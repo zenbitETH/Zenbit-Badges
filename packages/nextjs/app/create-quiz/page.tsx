@@ -43,8 +43,13 @@ const CreateQuizForm: React.FC = () => {
     if (!formData.question || !formData.answer || formData?.options?.length < 3) {
       return;
     }
+    const correctAnswer = parseInt(formData.answer);
+    if (correctAnswer < 0 || correctAnswer > 3) {
+      return;
+    }
     const newQuestion: Question = {
       ...formData,
+      answer: formData.options[correctAnswer],
       id: editMode || Date.now().toString(),
     };
 
@@ -69,10 +74,14 @@ const CreateQuizForm: React.FC = () => {
     if (!questionToEdit.question || !questionToEdit.answer || questionToEdit?.options?.length < 3) {
       return;
     }
+    const correctAnswer = parseInt(questionToEdit.answer);
+    if (correctAnswer < 0 || correctAnswer > 3) {
+      return;
+    }
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: questionToEdit.answer,
+      answer: questionToEdit.options[correctAnswer],
     });
     setEditMode(id);
   };
@@ -159,9 +168,9 @@ const CreateQuizForm: React.FC = () => {
               required
             >
               <option value="">Select correct answer</option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              <option value={1}>Option 1</option>
+              <option value={2}>Option 2</option>
+              <option value={3}>Option 3</option>
             </select>
           </div>
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">

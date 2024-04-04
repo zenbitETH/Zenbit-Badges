@@ -25,7 +25,7 @@ const Quiz = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const score = questions.reduce((total, question, index) => {
-      if (answers[index] === question.answer) {
+      if (answers[index] === (question as any)?.answer) {
         return total + 1;
       }
       return total;
