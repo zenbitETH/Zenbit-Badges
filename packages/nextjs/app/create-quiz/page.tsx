@@ -93,9 +93,34 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
-
+  const exportQuiz = async (questions: Question[]) => {
+    try {
+      const response = await fetch("/api/exportQuiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(questions),
+      });
+      console.log("response", response);
+      if (response.ok) {
+        console.log("Quiz exported successfully!");
+      } else {
+        console.error("Failed to export quiz");
+      }
+    } catch (error) {
+      console.error("Error exporting quiz", error);
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto">
+      <button
+        onClick={() => {
+          exportQuiz(questions);
+        }}
+      >
+        Export Quiz
+      </button>
       <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
         <div className="mb-4">
           <label htmlFor="question" className="block mb-1">
