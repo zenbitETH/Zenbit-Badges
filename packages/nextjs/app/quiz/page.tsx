@@ -7,7 +7,7 @@ import { Answers, Question } from "~~/utils/scaffold-eth/quiz";
 
 const questions: Question[] = [
   {
-    question: "What is the capital of France?",
+    question: "What is the capital of Francefwsjkdfbs fsdjkfbskjf sdf sdkjjfbsdk?",
     options: ["New York", "London", "Paris", "Dubai"],
     answer: "Paris",
   },
@@ -47,29 +47,31 @@ const Quiz = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 m-4">
-      <div className="space-y-4">
-        {questions.map((question, index) => (
-          <QuestionComponent
-            key={index}
-            question={question}
-            questionIndex={index}
-            handleOptionChange={handleOptionChange}
-            currentAnswer={answers[index]}
-          />
-        ))}
-        <button
-          type="submit"
-          className={`${
-            allQuestionsAnswered ? "bg-green-500 text-white" : "bg-gray-300 text-gray-600"
-          } px-4 py-2 rounded ${allQuestionsAnswered ? "" : "pointer-events-none"}`}
-          disabled={!allQuestionsAnswered}
-        >
-          Submit
-        </button>
+    <div className="flex justify-center m-10">
+      <div className="w-100 rounded-lg ">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {questions.map((question, index) => (
+            <QuestionComponent
+              key={index}
+              question={question}
+              questionIndex={index}
+              handleOptionChange={handleOptionChange}
+              currentAnswer={answers[index]}
+            />
+          ))}
+          <button
+            type="submit"
+            className={`${
+              allQuestionsAnswered ? "bg-green-500 text-white" : "bg-gray-300 text-gray-600"
+            } px-4 py-2 rounded mx-auto block ${allQuestionsAnswered ? "" : "pointer-events-none"}`}
+            disabled={!allQuestionsAnswered}
+          >
+            Submit
+          </button>
+        </form>
+        {result && <p className="text-center mt-4">{result}</p>}
       </div>
-      {result && <p>{result}</p>}
-    </form>
+    </div>
   );
 };
 export default Quiz;

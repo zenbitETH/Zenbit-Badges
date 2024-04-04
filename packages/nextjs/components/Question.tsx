@@ -13,10 +13,12 @@ interface QuestionProps {
 const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, handleOptionChange, currentAnswer }) => {
   return (
     <div className="p-6 border rounded-lg mb-6">
-      <h3 className="text-lg font-semibold mb-4">{question.question}</h3>
-      <div className="space-y-2">
+      <h3 className="text-lg font-semibold mb-4">
+        {questionIndex + 1}. {question.question}
+      </h3>
+      <div className="flex justify-between">
         {question.options.map((option, index) => (
-          <label key={index} className="flex items-center">
+          <label key={index} className="flex items-center ">
             <input
               type="radio"
               className="mr-2"
