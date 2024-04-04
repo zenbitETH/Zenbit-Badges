@@ -5,7 +5,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 interface FormData {
   question: string;
   options: string[]; // Change the type to array of strings
-  correctAnswer: string;
+  answer: string;
 }
 
 interface Question extends FormData {
@@ -16,7 +16,7 @@ const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     question: "",
     options: ["", "", ""], // Initialize with empty strings
-    correctAnswer: "",
+    answer: "",
   });
   const [questions, setQuestions] = useState<Question[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const CreateQuizForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.question || !formData.correctAnswer || formData?.options?.length < 3) {
+    if (!formData.question || !formData.answer || formData?.options?.length < 3) {
       return;
     }
     const newQuestion: Question = {
@@ -59,20 +59,20 @@ const CreateQuizForm: React.FC = () => {
     setFormData({
       question: "",
       options: ["", "", ""], // Reset options
-      correctAnswer: "",
+      answer: "",
     });
   };
 
   const handleEdit = (id: string) => {
     const questionToEdit = questions.find(q => q.id === id);
     if (!questionToEdit) return;
-    if (!questionToEdit.question || !questionToEdit.correctAnswer || questionToEdit?.options?.length < 3) {
+    if (!questionToEdit.question || !questionToEdit.answer || questionToEdit?.options?.length < 3) {
       return;
     }
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      correctAnswer: questionToEdit.correctAnswer,
+      answer: questionToEdit.answer,
     });
     setEditMode(id);
   };
@@ -85,7 +85,7 @@ const CreateQuizForm: React.FC = () => {
       setFormData({
         question: "",
         options: ["", "", ""],
-        correctAnswer: "",
+        answer: "",
       });
     }
   };
@@ -153,13 +153,13 @@ const CreateQuizForm: React.FC = () => {
           ))}
         </div>
         <div className="mb-4">
-          <label htmlFor="correctAnswer" className="block mb-1">
+          <label htmlFor="answer" className="block mb-1">
             Correct Answer:
           </label>
           <select
-            id="correctAnswer"
-            name="correctAnswer"
-            value={formData.correctAnswer}
+            id="answer"
+            name="answer"
+            value={formData.answer}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded px-2 py-1"
             required
@@ -179,14 +179,14 @@ const CreateQuizForm: React.FC = () => {
         <div className="border border-gray-300 rounded p-4">
           <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
           <ul>
-            {questions.map(({ id, question, correctAnswer }, index) => (
+            {questions.map(({ id, question, answer }, index) => (
               <li key={id} className="mb-4 p-2 border">
                 <p>
                   <strong>Question {index + 1} :</strong> {question}
                 </p>
                 <p>{/* <strong>Options:</strong> {option1}, {option2}, {option3} */}</p>
                 <p>
-                  <strong>Answer:</strong> {correctAnswer}
+                  <strong>Answer:</strong> {answer}
                 </p>
                 <button onClick={() => handleEdit(id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                   Edit

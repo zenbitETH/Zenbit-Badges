@@ -2,21 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import QuestionComponent from "~~/components/Question";
+import questions from "~~/quiz/quizzes.json";
 // import Question from "~/components/Question";
-import { Answers, Question } from "~~/utils/scaffold-eth/quiz";
-
-const questions: Question[] = [
-  {
-    question: "What is the capital of Francefwsjkdfbs fsdjkfbskjf sdf sdkjjfbsdk?",
-    options: ["New York", "London", "Paris", "Dubai"],
-    answer: "Paris",
-  },
-  {
-    question: "Who is the CEO of Tesla?",
-    options: ["Jeff Bezos", "Elon Musk", "Bill Gates", "Steve Jobs"],
-    answer: "Elon Musk",
-  },
-];
+import { Answers } from "~~/utils/scaffold-eth/quiz";
 
 const Quiz = () => {
   const [answers, setAnswers] = useState<Answers>({});
@@ -56,7 +44,7 @@ const Quiz = () => {
               question={question}
               questionIndex={index}
               handleOptionChange={handleOptionChange}
-              currentAnswer={answers[index]}
+              answer={answers[index]}
             />
           ))}
           <button

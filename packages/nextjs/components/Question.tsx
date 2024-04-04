@@ -7,10 +7,10 @@ interface QuestionProps {
   question: Question;
   questionIndex: number;
   handleOptionChange: (questionIndex: number, option: string) => void;
-  currentAnswer?: string;
+  answer?: string;
 }
 
-const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, handleOptionChange, currentAnswer }) => {
+const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, handleOptionChange, answer }) => {
   return (
     <div className="p-6 border rounded-lg mb-6">
       <h3 className="text-lg font-semibold mb-4">
@@ -24,7 +24,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, h
               className="mr-2"
               name={`question-${questionIndex}`}
               value={option}
-              checked={currentAnswer === option}
+              checked={answer === option}
               onChange={() => handleOptionChange(questionIndex, option)}
             />
             {option}
