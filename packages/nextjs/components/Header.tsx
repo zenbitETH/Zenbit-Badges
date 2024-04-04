@@ -34,6 +34,8 @@ export const menuLinks: HeaderMenuLink[] = [
   },
 ];
 
+//TODO update the links based on the user account address for the create quiz and quiz pages
+
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
 
