@@ -4,9 +4,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 
 interface FormData {
   question: string;
-  option1: string;
-  option2: string;
-  option3: string;
+  options: string[]; // Change the type to array of strings
   correctAnswer: string;
 }
 
@@ -17,30 +15,37 @@ interface Question extends FormData {
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     question: "",
-    option1: "",
-    option2: "",
-    option3: "",
+    options: ["", "", ""], // Initialize with empty strings
     correctAnswer: "",
   });
   const [questions, setQuestions] = useState<Question[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "options") {
+      const optionIndex = Number(e.target.getAttribute("data-index"));
+      const updatedOptions = [...formData.options];
+      updatedOptions[optionIndex] = value;
+      setFormData(prevState => ({
+        ...prevState,
+        options: updatedOptions,
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const actualAnswer = formData[formData.correctAnswer as keyof FormData];
+    if (!formData.question || !formData.correctAnswer || formData?.options?.length < 3) {
+      return;
+    }
     const newQuestion: Question = {
       ...formData,
-      correctAnswer: actualAnswer,
-      id: editMode || Date.now().toString(), // Use current timestamp as a makeshift ID
+      id: editMode || Date.now().toString(),
     };
 
     if (editMode) {
@@ -51,12 +56,9 @@ const CreateQuizForm: React.FC = () => {
       setQuestions([...questions, newQuestion]);
     }
 
-    // Reset the form
     setFormData({
       question: "",
-      option1: "",
-      option2: "",
-      option3: "",
+      options: ["", "", ""], // Reset options
       correctAnswer: "",
     });
   };
@@ -64,16 +66,13 @@ const CreateQuizForm: React.FC = () => {
   const handleEdit = (id: string) => {
     const questionToEdit = questions.find(q => q.id === id);
     if (!questionToEdit) return;
-
-    const correctAnswerReference =
-      Object.keys(formData).find(key => formData[key as keyof FormData] === questionToEdit.correctAnswer) || "";
-
+    if (!questionToEdit.question || !questionToEdit.correctAnswer || questionToEdit?.options?.length < 3) {
+      return;
+    }
     setFormData({
       question: questionToEdit.question,
-      option1: questionToEdit.option1,
-      option2: questionToEdit.option2,
-      option3: questionToEdit.option3,
-      correctAnswer: correctAnswerReference,
+      options: [...questionToEdit.options],
+      correctAnswer: questionToEdit.correctAnswer,
     });
     setEditMode(id);
   };
@@ -81,14 +80,11 @@ const CreateQuizForm: React.FC = () => {
   const handleDelete = (id: string) => {
     const updatedQuestions = questions.filter(q => q.id !== id);
     setQuestions(updatedQuestions);
-    // Exit edit mode if the currently edited question is deleted
     if (editMode === id) {
       setEditMode(null);
       setFormData({
         question: "",
-        option1: "",
-        option2: "",
-        option3: "",
+        options: ["", "", ""],
         correctAnswer: "",
       });
     }
@@ -102,7 +98,7 @@ const CreateQuizForm: React.FC = () => {
         },
         body: JSON.stringify(questions),
       });
-      console.log("response", response);
+
       if (response.ok) {
         console.log("Quiz exported successfully!");
       } else {
@@ -112,6 +108,7 @@ const CreateQuizForm: React.FC = () => {
       console.error("Error exporting quiz", error);
     }
   };
+
   return (
     <div className="max-w-4xl mx-auto">
       <button
@@ -137,48 +134,23 @@ const CreateQuizForm: React.FC = () => {
           />
         </div>
         <div className="flex mb-4">
-          <div className="w-1/3 mr-2">
-            <label htmlFor="option1" className="block mb-1">
-              Option 1:
-            </label>
-            <input
-              type="text"
-              id="option1"
-              name="option1"
-              value={formData.option1}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
-              required
-            />
-          </div>
-          <div className="w-1/3 mr-2">
-            <label htmlFor="option2" className="block mb-1">
-              Option 2:
-            </label>
-            <input
-              type="text"
-              id="option2"
-              name="option2"
-              value={formData.option2}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
-              required
-            />
-          </div>
-          <div className="w-1/3">
-            <label htmlFor="option3" className="block mb-1">
-              Option 3:
-            </label>
-            <input
-              type="text"
-              id="option3"
-              name="option3"
-              value={formData.option3}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
-              required
-            />
-          </div>
+          {formData.options.map((option, index) => (
+            <div key={index} className="w-1/3 mr-2">
+              <label htmlFor={`option${index + 1}`} className="block mb-1">
+                Option {index + 1}:
+              </label>
+              <input
+                type="text"
+                id={`option${index + 1}`}
+                name="options"
+                data-index={index}
+                value={option}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+          ))}
         </div>
         <div className="mb-4">
           <label htmlFor="correctAnswer" className="block mb-1">
@@ -207,14 +179,12 @@ const CreateQuizForm: React.FC = () => {
         <div className="border border-gray-300 rounded p-4">
           <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
           <ul>
-            {questions.map(({ id, question, option1, option2, option3, correctAnswer }, index) => (
+            {questions.map(({ id, question, correctAnswer }, index) => (
               <li key={id} className="mb-4 p-2 border">
                 <p>
                   <strong>Question {index + 1} :</strong> {question}
                 </p>
-                <p>
-                  <strong>Options:</strong> {option1}, {option2}, {option3}
-                </p>
+                <p>{/* <strong>Options:</strong> {option1}, {option2}, {option3} */}</p>
                 <p>
                   <strong>Answer:</strong> {correctAnswer}
                 </p>
