@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   question: string;
@@ -20,6 +21,7 @@ const CreateQuizForm: React.FC = () => {
   });
   const [questions, setQuestions] = useState<Question[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
+  const router = useRouter();
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "options") {
@@ -44,12 +46,10 @@ const CreateQuizForm: React.FC = () => {
       return;
     }
     const correctAnswer = parseInt(formData.answer);
-    if (correctAnswer < 0 || correctAnswer > 3) {
-      return;
-    }
+
     const newQuestion: Question = {
       ...formData,
-      answer: formData.options[correctAnswer],
+      answer: formData.options[correctAnswer - 1],
       id: editMode || Date.now().toString(),
     };
 
@@ -71,17 +71,13 @@ const CreateQuizForm: React.FC = () => {
   const handleEdit = (id: string) => {
     const questionToEdit = questions.find(q => q.id === id);
     if (!questionToEdit) return;
-    if (!questionToEdit.question || !questionToEdit.answer || questionToEdit?.options?.length < 3) {
-      return;
-    }
+
     const correctAnswer = parseInt(questionToEdit.answer);
-    if (correctAnswer < 0 || correctAnswer > 3) {
-      return;
-    }
+
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: questionToEdit.options[correctAnswer],
+      answer: questionToEdit.options[correctAnswer - 1],
     });
     setEditMode(id);
   };
@@ -109,7 +105,7 @@ const CreateQuizForm: React.FC = () => {
       });
 
       if (response.ok) {
-        console.log("Quiz exported successfully!");
+        router.push("/");
       } else {
         console.error("Failed to export quiz");
       }
@@ -120,6 +116,14 @@ const CreateQuizForm: React.FC = () => {
 
   return (
     <div className="m-10">
+      <button
+        onClick={() => {
+          exportQuiz(questions);
+        }}
+        className="bg-blue-500 text-white px-4  rounded"
+      >
+        Export Quiz
+      </button>
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
           <div className="mb-4">
@@ -213,14 +217,6 @@ const CreateQuizForm: React.FC = () => {
           </div>
         )}
       </div>
-      <button
-        onClick={() => {
-          exportQuiz(questions);
-        }}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Export Quiz
-      </button>
     </div>
   );
 };
