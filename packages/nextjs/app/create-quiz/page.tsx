@@ -35,8 +35,11 @@ const CreateQuizForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const actualAnswer = formData[formData.correctAnswer as keyof FormData];
     const newQuestion: Question = {
       ...formData,
+      correctAnswer: actualAnswer,
       id: editMode || Date.now().toString(), // Use current timestamp as a makeshift ID
     };
 
@@ -61,12 +64,16 @@ const CreateQuizForm: React.FC = () => {
   const handleEdit = (id: string) => {
     const questionToEdit = questions.find(q => q.id === id);
     if (!questionToEdit) return;
+
+    const correctAnswerReference =
+      Object.keys(formData).find(key => formData[key as keyof FormData] === questionToEdit.correctAnswer) || "";
+
     setFormData({
       question: questionToEdit.question,
       option1: questionToEdit.option1,
       option2: questionToEdit.option2,
       option3: questionToEdit.option3,
-      correctAnswer: questionToEdit.correctAnswer,
+      correctAnswer: correctAnswerReference,
     });
     setEditMode(id);
   };
@@ -175,7 +182,7 @@ const CreateQuizForm: React.FC = () => {
         <div className="border border-gray-300 rounded p-4">
           <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
           <ul>
-            {questions.map(({ id, question, option1, option2, option3 }) => (
+            {questions.map(({ id, question, option1, option2, option3, correctAnswer }) => (
               <li key={id} className="mb-4 p-2 border-b">
                 <p>
                   <strong>Question:</strong> {question}
@@ -184,7 +191,7 @@ const CreateQuizForm: React.FC = () => {
                   <strong>Options:</strong> {option1}, {option2}, {option3}
                 </p>
                 <p>
-                  {/* <strong>Answer:</strong> {formData[`option${correctAnswer.charAt(correctAnswer.length - 1)}`]} */}
+                  <strong>Answer:</strong> {correctAnswer}
                 </p>
                 <button onClick={() => handleEdit(id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                   Edit
