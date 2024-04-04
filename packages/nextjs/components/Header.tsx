@@ -20,6 +20,10 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
   },
   {
+    label: "Create Quiz",
+    href: "/create-quiz",
+  },
+  {
     label: "Quiz",
     href: "/quiz",
   },
