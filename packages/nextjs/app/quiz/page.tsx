@@ -36,9 +36,9 @@ const Quiz = () => {
 
   // Check for the access to the questions before rendering the component
   return (
-    <div className="flex justify-center m-10">
+    <div className="min-w-xl max-w-xl mx-auto flex justify-center m-10">
       {questions.length > 0 ? (
-        <div className="w-100 rounded-lg ">
+        <div className="min-w-xl max-w-xl rounded-lg">
           <form onSubmit={handleSubmit} className="space-y-4">
             {questions.map((question, index) => (
               <QuestionComponent
