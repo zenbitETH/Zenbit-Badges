@@ -182,10 +182,10 @@ const CreateQuizForm: React.FC = () => {
         <div className="border border-gray-300 rounded p-4">
           <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
           <ul>
-            {questions.map(({ id, question, option1, option2, option3, correctAnswer }) => (
-              <li key={id} className="mb-4 p-2 border-b">
+            {questions.map(({ id, question, option1, option2, option3, correctAnswer }, index) => (
+              <li key={id} className="mb-4 p-2 border">
                 <p>
-                  <strong>Question:</strong> {question}
+                  <strong>Question {index + 1} :</strong> {question}
                 </p>
                 <p>
                   <strong>Options:</strong> {option1}, {option2}, {option3}
