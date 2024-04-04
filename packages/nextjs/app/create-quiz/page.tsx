@@ -10,10 +10,8 @@ interface FormData {
   correctAnswer: string;
 }
 
-interface Question {
-  question: string;
-  options: [string, string, string];
-  answer: string;
+interface Question extends FormData {
+  id: string; // Unique identifier for each question
 }
 
 const CreateQuizForm: React.FC = () => {
@@ -25,7 +23,7 @@ const CreateQuizForm: React.FC = () => {
     correctAnswer: "",
   });
   const [questions, setQuestions] = useState<Question[]>([]);
-  //   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -37,22 +35,20 @@ const CreateQuizForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.question || !formData.option1 || !formData.option2 || !formData.option3 || !formData.correctAnswer) {
-      alert("Please fill in all fields");
-      return;
-    }
-
-    const { question, option1, option2, option3, correctAnswer } = formData;
-
-    const quizItem: Question = {
-      question,
-      options: [option1, option2, option3],
-      answer: correctAnswer,
+    const newQuestion: Question = {
+      ...formData,
+      id: editMode || Date.now().toString(), // Use current timestamp as a makeshift ID
     };
 
-    setQuestions([...questions, quizItem]);
+    if (editMode) {
+      const updatedQuestions = questions.map(q => (q.id === editMode ? newQuestion : q));
+      setQuestions(updatedQuestions);
+      setEditMode(null);
+    } else {
+      setQuestions([...questions, newQuestion]);
+    }
 
-    // Clear the form fields
+    // Reset the form
     setFormData({
       question: "",
       option1: "",
@@ -60,16 +56,40 @@ const CreateQuizForm: React.FC = () => {
       option3: "",
       correctAnswer: "",
     });
-    // setIsFormValid(false);
   };
 
-  //   const handleAddQuestion = () => {
-  //     setIsFormValid(true);
-  //   };
+  const handleEdit = (id: string) => {
+    const questionToEdit = questions.find(q => q.id === id);
+    if (!questionToEdit) return;
+    setFormData({
+      question: questionToEdit.question,
+      option1: questionToEdit.option1,
+      option2: questionToEdit.option2,
+      option3: questionToEdit.option3,
+      correctAnswer: questionToEdit.correctAnswer,
+    });
+    setEditMode(id);
+  };
+
+  const handleDelete = (id: string) => {
+    const updatedQuestions = questions.filter(q => q.id !== id);
+    setQuestions(updatedQuestions);
+    // Exit edit mode if the currently edited question is deleted
+    if (editMode === id) {
+      setEditMode(null);
+      setFormData({
+        question: "",
+        option1: "",
+        option2: "",
+        option3: "",
+        correctAnswer: "",
+      });
+    }
+  };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 m-4">
+    <div className="max-w-4xl mx-auto">
+      <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
         <div className="mb-4">
           <label htmlFor="question" className="block mb-1">
             Question:
@@ -147,17 +167,31 @@ const CreateQuizForm: React.FC = () => {
           </select>
         </div>
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Submit
+          {editMode ? "Update Question" : "Add Question"}
         </button>
       </form>
 
       {questions.length > 0 && (
-        <div className="border border-gray-300 rounded p-4 w-96">
+        <div className="border border-gray-300 rounded p-4">
           <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
           <ul>
-            {questions.map((item, index) => (
-              <li key={index} className="mb-2">
-                {item.question}
+            {questions.map(({ id, question, option1, option2, option3 }) => (
+              <li key={id} className="mb-4 p-2 border-b">
+                <p>
+                  <strong>Question:</strong> {question}
+                </p>
+                <p>
+                  <strong>Options:</strong> {option1}, {option2}, {option3}
+                </p>
+                <p>
+                  {/* <strong>Answer:</strong> {formData[`option${correctAnswer.charAt(correctAnswer.length - 1)}`]} */}
+                </p>
+                <button onClick={() => handleEdit(id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(id)} className="bg-red-500 text-white px-2 py-1 rounded">
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
