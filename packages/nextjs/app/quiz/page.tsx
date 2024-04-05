@@ -58,8 +58,8 @@ const Quiz = () => {
 
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
-      const wallet = new Wallet("");
-      eas.connect(wallet);
+      const wallet = new Wallet(""); //TODO  Not able to send the signer
+     await  eas.connect(wallet);
       // Initialize SchemaEncoder with the schema string
       const schemaEncoder = new SchemaEncoder(
         "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
@@ -129,7 +129,7 @@ const Quiz = () => {
   const onSubmit = async () => {
     const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
     const msgHash = hashMessage(msg + connectedAddress);
-    const privateKey = "";
+    const privateKey = ""; // TODO add the private key
     const wallet = new Wallet(privateKey);
     const signature = await wallet.signMessage(arrayify(msgHash));
 
