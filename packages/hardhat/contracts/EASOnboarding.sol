@@ -15,7 +15,6 @@ contract EASOnboarding is EASOnboardingStorage {
         );
         _;
     }
-
     // Function to get attested, with checks and storing attestation data
     function getAttested(uint256 _eventId, uint256 _level, bytes32 _msgHash, bytes memory _signature)
         public
