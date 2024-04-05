@@ -9,7 +9,6 @@ contract EASOnboarding is EASOnboardingStorage {
     constructor() {
         deployer = msg.sender;
     }
-
     modifier isMentorAddress(address _mentorAddress) {
         require(
             isMentor[_mentorAddress] || _mentorAddress == deployer, "Only selected mentor addresses can create quiz"

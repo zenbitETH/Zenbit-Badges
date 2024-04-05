@@ -1,14 +1,39 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-// import { Wallet, hashMessage } from "ethers";
+import { useRouter } from "next/navigation";
+import { Wallet, hashMessage } from "ethers";
+import { useAccount } from "wagmi";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import questions from "~~/quiz/quizzes.json";
 // import Question from "~/components/Question";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
 const Quiz = () => {
+  const { address: connectedAddress } = useAccount();
+  const router = useRouter();
+  const { data: userData } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "studentEventMap",
+    args: [connectedAddress, 1n],
+  });
+
+  if (userData) {
+    router.push("/");
+  }
+
+  
+  const { writeAsync } = useScaffoldContractWrite({
+    contractName: "EASOnboarding",
+    functionName: "getAttested",
+    args: [1n, 1n, "0x", "0x"],
+    onBlockConfirmation: txnReceipt => {
+      console.log("txnReceipt", txnReceipt);
+      // router.push("/dashboard");
+    },
+  });
   const [answers, setAnswers] = useState<Answers>({});
   const [result, setResult] = useState<string | null>(null);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
@@ -35,25 +60,32 @@ const Quiz = () => {
       }
       return total;
     }, 0);
-
-    setResult(`You scored ${score} out of ${questions.length}`);
+    if (score == questions.length) {
+      onSubmit();
+    }
+    else
+    {
+      router.push("/");
+    }
+   
   };
-  // function arrayify(msgHash: string): Uint8Array {
-  //   return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
-  // }
-  // const onSubmit = async (data: any) => {
-  //   const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
-  //   const msgHash = hashMessage(msg + connectedAddress);
-  //   const privateKey = process.env.PRIVATE_KEY || "";
-  //   const wallet = new Wallet(privateKey);
-  //   const signature = await wallet.signMessage(arrayify(msgHash));
+  function arrayify(msgHash: string): Uint8Array {
+    return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
+  }
+  const onSubmit = async () => {
+    const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
+    const msgHash = hashMessage(msg + connectedAddress);
+    const privateKey = process.env.PRIVATE_KEY || "";
+    const wallet = new Wallet(privateKey);
+    const signature = await wallet.signMessage(arrayify(msgHash));
 
-  //   if (msgHash && signature) {
-  //     writeAsync({
-  //       args: [data.name, data.homeTown, msgHash as `0x${string}`, signature as `0x${string}`, parseInt(data.team)],
-  //     });
-  //   }
-  // };
+    if (msgHash && signature) {
+      writeAsync({
+        args: [1n, 1n, msgHash as `0x${string}`, signature as `0x${string}`],
+      });
+    }
+  };
+
   // // Check for the access to the questions before rendering the component
   return (
     <div className="min-w-xl max-w-xl mx-auto flex justify-center m-10">
