@@ -1,9 +1,8 @@
-"use client";
-
 import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAccount } from "wagmi";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
@@ -14,34 +13,46 @@ type HeaderMenuLink = {
   icon?: React.ReactNode;
 };
 
-export const menuLinks: HeaderMenuLink[] = [
-  {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "Create Quiz",
-    href: "/create-quiz",
-  },
-  {
-    label: "Quiz",
-    href: "/quiz",
-  },
-  {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
-  },
-  {
-    label: "Profile",
-    href: "/profile",
-  },
-];
-
-//TODO update the links based on the user account address for the create quiz and quiz pages
-
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
+  const { address: connectedAddress } = useAccount();
+
+  const menuLinks: HeaderMenuLink[] = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Debug Contracts",
+      href: "/debug",
+      icon: <BugAntIcon className="h-4 w-4" />,
+    },
+  ];
+
+  if (connectedAddress) {
+    const additionalLinks: HeaderMenuLink[] = [
+      {
+        label: "Quiz",
+        href: "/quiz",
+      },
+      {
+        label: "Profile",
+        href: "/profile",
+      },
+    ];
+
+    if (
+      ["0x4e087b926a0752c23b4dA800424547f5932bBD0c", "0xdA7773E91a396d592AD33146164dA6d7d2Fda9B6"].includes(
+        connectedAddress,
+      )
+    ) {
+      additionalLinks.push({
+        label: "Create Quiz",
+        href: "/create-quiz",
+      });
+    }
+    menuLinks.push(...additionalLinks);
+  }
 
   return (
     <>
@@ -66,9 +77,6 @@ export const HeaderMenuLinks = () => {
   );
 };
 
-/**
- * Site header
- */
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
