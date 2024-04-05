@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+// import { Wallet, hashMessage } from "ethers";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import questions from "~~/quiz/quizzes.json";
@@ -11,9 +12,9 @@ const Quiz = () => {
   const [answers, setAnswers] = useState<Answers>({});
   const [result, setResult] = useState<string | null>(null);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
-  const [selectedValueUniversity, setSelectedValueUniversity] = useState("");
-  const [selectedValueMentor, setSelectedValueMentor] = useState("");
 
+  const [selectedValueMentor, setSelectedValueMentor] = useState("");
+  // const { address: connectedAddress } = useAccount();
   const handleOptionChange = (questionIndex: number, option: string) => {
     setAnswers({
       ...answers,
@@ -37,8 +38,23 @@ const Quiz = () => {
 
     setResult(`You scored ${score} out of ${questions.length}`);
   };
+  // function arrayify(msgHash: string): Uint8Array {
+  //   return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
+  // }
+  // const onSubmit = async (data: any) => {
+  //   const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
+  //   const msgHash = hashMessage(msg + connectedAddress);
+  //   const privateKey = process.env.PRIVATE_KEY || "";
+  //   const wallet = new Wallet(privateKey);
+  //   const signature = await wallet.signMessage(arrayify(msgHash));
 
-  // Check for the access to the questions before rendering the component
+  //   if (msgHash && signature) {
+  //     writeAsync({
+  //       args: [data.name, data.homeTown, msgHash as `0x${string}`, signature as `0x${string}`, parseInt(data.team)],
+  //     });
+  //   }
+  // };
+  // // Check for the access to the questions before rendering the component
   return (
     <div className="min-w-xl max-w-xl mx-auto flex justify-center m-10">
       {questions.length > 0 ? (
@@ -53,20 +69,6 @@ const Quiz = () => {
                 answer={answers[index]}
               />
             ))}
-
-            <div className="flex justify-center align-middle items-center">
-              <div className="mr-10">University</div>
-              <select
-                className="px-4 py-2 border border-gray-300 rounded-md"
-                value={selectedValueUniversity}
-                onChange={e => setSelectedValueUniversity(e.target.value)}
-              >
-                <option value="">Select correct answer</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </select>
-            </div>
 
             <div className="flex justify-center align-middle items-center">
               <div className="mr-10">Mentor</div>
@@ -84,11 +86,11 @@ const Quiz = () => {
             <button
               type="submit"
               className={`${
-                allQuestionsAnswered && selectedValueMentor != "" && selectedValueUniversity != ""
+                allQuestionsAnswered && selectedValueMentor != ""
                   ? "bg-green-500 text-white"
                   : "bg-gray-300 text-gray-600"
               } px-4 py-2 rounded mx-auto block ${allQuestionsAnswered ? "" : "pointer-events-none"}`}
-              disabled={!(allQuestionsAnswered && selectedValueMentor != "" && selectedValueUniversity != "")}
+              disabled={!(allQuestionsAnswered && selectedValueMentor != "")}
             >
               Submit
             </button>
