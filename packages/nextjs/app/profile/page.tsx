@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Profile = () => {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-center mt-40">
       <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg">
@@ -32,7 +36,14 @@ const Profile = () => {
             <p className="text-sm">Mentor</p>
           </div>
           <div className="mt-6 flex justify-center">
-            <button className="bg-green-500 text-white px-6 py-3 rounded-md">Return To Dashboard</button>
+            <button
+              className="bg-green-500 text-white px-6 py-3 rounded-md"
+              onClick={() => {
+                router.push("/");
+              }}
+            >
+              Return To Dashboard
+            </button>
           </div>
         </div>
       </div>
