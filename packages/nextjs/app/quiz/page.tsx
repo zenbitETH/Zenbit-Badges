@@ -10,6 +10,9 @@ const Quiz = () => {
   const [answers, setAnswers] = useState<Answers>({});
   const [result, setResult] = useState<string | null>(null);
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
+  const [selectedValueUniversity, setSelectedValueUniversity] = useState("");
+  const [selectedValueMentor, setSelectedValueMentor] = useState("");
+
   const handleOptionChange = (questionIndex: number, option: string) => {
     setAnswers({
       ...answers,
@@ -49,12 +52,42 @@ const Quiz = () => {
                 answer={answers[index]}
               />
             ))}
+
+            <div className="flex justify-center align-middle items-center">
+              <div className="mr-10">University</div>
+              <select
+                className="px-4 py-2 border border-gray-300 rounded-md"
+                value={selectedValueUniversity}
+                onChange={e => setSelectedValueUniversity(e.target.value)}
+              >
+                <option value="">Select correct answer</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+              </select>
+            </div>
+
+            <div className="flex justify-center align-middle items-center">
+              <div className="mr-10">Mentor</div>
+              <select
+                className="px-4 py-2 border border-gray-300 rounded-md"
+                value={selectedValueMentor}
+                onChange={e => setSelectedValueMentor(e.target.value)}
+              >
+                <option value="">Select correct answer</option>
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+              </select>
+            </div>
             <button
               type="submit"
               className={`${
-                allQuestionsAnswered ? "bg-green-500 text-white" : "bg-gray-300 text-gray-600"
+                allQuestionsAnswered && selectedValueMentor != "" && selectedValueUniversity != ""
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-300 text-gray-600"
               } px-4 py-2 rounded mx-auto block ${allQuestionsAnswered ? "" : "pointer-events-none"}`}
-              disabled={!allQuestionsAnswered}
+              disabled={!(allQuestionsAnswered && selectedValueMentor != "" && selectedValueUniversity != "")}
             >
               Submit
             </button>
