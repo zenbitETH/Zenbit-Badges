@@ -31,7 +31,7 @@ const Home = () => {
   return (
     <>
       <div className="flex items-center justify-center pt-10">
-        {eventDetails && (
+        {eventDetails && eventDetails[0] !== BigInt(0) ? (
           <div
             className={`border ${
               userData ? "border-green-500" : userData == false ? "border-red-300" : "border-gray-300"
@@ -60,6 +60,8 @@ const Home = () => {
               </div>
             </div>
           </div>
+        ) : (
+          "No events available"
         )}
       </div>
     </>
