@@ -12,18 +12,27 @@ const Profile = () => {
                 <Image src="/thumbnail.jpg" alt="Profile" width={150} height={150} className="rounded-full" />
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-semibold mt-4">John Doe</h1>
-                <p className="text-gray-600">@johndoe</p>
+                <h1 className="text-2xl font-semibold mt-4">Name</h1>
+                <p className="">Description</p>
+                <p className="">Date</p>
               </div>
             </div>
           </div>
-          <div className="mt-6">
-            <p className="text-base text-gray-700">Email: johndoe@example.com</p>
-            <p className="text-base text-gray-700">Location: New York City</p>
-            <p className="text-base text-gray-700">Joined: January 1, 2023</p>
+          <div className="mt-6 text-center">
+            <div className="m-3">
+              <p className="text-base">Onboarding Attestation Granted!</p>
+              <p className="text-xs" style={{ marginTop: "-1rem" }}>
+                See on EAS explorer
+              </p>
+            </div>
+            <p className="text-sm">Joined: January 1, 2023</p>
+            <p></p>
+            <p className="text-sm">Participants address</p>
+            <p className="text-sm"> University Address</p>
+            <p className="text-sm">Mentor</p>
           </div>
           <div className="mt-6 flex justify-center">
-            <button className="bg-blue-500 text-white px-6 py-3 rounded-md">Follow</button>
+            <button className="bg-green-500 text-white px-6 py-3 rounded-md">Return To Dashboard</button>
           </div>
         </div>
       </div>
