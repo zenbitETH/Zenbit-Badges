@@ -32,10 +32,6 @@ export const HeaderMenuLinks = () => {
   if (connectedAddress) {
     const additionalLinks: HeaderMenuLink[] = [
       {
-        label: "Create Quiz",
-        href: "/create-quiz",
-      },
-      {
         label: "Quiz",
         href: "/quiz",
       },
@@ -44,6 +40,17 @@ export const HeaderMenuLinks = () => {
         href: "/profile",
       },
     ];
+
+    if (
+      ["0x4e087b926a0752c23b4dA800424547f5932bBD0c", "0xdA7773E91a396d592AD33146164dA6d7d2Fda9B6"].includes(
+        connectedAddress,
+      )
+    ) {
+      additionalLinks.push({
+        label: "Create Quiz",
+        href: "/create-quiz",
+      });
+    }
     menuLinks.push(...additionalLinks);
   }
 
