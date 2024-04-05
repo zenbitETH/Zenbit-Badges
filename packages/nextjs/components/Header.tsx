@@ -20,6 +20,10 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
   },
   {
+    label: "Create Quiz",
+    href: "/create-quiz",
+  },
+  {
     label: "Quiz",
     href: "/quiz",
   },
@@ -28,7 +32,13 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/debug",
     icon: <BugAntIcon className="h-4 w-4" />,
   },
+  {
+    label: "Profile",
+    href: "/profile",
+  },
 ];
+
+//TODO update the links based on the user account address for the create quiz and quiz pages
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
