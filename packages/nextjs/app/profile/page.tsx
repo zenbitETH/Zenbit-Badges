@@ -13,7 +13,7 @@ const Profile = () => {
           <div className="flex justify-center items-center">
             <div className="flex flex-row items-center justify-between">
               <div className="mr-4">
-                <Image src="/thumbnail.jpg" alt="Profile" width={150} height={150} className="rounded-full" />
+                <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
               </div>
               <div className="ml-4">
                 <h1 className="text-2xl font-semibold mt-4">Name</h1>
