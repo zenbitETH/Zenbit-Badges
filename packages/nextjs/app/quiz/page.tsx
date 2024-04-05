@@ -35,7 +35,6 @@ const Quiz = () => {
     args: [1n],
   });
 
-
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",
     functionName: "getAttested",
@@ -59,7 +58,7 @@ const Quiz = () => {
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
       const wallet = new Wallet(""); //TODO  Not able to send the signer
-     await  eas.connect(wallet);
+      await eas.connect(wallet);
       // Initialize SchemaEncoder with the schema string
       const schemaEncoder = new SchemaEncoder(
         "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
@@ -163,6 +162,7 @@ const Quiz = () => {
                 value={selectedValueMentor}
                 onChange={e => setSelectedValueMentor(e.target.value)}
               >
+                {/* //TODO add the names of the mentor in the value */}
                 <option value="">Select correct answer</option>
                 <option value="option1">Option 1</option>
                 <option value="option2">Option 2</option>
