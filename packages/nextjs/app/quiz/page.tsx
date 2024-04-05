@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import QuestionComponent from "~~/components/Question";
+import { withAuth } from "~~/components/withAuth";
 import questions from "~~/quiz/quizzes.json";
 // import Question from "~/components/Question";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
@@ -100,4 +101,4 @@ const Quiz = () => {
     </div>
   );
 };
-export default Quiz;
+export default withAuth(Quiz);

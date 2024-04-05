@@ -2,6 +2,7 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { withAuth } from "~~/components/withAuth";
 
 interface FormData {
   question: string;
@@ -221,4 +222,4 @@ const CreateQuizForm: React.FC = () => {
   );
 };
 
-export default CreateQuizForm;
+export default withAuth(CreateQuizForm);
