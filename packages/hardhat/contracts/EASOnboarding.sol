@@ -9,13 +9,14 @@ contract EASOnboarding is EASOnboardingStorage {
     constructor() {
         deployer = msg.sender;
     }
+
     modifier isMentorAddress(address _mentorAddress) {
         require(
             isMentor[_mentorAddress] || _mentorAddress == deployer, "Only selected mentor addresses can create quiz"
         );
         _;
     }
-    // Function to get attested, with checks and storing attestation data
+
     function getAttested(uint256 _eventId, uint256 _level, bytes32 _msgHash, bytes memory _signature)
         public
         returns (bool)
@@ -28,7 +29,7 @@ contract EASOnboarding is EASOnboardingStorage {
         );
 
         events[_eventId].attendees.push(msg.sender);
-        attestationProfile[msg.sender].eventsCompleted++;
+        attestationProfile[msg.sender].eventsCompleted.push(_eventId);
         attestationProfile[msg.sender].studentLevel = _level;
         studentEventMap[msg.sender][_eventId] = true;
         return true;
@@ -45,6 +46,7 @@ contract EASOnboarding is EASOnboardingStorage {
 
     function createEvent(
         uint256 _closingTimestamp,
+        uint256 _level,
         string memory _eventName,
         string memory _eventDescription,
         string memory _mentorName
@@ -52,6 +54,7 @@ contract EASOnboarding is EASOnboardingStorage {
         require(_closingTimestamp > block.timestamp, "Closing timestamp cannot be in the past.");
 
         events[eventIdCounter].eventId = eventIdCounter;
+        events[eventIdCounter].level = _level;
         events[eventIdCounter].closingTimestamp = _closingTimestamp;
         events[eventIdCounter].attendeeCount = 1;
         events[eventIdCounter].eventName = _eventName;

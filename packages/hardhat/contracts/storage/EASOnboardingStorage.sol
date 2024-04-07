@@ -11,4 +11,12 @@ contract EASOnboardingStorage {
     mapping(address => mapping(uint256 => bool)) public studentEventMap;
     mapping(address => bool) isMentor;
     uint256 public eventIdCounter = 1;
+
+    function getAllEvents() public view returns (Structs.Event[] memory) {
+        Structs.Event[] memory eventsArray = new Structs.Event[](eventIdCounter - 1);
+        for (uint256 i = 1; i < eventIdCounter; i++) {
+            eventsArray[i] = events[i];
+        }
+        return eventsArray;
+    }
 }
