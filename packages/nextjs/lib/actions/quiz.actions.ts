@@ -1,17 +1,19 @@
-// Check for the type and then create the model otherwise throw the error
+import { CreateQuiz } from "../../types/quiz";
+import { connectToDatabase } from "../database";
+import { handleError } from "../utils";
 
-// export async function createEvent({ userId, event, path }: CreateEventParams) {
-//     try {
-//       await connectToDatabase()
+export async function createEvent(body: CreateQuiz) {
+  try {
+    await connectToDatabase();
 
-//       const organizer = await User.findById(userId)
-//       if (!organizer) throw new Error('Organizer not found')
+    // const organizer = await User.findById(userId);
+    // if (!organizer) throw new Error("Organizer not found");
 
-//       const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
-//       revalidatePath(path)
+    // const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId });
+    // revalidatePath(path);
 
-//       return JSON.parse(JSON.stringify(newEvent))
-//     } catch (error) {
-//       handleError(error)
-//     }
-//   }
+    return JSON.parse(JSON.stringify(body));
+  } catch (error) {
+    handleError(error);
+  }
+}
