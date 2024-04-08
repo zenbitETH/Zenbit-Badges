@@ -16,11 +16,11 @@ const Profile = () => {
     args: [1n],
   });
 
-  const { data: attestationData } = useScaffoldContractRead({
-    contractName: "EASOnboarding",
-    functionName: "attestationProfile",
-    args: [connectedAddress],
-  });
+  // const { data: attestationData } = useScaffoldContractRead({
+  //   contractName: "EASOnboarding",
+  //   functionName: "attestationProfile",
+  //   args: [connectedAddress],
+  // });
   return (
     <div>
       <div className="flex items-center justify-center mt-40">

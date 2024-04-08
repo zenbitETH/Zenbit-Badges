@@ -1,5 +1,6 @@
 import { useTargetNetwork } from "./useTargetNetwork";
-import { Abi, ExtractAbiEventNames } from "abitype";
+import { ExtractAbiEventNames } from "abitype";
+// Removed Abi from the import statement of the abitype
 import { Log } from "viem";
 import { useContractEvent } from "wagmi";
 import { addIndexedArgsToEvent, useDeployedContractInfo } from "~~/hooks/scaffold-eth";
@@ -30,7 +31,7 @@ export const useScaffoldEventSubscriber = <
 
   return useContractEvent({
     address: deployedContractData?.address,
-    abi: deployedContractData?.abi as Abi,
+    abi: deployedContractData?.abi,
     chainId: targetNetwork.id,
     listener: listenerWithIndexedArgs,
     eventName,
