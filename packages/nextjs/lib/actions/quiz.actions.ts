@@ -3,13 +3,11 @@ import { connectToDatabase } from "../database";
 import Quiz from "../database/models/quiz.model";
 import { handleError } from "../utils";
 
-export async function createEvent(body: CreateQuiz[]) {
+export async function createEvent(body: CreateQuiz) {
   try {
     await connectToDatabase();
 
-    // const result = await Quiz.create(body);
-
-    const result = await Quiz.insertMany(body);
+    const result = await Quiz.create(body);
 
     return JSON.parse(JSON.stringify(result));
   } catch (error) {
@@ -23,7 +21,7 @@ export async function getEventQuestionByAdmin(body: EventId) {
 
     const result = await Quiz.find({ eventId: body.eventId }, {}, { sort: { createdAt: -1 } });
 
-    return JSON.parse(JSON.stringify(result));
+    return result;
   } catch (error) {
     handleError(error);
   }
