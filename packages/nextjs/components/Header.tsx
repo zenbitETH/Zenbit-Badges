@@ -46,10 +46,16 @@ export const HeaderMenuLinks = () => {
         connectedAddress,
       )
     ) {
-      additionalLinks.push({
-        label: "Create Quiz",
-        href: "/create-quiz",
-      });
+      additionalLinks.push(
+        {
+          label: "Create Event",
+          href: "/create-event",
+        },
+        {
+          label: "Create Quiz",
+          href: "/create-quiz",
+        },
+      );
     }
     menuLinks.push(...additionalLinks);
   }
