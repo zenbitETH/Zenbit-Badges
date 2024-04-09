@@ -4,7 +4,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import moment from "moment";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
-import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FormData {
   name: string;
@@ -70,6 +70,11 @@ const CreateQuizForm: React.FC = () => {
       timeStamp: 0,
     });
   };
+
+  const { data: eventData } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "getAllEvents",
+  });
 
   return (
     <div className="m-10">
@@ -155,34 +160,32 @@ const CreateQuizForm: React.FC = () => {
           </button>
         </form>
 
-        {/* {questions.length > 0 && (
+        {eventData && eventData.length > 0 && (
           <div className="border border-gray-300 rounded p-4">
-            <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
+            <h2 className="text-lg font-semibold mb-2">Created Events:</h2>
             <ul>
-              {questions.map(({ eventId, question, options, answer }, index) => (
+              {eventData.map(({ eventId, eventName, eventDescription, mentorName, level, closingTimestamp }, index) => (
                 <li key={eventId} className="mb-4 p-2 border">
                   <p>
-                    <strong>Question {index + 1} :</strong> {question}
+                    <strong>Event {index + 1} :</strong> {eventName}
                   </p>
                   <p>
-                    <strong>Options:</strong>
-                    {options?.map((option, key) => {
-                      return (
-                        <span key={key}>
-                          {key + 1}:{option}
-                          {"            "}
-                        </span>
-                      );
-                    })}
+                    <strong>Description:</strong> {eventDescription}
                   </p>
                   <p>
-                    <strong>Answer:</strong> {answer}
+                    <strong>mentorName:</strong> {mentorName}
+                  </p>
+                  <p>
+                    <strong>Level:</strong> {String(level)}
+                  </p>
+                  <p>
+                    <strong>TimeStamp:</strong> {String(closingTimestamp)}
                   </p>
                 </li>
               ))}
             </ul>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
