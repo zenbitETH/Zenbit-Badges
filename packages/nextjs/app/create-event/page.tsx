@@ -43,8 +43,9 @@ const CreateQuizForm: React.FC = () => {
     ) {
       return;
     }
-    const isValidDate = moment(formData.timeStamp).isValid();
-    if (!isValidDate) {
+    const isValidDate = moment(formData.timeStamp).valueOf();
+    const currentTimestamp = moment().valueOf();
+    if (isValidDate < currentTimestamp) {
       return;
     }
     // const correctAnswer = parseInt(formData.answer);
