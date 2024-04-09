@@ -33,7 +33,7 @@ const Profile = () => {
                     <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
                   </div>
                   <div className="ml-4">
-                    <h1 className="text-2xl font-semibold mt-4">{eventDetails[3]}</h1>
+                    <h1 className="text-2xl font-semibold mt-4"></h1>
                     <p className="">{eventDetails[4]}</p>
                     <p className="">{eventDetails[5]}</p>
                   </div>

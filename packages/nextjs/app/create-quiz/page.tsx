@@ -8,10 +8,11 @@ interface FormData {
   question: string;
   options: string[]; // Change the type to array of strings
   answer: string;
+  eventId: string;
 }
 
 interface Question extends FormData {
-  id: string; // Unique identifier for each question
+  eventId: string; // Unique identifier for each question
 }
 
 const CreateQuizForm: React.FC = () => {
@@ -19,6 +20,7 @@ const CreateQuizForm: React.FC = () => {
     question: "",
     options: ["", "", ""], // Initialize with empty strings
     answer: "",
+    eventId: "",
   });
   const [questions, setQuestions] = useState<Question[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
@@ -51,11 +53,11 @@ const CreateQuizForm: React.FC = () => {
     const newQuestion: Question = {
       ...formData,
       answer: formData.options[correctAnswer - 1],
-      id: editMode || Date.now().toString(),
+      eventId: editMode || Date.now().toString(),
     };
 
     if (editMode) {
-      const updatedQuestions = questions.map(q => (q.id === editMode ? newQuestion : q));
+      const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
       setQuestions(updatedQuestions);
       setEditMode(null);
     } else {
@@ -66,11 +68,12 @@ const CreateQuizForm: React.FC = () => {
       question: "",
       options: ["", "", ""], // Reset options
       answer: "",
+      eventId: "",
     });
   };
 
   const handleEdit = (id: string) => {
-    const questionToEdit = questions.find(q => q.id === id);
+    const questionToEdit = questions.find(q => q.eventId === id);
     if (!questionToEdit) return;
 
     const correctAnswer = parseInt(questionToEdit.answer);
@@ -79,12 +82,13 @@ const CreateQuizForm: React.FC = () => {
       question: questionToEdit.question,
       options: [...questionToEdit.options],
       answer: questionToEdit.options[correctAnswer - 1],
+      eventId: questionToEdit.eventId,
     });
     setEditMode(id);
   };
 
   const handleDelete = (id: string) => {
-    const updatedQuestions = questions.filter(q => q.id !== id);
+    const updatedQuestions = questions.filter(q => q.eventId !== id);
     setQuestions(updatedQuestions);
     if (editMode === id) {
       setEditMode(null);
@@ -92,6 +96,7 @@ const CreateQuizForm: React.FC = () => {
         question: "",
         options: ["", "", ""],
         answer: "",
+        eventId: "",
       });
     }
   };
@@ -187,8 +192,8 @@ const CreateQuizForm: React.FC = () => {
           <div className="border border-gray-300 rounded p-4">
             <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
             <ul>
-              {questions.map(({ id, question, options, answer }, index) => (
-                <li key={id} className="mb-4 p-2 border">
+              {questions.map(({ eventId, question, options, answer }, index) => (
+                <li key={eventId} className="mb-4 p-2 border">
                   <p>
                     <strong>Question {index + 1} :</strong> {question}
                   </p>
@@ -206,10 +211,10 @@ const CreateQuizForm: React.FC = () => {
                   <p>
                     <strong>Answer:</strong> {answer}
                   </p>
-                  <button onClick={() => handleEdit(id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
+                  <button onClick={() => handleEdit(eventId)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(id)} className="bg-red-500 text-white px-2 py-1 rounded">
+                  <button onClick={() => handleDelete(eventId)} className="bg-red-500 text-white px-2 py-1 rounded">
                     Delete
                   </button>
                 </li>

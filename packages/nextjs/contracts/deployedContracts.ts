@@ -47,11 +47,6 @@ const deployedContracts = {
               name: "studentLevel",
               type: "uint256",
             },
-            {
-              internalType: "uint256",
-              name: "eventsCompleted",
-              type: "uint256",
-            },
           ],
           stateMutability: "view",
           type: "function",
@@ -61,6 +56,11 @@ const deployedContracts = {
             {
               internalType: "uint256",
               name: "_closingTimestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "_level",
               type: "uint256",
             },
             {
@@ -114,6 +114,11 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
+              name: "level",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
               name: "closingTimestamp",
               type: "uint256",
             },
@@ -151,6 +156,76 @@ const deployedContracts = {
               internalType: "bool",
               name: "overrideClosingTimestamp",
               type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllEvents",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "eventId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "level",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "closingTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "attendeeCount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "eventName",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "eventDescription",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "mentorName",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "mentorAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "address[]",
+                  name: "attendees",
+                  type: "address[]",
+                },
+                {
+                  internalType: "bool",
+                  name: "isActive",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "overrideClosingTimestamp",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct Structs.Event[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
@@ -333,6 +408,7 @@ const deployedContracts = {
         attestationProfile: "contracts/storage/EASOnboardingStorage.sol",
         eventIdCounter: "contracts/storage/EASOnboardingStorage.sol",
         events: "contracts/storage/EASOnboardingStorage.sol",
+        getAllEvents: "contracts/storage/EASOnboardingStorage.sol",
         studentEventMap: "contracts/storage/EASOnboardingStorage.sol",
       },
     },
@@ -665,6 +741,7 @@ const deployedContracts = {
         attestationProfile: "contracts/storage/EASOnboardingStorage.sol",
         eventIdCounter: "contracts/storage/EASOnboardingStorage.sol",
         events: "contracts/storage/EASOnboardingStorage.sol",
+        getAllEvents: "contracts/storage/EASOnboardingStorage.sol",
         studentEventMap: "contracts/storage/EASOnboardingStorage.sol",
       },
     },
