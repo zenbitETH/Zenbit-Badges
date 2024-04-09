@@ -4,6 +4,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import moment from "moment";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FormData {
   name: string;
@@ -22,7 +23,16 @@ const CreateQuizForm: React.FC = () => {
     mentorName: "",
   });
 
-  //   const router = useRouter();
+  const { writeAsync } = useScaffoldContractWrite({
+    contractName: "EASOnboarding",
+    functionName: "createEvent",
+    args: [1n, 1n, "", "", ""],
+    onBlockConfirmation: async txnReceipt => {
+      console.log("txnReceipt for the create Event ", txnReceipt);
+      // attachAttestation();
+    },
+  });
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
@@ -48,44 +58,18 @@ const CreateQuizForm: React.FC = () => {
     if (isValidDate < currentTimestamp) {
       return;
     }
-    // const correctAnswer = parseInt(formData.answer);
-
-    // const newQuestion: Question = {
-    //   ...formData,
-    //   answer: formData.options[correctAnswer - 1],
-    //   eventId: Date.now().toString(),
-    // };
-
-    console.log(formData);
+    writeAsync({
+      args: [BigInt(formData.timeStamp), BigInt(formData.level), formData.name, formData.desc, formData.mentorName],
+    });
 
     setFormData({
       name: "",
-      desc: "", // Reset options
+      desc: "",
       mentorName: "",
       level: 0,
       timeStamp: 0,
     });
   };
-
-  //   const exportQuiz = async (questions: Question[]) => {
-  //     try {
-  //       const response = await fetch("/api/quiz", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(questions),
-  //       });
-
-  //       if (response.ok) {
-  //         router.push("/");
-  //       } else {
-  //         console.error("Failed to export quiz");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error exporting quiz", error);
-  //     }
-  //   };
 
   return (
     <div className="m-10">
