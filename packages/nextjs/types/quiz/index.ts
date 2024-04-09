@@ -4,3 +4,7 @@ export type CreateQuiz = {
   options: string[];
   eventId: string;
 };
+
+export type EventId = {
+  eventId: string;
+};

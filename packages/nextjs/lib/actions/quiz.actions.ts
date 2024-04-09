@@ -1,18 +1,39 @@
-import { CreateQuiz } from "../../types/quiz";
+import { CreateQuiz, EventId } from "../../types/quiz";
 import { connectToDatabase } from "../database";
+import Quiz from "../database/models/quiz.model";
 import { handleError } from "../utils";
 
-export async function createEvent(body: CreateQuiz) {
+export async function createEvent(body: CreateQuiz[]) {
   try {
     await connectToDatabase();
 
-    // const organizer = await User.findById(userId);
-    // if (!organizer) throw new Error("Organizer not found");
+    const result = await Quiz.insertMany(body);
 
-    // const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId });
-    // revalidatePath(path);
+    return JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    handleError(error);
+  }
+}
 
-    return JSON.parse(JSON.stringify(body));
+export async function getEventQuestionByAdmin(body: EventId) {
+  try {
+    await connectToDatabase();
+
+    const result = await Quiz.find({ eventId: body.eventId }, {}, { sort: { createdAt: -1 } });
+
+    return JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+export async function getEventQuestion(body: EventId) {
+  try {
+    await connectToDatabase();
+
+    const result = await Quiz.find({ eventId: body.eventId }, { answer: 0 }, { sort: { createdAt: -1 } });
+
+    return JSON.parse(JSON.stringify(result));
   } catch (error) {
     handleError(error);
   }
