@@ -79,6 +79,12 @@ contract EASOnboarding is EASOnboardingStorage {
         return true;
     }
 
+    function addMentors(address[] memory _newMentors) public isMentorAddress(msg.sender) {
+        for (uint256 i = 0; i < _newMentors.length; i++) {
+            isMentor[_newMentors[i]] = true;
+        }
+    }
+
     function getEthSignedMessageHash(bytes32 _messageHash) public pure returns (bytes32) {
         return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
     }
