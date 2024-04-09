@@ -13,6 +13,8 @@ interface FormData {
   timeStamp: number;
   mentorName: string;
 }
+// TODO need to read the events fro t he contract.
+// Cannot create the contract from the front end
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
