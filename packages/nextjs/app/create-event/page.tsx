@@ -1,105 +1,71 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import moment from "moment";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 
 interface FormData {
-  question: string;
-  options: string[]; // Change the type to array of strings
-  answer: string;
-  eventId: string;
-}
-
-interface Question extends FormData {
-  eventId: string; // Unique identifier for each question
+  name: string;
+  desc: string;
+  level: number;
+  timeStamp: number;
+  mentorName: string;
 }
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    question: "",
-    options: ["", "", ""], // Initialize with empty strings
-    answer: "",
-    eventId: "",
+    name: "",
+    desc: "", // Initialize with empty strings
+    level: 0,
+    timeStamp: 0,
+    mentorName: "",
   });
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [editMode, setEditMode] = useState<string | null>(null);
+
   //   const router = useRouter();
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name === "options") {
-      const optionIndex = Number(e.target.getAttribute("data-index"));
-      const updatedOptions = [...formData.options];
-      updatedOptions[optionIndex] = value;
-      setFormData(prevState => ({
-        ...prevState,
-        options: updatedOptions,
-      }));
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.question || !formData.answer || formData?.options?.length < 3) {
+    if (
+      !formData.name ||
+      !formData.desc ||
+      !formData.mentorName ||
+      formData.level == undefined ||
+      !formData.timeStamp
+    ) {
       return;
     }
-    const correctAnswer = parseInt(formData.answer);
-
-    const newQuestion: Question = {
-      ...formData,
-      answer: formData.options[correctAnswer - 1],
-      eventId: editMode || Date.now().toString(),
-    };
-
-    if (editMode) {
-      const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
-      setQuestions(updatedQuestions);
-      setEditMode(null);
-    } else {
-      setQuestions([...questions, newQuestion]);
+    const isValidDate = moment(formData.timeStamp).isValid();
+    if (!isValidDate) {
+      return;
     }
+    // const correctAnswer = parseInt(formData.answer);
+
+    // const newQuestion: Question = {
+    //   ...formData,
+    //   answer: formData.options[correctAnswer - 1],
+    //   eventId: Date.now().toString(),
+    // };
+
+    console.log(formData);
 
     setFormData({
-      question: "",
-      options: ["", "", ""], // Reset options
-      answer: "",
-      eventId: "",
+      name: "",
+      desc: "", // Reset options
+      mentorName: "",
+      level: 0,
+      timeStamp: 0,
     });
   };
 
-  const handleEdit = (id: string) => {
-    const questionToEdit = questions.find(q => q.eventId === id);
-    if (!questionToEdit) return;
-
-    const correctAnswer = parseInt(questionToEdit.answer);
-
-    setFormData({
-      question: questionToEdit.question,
-      options: [...questionToEdit.options],
-      answer: questionToEdit.options[correctAnswer - 1],
-      eventId: questionToEdit.eventId,
-    });
-    setEditMode(id);
-  };
-
-  const handleDelete = (id: string) => {
-    const updatedQuestions = questions.filter(q => q.eventId !== id);
-    setQuestions(updatedQuestions);
-    if (editMode === id) {
-      setEditMode(null);
-      setFormData({
-        question: "",
-        options: ["", "", ""],
-        answer: "",
-        eventId: "",
-      });
-    }
-  };
   //   const exportQuiz = async (questions: Question[]) => {
   //     try {
   //       const response = await fetch("/api/quiz", {
@@ -125,14 +91,14 @@ const CreateQuizForm: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
           <div className="mb-4">
-            <label htmlFor="question" className="block mb-1">
-              Create Event:
+            <label htmlFor="name" className="block mb-1">
+              Event Name:
             </label>
             <input
               type="text"
-              id="question"
-              name="question"
-              value={formData.question}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-2 py-1"
               required
@@ -140,14 +106,14 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="question" className="block mb-1">
-              Create Event:
+            <label htmlFor="desc" className="block mb-1">
+              Event Description:
             </label>
             <input
               type="text"
-              id="question"
-              name="question"
-              value={formData.question}
+              id="desc"
+              name="desc"
+              value={formData.desc}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-2 py-1"
               required
@@ -155,14 +121,14 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="question" className="block mb-1">
-              Create Event:
+            <label htmlFor="level" className="block mb-1">
+              Level:
             </label>
             <input
-              type="text"
-              id="question"
-              name="question"
-              value={formData.question}
+              type="number"
+              id="level"
+              name="level"
+              value={formData.level}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-2 py-1"
               required
@@ -170,14 +136,14 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="question" className="block mb-1">
-              Create Event:
+            <label htmlFor="timeStamp" className="block mb-1">
+              Closing TimeStamp:
             </label>
             <input
-              type="text"
-              id="question"
-              name="question"
-              value={formData.question}
+              type="number"
+              id="timeStamp"
+              name="timeStamp"
+              value={formData.timeStamp}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-2 py-1"
               required
@@ -185,14 +151,14 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="question" className="block mb-1">
-              Create Event:
+            <label htmlFor="mentorName" className="block mb-1">
+              Mentor Name:
             </label>
             <input
               type="text"
-              id="question"
-              name="question"
-              value={formData.question}
+              id="mentorName"
+              name="mentorName"
+              value={formData.mentorName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-2 py-1"
               required
@@ -200,11 +166,11 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-            {editMode ? "Update Question" : "Add Question"}
+            Add Event
           </button>
         </form>
 
-        {questions.length > 0 && (
+        {/* {questions.length > 0 && (
           <div className="border border-gray-300 rounded p-4">
             <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
             <ul>
@@ -227,17 +193,11 @@ const CreateQuizForm: React.FC = () => {
                   <p>
                     <strong>Answer:</strong> {answer}
                   </p>
-                  <button onClick={() => handleEdit(eventId)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(eventId)} className="bg-red-500 text-white px-2 py-1 rounded">
-                    Delete
-                  </button>
                 </li>
               ))}
             </ul>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
