@@ -8,7 +8,11 @@ type ResponseData = {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   if (req.method === "POST") {
-    // Assuming the body of the request contains your quiz data
+    // Process a POST request
+
+    console.log(req.body);
+
+    res.status(200).json({ message: "Exported quiz successfully" });
   } else {
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);

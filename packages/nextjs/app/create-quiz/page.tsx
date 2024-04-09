@@ -97,7 +97,7 @@ const CreateQuizForm: React.FC = () => {
   };
   const exportQuiz = async (questions: Question[]) => {
     try {
-      const response = await fetch("/api/exportQuiz", {
+      const response = await fetch("/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
