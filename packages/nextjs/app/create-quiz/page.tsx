@@ -67,14 +67,12 @@ const CreateQuizForm: React.FC = () => {
         console.error("Failed to fetch data");
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
   useEffect(() => {
-    if (selectedEvent) {
-      getData();
-    }
+    getData();
   }, [selectedEvent]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,14 +85,14 @@ const CreateQuizForm: React.FC = () => {
     const newQuestion: Question = {
       ...formData,
       answer: formData.options[correctAnswer - 1],
-      eventId: editMode || selectedEvent,
+      eventId: selectedEvent,
     };
 
     if (editMode) {
       // const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
       // setQuestions(updatedQuestions);
 
-      const response = await fetch(`/api/quiz?id=${selectedEvent}`, {
+      const response = await fetch(`/api/quiz?id=${editMode}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +112,6 @@ const CreateQuizForm: React.FC = () => {
       } else {
         console.error("Failed to update question");
       }
-      // Edit the question
     } else {
       const response = await fetch("/api/quiz", {
         method: "POST",
@@ -139,18 +136,17 @@ const CreateQuizForm: React.FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    const questionToEdit = data.find((q: { eventId: string }) => q.eventId === id);
-    if (!questionToEdit) return;
+    const questionToEdit = data.find((q: { _id: string }) => q._id == id);
 
-    const correctAnswer = parseInt(questionToEdit.answer);
+    if (!questionToEdit) return;
 
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: questionToEdit.options[correctAnswer - 1],
+      answer: "",
       eventId: questionToEdit.eventId,
     });
-    setEditMode(id);
+    setEditMode(questionToEdit._id);
   };
 
   const handleDelete = (id: string) => {
@@ -255,7 +251,8 @@ const CreateQuizForm: React.FC = () => {
                       question,
                       options,
                       answer,
-                    }: { eventId: string; question: string; options: string[]; answer: string },
+                      _id,
+                    }: { eventId: string; question: string; options: string[]; answer: string; _id: string },
                     index: number,
                   ) => (
                     <li key={eventId} className="mb-4 p-2 border">
@@ -276,10 +273,7 @@ const CreateQuizForm: React.FC = () => {
                       <p>
                         <strong>Answer:</strong> {answer}
                       </p>
-                      <button
-                        onClick={() => handleEdit(eventId)}
-                        className="mr-2 bg-blue-500 text-white px-2 py-1 rounded"
-                      >
+                      <button onClick={() => handleEdit(_id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                         Edit
                       </button>
                       <button onClick={() => handleDelete(eventId)} className="bg-red-500 text-white px-2 py-1 rounded">

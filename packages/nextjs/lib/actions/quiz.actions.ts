@@ -39,7 +39,7 @@ export async function getEventQuestion(body: EventId) {
   }
 }
 
-export async function updateQuestion(body: EventId, id: string) {
+export async function updateQuestion(body: CreateQuiz, id: string) {
   try {
     await connectToDatabase();
 
