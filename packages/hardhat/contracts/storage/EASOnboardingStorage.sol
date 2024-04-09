@@ -15,7 +15,7 @@ contract EASOnboardingStorage {
     function getAllEvents() public view returns (Structs.Event[] memory) {
         Structs.Event[] memory eventsArray = new Structs.Event[](eventIdCounter - 1);
         for (uint256 i = 1; i < eventIdCounter; i++) {
-            eventsArray[i] = events[i];
+            eventsArray[i-1] = events[i];
         }
         return eventsArray;
     }
