@@ -28,7 +28,7 @@ const CreateQuizForm: React.FC = () => {
     answer: "",
     eventId: "",
   });
-  const [questions, setQuestions] = useState<Question[]>([]);
+
   const [editMode, setEditMode] = useState<string | null>(null);
   // const router = useRouter();
   const [data, setData] = useState<any>([]);
@@ -149,17 +149,29 @@ const CreateQuizForm: React.FC = () => {
     setEditMode(questionToEdit._id);
   };
 
-  const handleDelete = (id: string) => {
-    const updatedQuestions = questions.filter(q => q.eventId !== id);
-    setQuestions(updatedQuestions);
-    if (editMode === id) {
-      setEditMode(null);
-      setFormData({
-        question: "",
-        options: ["", "", ""],
-        answer: "",
-        eventId: "",
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/quiz?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (response.ok) {
+        getData();
+        setEditMode(null);
+        setFormData({
+          question: "",
+          options: ["", "", ""],
+          answer: "",
+          eventId: "",
+        });
+      } else {
+        console.error("Failed to delete question");
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -276,7 +288,7 @@ const CreateQuizForm: React.FC = () => {
                       <button onClick={() => handleEdit(_id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                         Edit
                       </button>
-                      <button onClick={() => handleDelete(eventId)} className="bg-red-500 text-white px-2 py-1 rounded">
+                      <button onClick={() => handleDelete(_id)} className="bg-red-500 text-white px-2 py-1 rounded">
                         Delete
                       </button>
                     </li>
