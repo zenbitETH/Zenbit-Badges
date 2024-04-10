@@ -1,4 +1,4 @@
-import { CreateQuiz, EventId } from "../../types/quiz";
+import { CreateQuiz, EventId, MyObject } from "../../types/quiz";
 import { connectToDatabase } from "../database";
 import Quiz from "../database/models/quiz.model";
 import { handleError } from "../utils";
@@ -62,6 +62,32 @@ export async function deletedQuestion(id: string) {
     await Quiz.findOneAndUpdate({ _id: id }, { isActive: false }, { new: true });
 
     return true;
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+export async function checkAnswer(body: MyObject) {
+  try {
+    await connectToDatabase();
+
+    const getAllQuestions = await Quiz.find({
+      eventId: body.eventId,
+      isActive: true,
+    }).lean();
+
+    const values: Record<string, string> = body.value;
+    let count = 0;
+    getAllQuestions.map(q => {
+      if (q.answer == values[q._id as string]) {
+        count++;
+      }
+    });
+
+    if (count > 0 && count == getAllQuestions.length) {
+      return JSON.parse(JSON.stringify(true));
+    }
+    return JSON.parse(JSON.stringify(false));
   } catch (error) {
     handleError(error);
   }

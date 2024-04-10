@@ -3,8 +3,9 @@ export interface Question {
   question: string;
   options: string[];
   answer: string;
+  _id: string;
 }
 
 export interface Answers {
-  [key: number]: string;
+  [key: string]: string;
 }

@@ -35,6 +35,19 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "address[]",
+              name: "_newMentors",
+              type: "address[]",
+            },
+          ],
+          name: "addMentors",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "",
               type: "address",
