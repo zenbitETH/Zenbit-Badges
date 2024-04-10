@@ -52,6 +52,7 @@ const CreateQuizForm: React.FC = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
         },
       });
 
@@ -91,6 +92,7 @@ const CreateQuizForm: React.FC = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
         },
         body: JSON.stringify(newQuestion),
       });
@@ -112,6 +114,7 @@ const CreateQuizForm: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
         },
         body: JSON.stringify(newQuestion),
       });
@@ -155,6 +158,7 @@ const CreateQuizForm: React.FC = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
         },
       });
 

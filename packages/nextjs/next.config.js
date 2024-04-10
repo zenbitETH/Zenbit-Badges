@@ -9,6 +9,8 @@ const nextConfig = {
   env: {
     // @ts-ignore
     PRIVATE_KEY: process.env.PRIVATE_KEY,
+    // @ts-ignore
+    API_KEY: process.env.API_KEY,
   },
   eslint: {
     ignoreDuringBuilds: process.env.NEXT_PUBLIC_IGNORE_BUILD_ERROR === "true",

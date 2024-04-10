@@ -32,6 +32,7 @@ const Quiz = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
         },
       });
       const data = await response.json();
@@ -137,6 +138,7 @@ const Quiz = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-api-key": process.env.API_KEY || "",
       },
       body: JSON.stringify({ eventId: eventId, value: answers }),
     });
