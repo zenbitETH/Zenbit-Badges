@@ -117,7 +117,8 @@ const Quiz = () => {
 
   // const [selectedValueMentor, setSelectedValueMentor] = useState("");
   // const { address: connectedAddress } = useAccount();
-  const handleOptionChange = (questionIndex: number, option: string) => {
+  const handleOptionChange = (questionIndex: string, option: string) => {
+    console.log("questionIndex", questionIndex, option);
     setAnswers({
       ...answers,
       [questionIndex]: option,
@@ -175,7 +176,7 @@ const Quiz = () => {
                   question={question}
                   questionIndex={index}
                   handleOptionChange={handleOptionChange}
-                  answer={answers[index]}
+                  answer={answers[(question as { _id: string })?._id]}
                 />
               );
             })}

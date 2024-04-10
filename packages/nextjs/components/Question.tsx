@@ -6,7 +6,7 @@ import { Question } from "~~/utils/scaffold-eth/quiz";
 interface QuestionProps {
   question: Question;
   questionIndex: number;
-  handleOptionChange: (questionIndex: number, option: string) => void;
+  handleOptionChange: (questionIndex: string, option: string) => void;
   answer?: string;
 }
 
@@ -25,7 +25,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, h
               name={`question-${questionIndex}`}
               value={option}
               checked={answer === option}
-              onChange={() => handleOptionChange(questionIndex, option)}
+              onChange={() => handleOptionChange(question?._id, option)}
             />
             {option}
           </label>
