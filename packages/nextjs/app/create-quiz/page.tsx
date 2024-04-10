@@ -50,6 +50,7 @@ const CreateQuizForm: React.FC = () => {
 
   const getData = async () => {
     try {
+      if (selectedEvent === "") return;
       const canAccess = checkQuizAccess();
       if (canAccess) {
         const response = await fetch(`/api/quiz?id=${selectedEvent}`, {
@@ -200,6 +201,7 @@ const CreateQuizForm: React.FC = () => {
     const questionToEdit = eventData?.find((q: { mentorAddress: string }) => q.mentorAddress == connectedAddress);
 
     if (!questionToEdit) {
+      alert("You are not authorized to create/edit questions for this event");
       throw new Error("You are not authorized to create quiz");
     } else return true;
   };
