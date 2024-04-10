@@ -16,10 +16,9 @@ const Home = () => {
   //   functionName: "eventIdCounter",
   // });
   const router = useRouter();
-  const { data: eventDetails } = useScaffoldContractRead({
+  const { data: events } = useScaffoldContractRead({
     contractName: "EASOnboarding",
-    functionName: "events",
-    args: [1n],
+    functionName: "getAllEvents",
   });
 
   const { data: userData } = useScaffoldContractRead({
@@ -31,38 +30,41 @@ const Home = () => {
   return (
     <>
       <div className="flex items-center justify-center pt-10">
-        {eventDetails && eventDetails[0] !== BigInt(0) ? (
-          <div
-            className={`border ${
-              userData ? "border-green-500" : userData == false ? "border-red-300" : "border-gray-300"
-            } rounded-lg shadow-md p-6 max-w-xl`}
-            onClick={() => {
-              if (!userData && connectedAddress) {
-                router.push("/quiz");
-              }
-            }}
-          >
-            <div>
-              <div>
-                <strong>Expiry:</strong> {Number(eventDetails[1])}
-              </div>
-              <div>
-                <strong>Title:</strong> {String(eventDetails[3])}
-              </div>
-              <div>
-                <strong>Description:</strong> {String(eventDetails[4])}
-              </div>
-              <div>
-                <strong>Mentor:</strong> {String(eventDetails[5])}
-              </div>
-              <div>
-                <strong>Address:</strong> {eventDetails[6]}
-              </div>
-            </div>
-          </div>
-        ) : (
-          "No events available"
-        )}
+        {events
+          ? events?.map(eventDetails => {
+              return (
+                // eslint-disable-next-line react/jsx-key
+                <div
+                  className={`border ${
+                    userData ? "border-green-500" : userData == false ? "border-red-300" : "border-gray-300"
+                  } rounded-lg shadow-md p-6 max-w-xl`}
+                  onClick={() => {
+                    if (!userData && connectedAddress) {
+                      router.push(`/quiz?eventId=${eventDetails.eventId.toString()}`);
+                    }
+                  }}
+                >
+                  <div>
+                    <div>
+                      <strong>Expiry:</strong> {Number(eventDetails.closingTimestamp)}
+                    </div>
+                    <div>
+                      <strong>Title:</strong> {String(eventDetails.eventName)}
+                    </div>
+                    <div>
+                      <strong>Description:</strong> {String(eventDetails.eventDescription)}
+                    </div>
+                    <div>
+                      <strong>Mentor:</strong> {String(eventDetails.mentorName)}
+                    </div>
+                    <div>
+                      <strong>Level:</strong> {eventDetails.level.toString()}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          : "No events available"}
       </div>
     </>
   );

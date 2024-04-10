@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { Wallet, hashMessage } from "ethers";
 import { useAccount } from "wagmi";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import questions from "~~/quiz/quizzes.json";
 // import Question from "~/components/Question";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
@@ -19,6 +19,28 @@ const eas = new EAS(easContractAddress);
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const { eventId = "" } = searchParams ? Object.fromEntries(searchParams) : {};
+  if (!eventId) {
+    router.push("/");
+  }
+  const [questions, setQuestions] = useState([]);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const response = await fetch(`/api/userQuiz?id=${eventId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      setQuestions(data?.data || []);
+    };
+    fetchQuestions();
+  }, [eventId]);
+
   const { data: userData } = useScaffoldContractRead({
     contractName: "EASOnboarding",
     functionName: "studentEventMap",
@@ -145,15 +167,17 @@ const Quiz = () => {
       {questions.length > 0 ? (
         <div className="min-w-xl max-w-xl rounded-lg">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {questions.map((question, index) => (
-              <QuestionComponent
-                key={index}
-                question={question}
-                questionIndex={index}
-                handleOptionChange={handleOptionChange}
-                answer={answers[index]}
-              />
-            ))}
+            {questions.map((question, index) => {
+              return (
+                <QuestionComponent
+                  key={index}
+                  question={question}
+                  questionIndex={index}
+                  handleOptionChange={handleOptionChange}
+                  answer={answers[index]}
+                />
+              );
+            })}
 
             <div className="flex justify-center align-middle items-center">
               <div className="mr-10">Mentor</div>
