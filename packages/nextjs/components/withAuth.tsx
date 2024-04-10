@@ -12,9 +12,11 @@ export const withAuth = (WrappedComponent: React.FC<any>) => {
       return <ErrorPage statusCode={404} />;
     }
     if (
-      !["0x4e087b926a0752c23b4dA800424547f5932bBD0c", "0xdA7773E91a396d592AD33146164dA6d7d2Fda9B6"].includes(
-        connectedAddress,
-      ) &&
+      ![
+        "0x4e087b926a0752c23b4dA800424547f5932bBD0c",
+        "0xdA7773E91a396d592AD33146164dA6d7d2Fda9B6",
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      ].includes(connectedAddress) &&
       (pathname == "/create-quiz" || pathname == "/create-event")
     ) {
       return <ErrorPage statusCode={404} />;

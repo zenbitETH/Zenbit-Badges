@@ -3,6 +3,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 interface FormData {
   question: string;
@@ -14,12 +15,6 @@ interface FormData {
 interface Question extends FormData {
   eventId: string; // Unique identifier for each question
 }
-const options = [
-  {
-    eventId: "1",
-    eventName: "Event 1",
-  },
-];
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -135,6 +130,11 @@ const CreateQuizForm: React.FC = () => {
     }
   };
 
+  const { data: eventData } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "getAllEvents",
+  });
+
   const handleEdit = (id: string) => {
     const questionToEdit = data.find((q: { _id: string }) => q._id == id);
 
@@ -186,12 +186,13 @@ const CreateQuizForm: React.FC = () => {
           setSelectedEvent(selectedValue);
         }}
       >
-        <option value="">Please Select</option> {/* Add this option */}
-        {options.map((option, index) => (
-          <option key={index} value={option.eventId}>
-            {option.eventName}
-          </option>
-        ))}
+        <option value="">Please Select</option>
+        {eventData &&
+          eventData?.map((option, index) => (
+            <option key={index} value={option.eventId.toString()}>
+              {option.eventName}
+            </option>
+          ))}
       </select>
       {selectedEvent && (
         <div className="max-w-4xl mx-auto">
