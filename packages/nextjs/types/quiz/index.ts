@@ -8,3 +8,7 @@ export type CreateQuiz = {
 export type EventId = {
   eventId: string;
 };
+export interface MyObject {
+  eventId: string;
+  value: Record<string, string>;
+}

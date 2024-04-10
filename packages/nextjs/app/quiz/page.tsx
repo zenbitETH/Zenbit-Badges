@@ -54,7 +54,7 @@ const Quiz = () => {
   const { data: eventDetails } = useScaffoldContractRead({
     contractName: "EASOnboarding",
     functionName: "events",
-    args: [1n],
+    args: [BigInt(eventId)],
   });
 
   const { writeAsync } = useScaffoldContractWrite({
@@ -131,16 +131,17 @@ const Quiz = () => {
     setAllQuestionsAnswered(answeredQuestionsCount == questions.length);
   }, [answers, questions]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const score = questions.reduce((total, question, index) => {
-      if (answers[index] === (question as any)?.answer) {
-        return total + 1;
-      }
-      return total;
-    }, 0);
-    console.log("score", score, questions);
-    if (score == questions?.length) {
+    const response = await fetch("/api/userQuiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ eventId: eventId, value: answers }),
+    });
+    const result = await response.json();
+    if (result && result.data) {
       onSubmit();
     } else {
       router.push("/");
@@ -149,16 +150,18 @@ const Quiz = () => {
   function arrayify(msgHash: string): Uint8Array {
     return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
   }
+
   const onSubmit = async () => {
     const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
     const msgHash = hashMessage(msg + connectedAddress);
-    const privateKey = ""; // TODO add the private key
+    const privateKey = process.env.PRIVATE_KEY ?? ""; // Provide a default value for privateKey
+
     const wallet = new Wallet(privateKey);
     const signature = await wallet.signMessage(arrayify(msgHash));
 
     if (msgHash && signature) {
       writeAsync({
-        args: [1n, 1n, msgHash as `0x${string}`, signature as `0x${string}`],
+        args: [BigInt(eventId), eventDetails?.[1], msgHash as `0x${string}`, signature as `0x${string}`],
       });
     }
   };
