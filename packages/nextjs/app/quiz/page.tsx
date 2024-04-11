@@ -44,11 +44,11 @@ const Quiz = () => {
 
   const { data: userData } = useScaffoldContractRead({
     contractName: "EASOnboarding",
-    functionName: "studentEventMap",
-    args: [connectedAddress, 1n],
+    functionName: "getEventsCompleted",
+    args: [connectedAddress],
   });
 
-  if (userData) {
+  if (userData && userData[1].includes(BigInt(eventId))) {
     router.push("/");
   }
 
@@ -57,6 +57,10 @@ const Quiz = () => {
     functionName: "events",
     args: [BigInt(eventId)],
   });
+
+  if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
+    router.push("/");
+  }
 
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",
