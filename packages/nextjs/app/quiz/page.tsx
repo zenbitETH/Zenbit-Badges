@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useSigner } from "~~/hooks/scaffold-eth/useEther";
 // import Question from "~/components/Question";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
@@ -19,7 +20,7 @@ const eas = new EAS(easContractAddress);
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const router = useRouter();
-
+  const signer = useSigner();
   const searchParams = useSearchParams();
   const { eventId = "" } = searchParams ? Object.fromEntries(searchParams) : {};
   if (!eventId) {
@@ -84,17 +85,18 @@ const Quiz = () => {
 
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
-      const wallet = new Wallet(""); //TODO  Not able to send the signer
-      await eas.connect(wallet);
+      if (signer) {
+        eas.connect(signer);
+      }
       // Initialize SchemaEncoder with the schema string
       const schemaEncoder = new SchemaEncoder(
         "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
       );
       const encodedData = schemaEncoder.encodeData([
-        { name: "Event_ID", value: eventDetails[0], type: "uint256" },
-        { name: "Event_Name", value: eventDetails[3], type: "string" },
-        { name: "Description", value: eventDetails[4], type: "string" },
-        { name: "Mentor_Name", value: eventDetails[5], type: "string" },
+        { name: "Event_ID", value: eventDetails[1], type: "uint256" },
+        { name: "Event_Name", value: eventDetails[5], type: "string" },
+        { name: "Description", value: eventDetails[6], type: "string" },
+        { name: "Mentor_Name", value: eventDetails[7], type: "string" },
       ]);
       const tx = await eas.attest({
         schema: schemaUID,
