@@ -1,20 +1,21 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+
+// import { useAccount } from "wagmi";
+// import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 const Profile = () => {
   const router = useRouter();
-  const { address: connectedAddress } = useAccount();
+  // const { address: connectedAddress } = useAccount();
 
-  const { data: eventDetails } = useScaffoldContractRead({
-    contractName: "EASOnboarding",
-    functionName: "events",
-    args: [1n],
-  });
+  // const { data: eventDetails } = useScaffoldContractRead({
+  //   contractName: "EASOnboarding",
+  //   functionName: "events",
+  //   args: [1n],
+  // });
 
   // const { data: attestationData } = useScaffoldContractRead({
   //   contractName: "EASOnboarding",
@@ -24,7 +25,7 @@ const Profile = () => {
   return (
     <div>
       <div className="flex items-center justify-center mt-40">
-        {eventDetails && eventDetails[0] != 0n && (
+        {/* {eventDetails && eventDetails[0] != 0n && (
           <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg">
             <div className="px-6 py-6">
               <div className="flex justify-center items-center">
@@ -51,11 +52,11 @@ const Profile = () => {
                 <p className="text-sm">{connectedAddress}</p>
 
                 <p className="text-sm">Mentor</p>
-                {/* //TODO  Add the mentor name from the attestation granted */}
+
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
       <div className="mt-6 flex justify-center">
         <button

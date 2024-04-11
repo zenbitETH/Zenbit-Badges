@@ -77,6 +77,11 @@ const deployedContracts = {
               type: "uint256",
             },
             {
+              internalType: "uint8",
+              name: "_type",
+              type: "uint8",
+            },
+            {
               internalType: "string",
               name: "_eventName",
               type: "string",
@@ -120,6 +125,11 @@ const deployedContracts = {
           ],
           name: "events",
           outputs: [
+            {
+              internalType: "uint8",
+              name: "typeOf",
+              type: "uint8",
+            },
             {
               internalType: "uint256",
               name: "eventId",
@@ -180,6 +190,11 @@ const deployedContracts = {
           outputs: [
             {
               components: [
+                {
+                  internalType: "uint8",
+                  name: "typeOf",
+                  type: "uint8",
+                },
                 {
                   internalType: "uint256",
                   name: "eventId",
@@ -295,6 +310,35 @@ const deployedContracts = {
             },
           ],
           stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_studentAddress",
+              type: "address",
+            },
+          ],
+          name: "getEventsCompleted",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "_studentLevel",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+            {
+              internalType: "bytes32[]",
+              name: "",
+              type: "bytes32[]",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -422,6 +466,7 @@ const deployedContracts = {
         eventIdCounter: "contracts/storage/EASOnboardingStorage.sol",
         events: "contracts/storage/EASOnboardingStorage.sol",
         getAllEvents: "contracts/storage/EASOnboardingStorage.sol",
+        getEventsCompleted: "contracts/storage/EASOnboardingStorage.sol",
         studentEventMap: "contracts/storage/EASOnboardingStorage.sol",
       },
     },
@@ -755,6 +800,7 @@ const deployedContracts = {
         eventIdCounter: "contracts/storage/EASOnboardingStorage.sol",
         events: "contracts/storage/EASOnboardingStorage.sol",
         getAllEvents: "contracts/storage/EASOnboardingStorage.sol",
+        getEventsCompleted: "contracts/storage/EASOnboardingStorage.sol",
         studentEventMap: "contracts/storage/EASOnboardingStorage.sol",
       },
     },

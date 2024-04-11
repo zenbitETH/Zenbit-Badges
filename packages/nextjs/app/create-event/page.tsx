@@ -12,6 +12,7 @@ interface FormData {
   level: number;
   timeStamp: number;
   mentorName: string;
+  type: number;
 }
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
@@ -23,12 +24,13 @@ const CreateQuizForm: React.FC = () => {
     level: 0,
     timeStamp: 0,
     mentorName: "",
+    type: 1,
   });
 
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",
     functionName: "createEvent",
-    args: [1n, 1n, "", "", ""],
+    args: [1n, 1n, 1, "", "", ""],
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt for the create Event ", txnReceipt);
       // attachAttestation();
@@ -61,7 +63,14 @@ const CreateQuizForm: React.FC = () => {
       return;
     }
     writeAsync({
-      args: [BigInt(formData.timeStamp), BigInt(formData.level), formData.name, formData.desc, formData.mentorName],
+      args: [
+        BigInt(formData.timeStamp),
+        BigInt(formData.level),
+        formData.type,
+        formData.name,
+        formData.desc,
+        formData.mentorName,
+      ],
     });
 
     setFormData({
@@ -70,6 +79,7 @@ const CreateQuizForm: React.FC = () => {
       mentorName: "",
       level: 0,
       timeStamp: 0,
+      type: 1,
     });
   };
 
@@ -128,6 +138,23 @@ const CreateQuizForm: React.FC = () => {
           </div>
 
           <div className="mb-4">
+            <label htmlFor="level" className="block mb-1">
+              Type of Questions:
+            </label>
+            <select
+              id="answer"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded px-2 py-1"
+              required
+            >
+              <option value={1}>MCQ </option>
+              <option value={2}>Only Questions</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="timeStamp" className="block mb-1">
               Closing TimeStamp:
             </label>
@@ -166,25 +193,30 @@ const CreateQuizForm: React.FC = () => {
           <div className="border border-gray-300 rounded p-4">
             <h2 className="text-lg font-semibold mb-2">Created Events:</h2>
             <ul>
-              {eventData.map(({ eventId, eventName, eventDescription, mentorName, level, closingTimestamp }, index) => (
-                <li key={eventId} className="mb-4 p-2 border">
-                  <p>
-                    <strong>Event {index + 1} :</strong> {eventName}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {eventDescription}
-                  </p>
-                  <p>
-                    <strong>mentorName:</strong> {mentorName}
-                  </p>
-                  <p>
-                    <strong>Level:</strong> {String(level)}
-                  </p>
-                  <p>
-                    <strong>TimeStamp:</strong> {String(closingTimestamp)}
-                  </p>
-                </li>
-              ))}
+              {eventData.map(
+                ({ eventId, eventName, typeOf, eventDescription, mentorName, level, closingTimestamp }, index) => (
+                  <li key={eventId} className="mb-4 p-2 border">
+                    <p>
+                      <strong>Event {index + 1} :</strong> {eventName}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {eventDescription}
+                    </p>
+                    <p>
+                      <strong>mentorName:</strong> {mentorName}
+                    </p>
+                    <p>
+                      <strong>Level:</strong> {String(level)}
+                    </p>
+                    <p>
+                      <strong>Type of Question :</strong> {typeOf == 1 ? "MCQ" : "Only Questions"}
+                    </p>
+                    <p>
+                      <strong>TimeStamp:</strong> {String(closingTimestamp)}
+                    </p>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         )}
