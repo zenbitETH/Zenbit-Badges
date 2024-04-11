@@ -81,7 +81,11 @@ const CreateQuizForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      if (!formData.question || !formData.answer || formData?.options?.length < 3) {
+      if (selectEventType == 1 && (!formData.question || !formData.answer || formData?.options?.length < 3)) {
+        alert("Please enter question, options and answer");
+        return;
+      } else if (selectEventType == 2 && !formData.question) {
+        alert("Please enter question");
         return;
       }
       const correctAnswer = parseInt(formData.answer);
@@ -261,7 +265,6 @@ const CreateQuizForm: React.FC = () => {
                         value={option}
                         onChange={handleChange}
                         className="w-full border border-gray-300 rounded px-2 py-1"
-                        required
                       />
                     </div>
                   ))}
@@ -276,7 +279,6 @@ const CreateQuizForm: React.FC = () => {
                     value={formData.answer}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded px-2 py-1"
-                    required
                   >
                     <option value="">Select correct answer</option>
                     <option value={1}>Option 1</option>
@@ -310,21 +312,24 @@ const CreateQuizForm: React.FC = () => {
                         <strong>Question {index + 1} :</strong> {question}
                       </p>
                       {selectEventType == 1 && (
-                        <p>
-                          <strong>Options:</strong>
-                          {options?.map((option, key) => {
-                            return (
-                              <span key={key}>
-                                {key + 1}:{option}
-                                {"            "}
-                              </span>
-                            );
-                          })}
-                        </p>
+                        <>
+                          <p>
+                            <strong>Options:</strong>
+                            {options?.map((option, key) => {
+                              return (
+                                <span key={key}>
+                                  {key + 1}:{option}
+                                  {"            "}
+                                </span>
+                              );
+                            })}
+                          </p>
+                          <p>
+                            <strong>Answer:</strong> {answer}
+                          </p>
+                        </>
                       )}
-                      <p>
-                        <strong>Answer:</strong> {answer}
-                      </p>
+
                       <button onClick={() => handleEdit(_id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
                         Edit
                       </button>

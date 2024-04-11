@@ -7,7 +7,6 @@ const CategorySchema = new Schema({
   },
   answer: {
     type: String,
-    required: true,
   },
   options: [
     {
