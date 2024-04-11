@@ -47,12 +47,14 @@ contract EASOnboarding is EASOnboardingStorage {
     function createEvent(
         uint256 _closingTimestamp,
         uint256 _level,
+        uint8 _type,
         string memory _eventName,
         string memory _eventDescription,
         string memory _mentorName
     ) public isMentorAddress(msg.sender) {
         require(_closingTimestamp > block.timestamp, "Closing timestamp cannot be in the past.");
 
+        events[eventIdCounter].typeOf = _type;
         events[eventIdCounter].eventId = eventIdCounter;
         events[eventIdCounter].level = _level;
         events[eventIdCounter].closingTimestamp = _closingTimestamp;

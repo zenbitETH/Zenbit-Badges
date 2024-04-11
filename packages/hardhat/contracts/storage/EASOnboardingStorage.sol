@@ -15,8 +15,21 @@ contract EASOnboardingStorage {
     function getAllEvents() public view returns (Structs.Event[] memory) {
         Structs.Event[] memory eventsArray = new Structs.Event[](eventIdCounter - 1);
         for (uint256 i = 1; i < eventIdCounter; i++) {
-            eventsArray[i-1] = events[i];
+            eventsArray[i - 1] = events[i];
         }
         return eventsArray;
+    }
+    // Function to get eventsCompleted
+
+    function getEventsCompleted(address _studentAddress)
+        public
+        view
+        returns (uint256 _studentLevel, uint256[] memory, bytes32[] memory)
+    {
+        return (
+            attestationProfile[_studentAddress].studentLevel,
+            attestationProfile[_studentAddress].eventsCompleted,
+            attestationProfile[_studentAddress].attestations
+        );
     }
 }

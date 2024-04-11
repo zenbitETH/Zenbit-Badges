@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 library Structs {
     struct Event {
+        uint8 typeOf;
         uint256 eventId;
         uint256 level;
         uint256 closingTimestamp;
