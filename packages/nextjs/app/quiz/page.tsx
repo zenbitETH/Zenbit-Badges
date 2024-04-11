@@ -123,7 +123,6 @@ const Quiz = () => {
   // const [selectedValueMentor, setSelectedValueMentor] = useState("");
   // const { address: connectedAddress } = useAccount();
   const handleOptionChange = (questionIndex: string, option: string) => {
-    console.log("questionIndex", questionIndex, option);
     setAnswers({
       ...answers,
       [questionIndex]: option,
@@ -138,20 +137,25 @@ const Quiz = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const response = await fetch("/api/userQuiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.API_KEY || "",
-      },
-      body: JSON.stringify({ eventId: eventId, value: answers }),
-    });
-    const result = await response.json();
-    if (result && result.data) {
-      onSubmit();
-    } else {
-      router.push("/");
+    if (eventDetails?.[0] == 1) {
+      const response = await fetch("/api/userQuiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
+        },
+        body: JSON.stringify({ eventId: eventId, value: answers }),
+      });
+      const result = await response.json();
+      if (result && result.data) {
+        onSubmit();
+      } else {
+        alert("All answers are not correct. Please retry the quiz");
+        router.push("/");
+      }
     }
+
+    // TODO handle for the only only questions type
   };
   function arrayify(msgHash: string): Uint8Array {
     return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
@@ -167,7 +171,7 @@ const Quiz = () => {
 
     if (msgHash && signature) {
       writeAsync({
-        args: [BigInt(eventId), eventDetails?.[1], msgHash as `0x${string}`, signature as `0x${string}`],
+        args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
       });
     }
   };
@@ -186,6 +190,7 @@ const Quiz = () => {
                   questionIndex={index}
                   handleOptionChange={handleOptionChange}
                   answer={answers[(question as { _id: string })?._id]}
+                  eventData={eventDetails}
                 />
               );
             })}

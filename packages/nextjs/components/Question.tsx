@@ -8,29 +8,49 @@ interface QuestionProps {
   questionIndex: number;
   handleOptionChange: (questionIndex: string, option: string) => void;
   answer?: string;
+  eventData: any;
 }
 
-const QuestionComponent: React.FC<QuestionProps> = ({ question, questionIndex, handleOptionChange, answer }) => {
+const QuestionComponent: React.FC<QuestionProps> = ({
+  question,
+  questionIndex,
+  handleOptionChange,
+  answer,
+  eventData,
+}) => {
   return (
     <div className="p-6 border rounded-lg mb-6">
       <h3 className="text-lg font-semibold mb-4">
         {questionIndex + 1}. {question.question}
       </h3>
-      <div className="flex justify-between">
-        {question.options.map((option, index) => (
-          <label key={index} className="flex items-center ">
-            <input
-              type="radio"
-              className="mr-2"
-              name={`question-${questionIndex}`}
-              value={option}
-              checked={answer === option}
-              onChange={() => handleOptionChange(question?._id, option)}
-            />
-            {option}
-          </label>
-        ))}
-      </div>
+      {eventData[0] == 1 && (
+        <div className="flex justify-between">
+          {question.options.map((option, index) => (
+            <label key={index} className="flex items-center ">
+              <input
+                type="radio"
+                className="mr-2"
+                name={`question-${questionIndex}`}
+                value={option}
+                checked={answer === option}
+                onChange={() => handleOptionChange(question?._id, option)}
+              />
+              {option}
+            </label>
+          ))}
+        </div>
+      )}
+      {eventData[0] == 2 && (
+        <div className="flex justify-between">
+          <input
+            type="text"
+            className="mr-2"
+            name={`question-${questionIndex}`}
+            value={answer}
+            onChange={e => handleOptionChange(question?._id, e.target.value)}
+          />
+        </div>
+      )}
     </div>
   );
 };
