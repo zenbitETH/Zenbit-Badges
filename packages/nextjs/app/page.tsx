@@ -23,8 +23,8 @@ const Home = () => {
 
   const { data: userData } = useScaffoldContractRead({
     contractName: "EASOnboarding",
-    functionName: "studentEventMap",
-    args: [connectedAddress, 1n],
+    functionName: "getEventsCompleted",
+    args: [connectedAddress],
   });
 
   return (
@@ -36,10 +36,14 @@ const Home = () => {
                 // eslint-disable-next-line react/jsx-key
                 <div
                   className={`border ${
-                    userData ? "border-green-500" : userData == false ? "border-red-300" : "border-gray-300"
+                    userData && userData?.[1].includes(eventDetails?.eventId) ? "border-green-500" : "border-gray-300"
                   } rounded-lg shadow-md p-6 max-w-xl`}
                   onClick={() => {
-                    if (!userData && connectedAddress) {
+                    if (
+                      !userData?.[1].includes(eventDetails?.eventId) &&
+                      connectedAddress &&
+                      eventDetails.level <= (userData?.[0] ?? 0)
+                    ) {
                       router.push(`/quiz?eventId=${eventDetails.eventId.toString()}`);
                     }
                   }}
