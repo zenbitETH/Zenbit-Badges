@@ -30,6 +30,7 @@ const CreateQuizForm: React.FC = () => {
   // const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
+  const [selectEventType, setSelectedEventType] = useState<number>(0);
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "options") {
@@ -210,10 +211,12 @@ const CreateQuizForm: React.FC = () => {
     <div className="m-10">
       <label htmlFor="pet-select">Choose Event</label>
       <select
-        name="pets"
-        id="pet-select"
+        name="events"
+        id="eventId"
         onChange={e => {
           const selectedValue = e.target.value;
+          const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
+          setSelectedEventType(selectedEventData?.typeOf || 0);
           setSelectedEvent(selectedValue);
         }}
       >
@@ -242,43 +245,47 @@ const CreateQuizForm: React.FC = () => {
                 required
               />
             </div>
-            <div className="flex mb-4">
-              {formData.options.map((option, index) => (
-                <div key={index} className="w-1/3 mr-2">
-                  <label htmlFor={`option${index + 1}`} className="block mb-1">
-                    Option {index + 1}:
+            {selectEventType == 1 && (
+              <>
+                <div className="flex mb-4">
+                  {formData.options.map((option, index) => (
+                    <div key={index} className="w-1/3 mr-2">
+                      <label htmlFor={`option${index + 1}`} className="block mb-1">
+                        Option {index + 1}:
+                      </label>
+                      <input
+                        type="text"
+                        id={`option${index + 1}`}
+                        name="options"
+                        data-index={index}
+                        value={option}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded px-2 py-1"
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="answer" className="block mb-1">
+                    Correct Answer:
                   </label>
-                  <input
-                    type="text"
-                    id={`option${index + 1}`}
-                    name="options"
-                    data-index={index}
-                    value={option}
+                  <select
+                    id="answer"
+                    name="answer"
+                    value={formData.answer}
                     onChange={handleChange}
                     className="w-full border border-gray-300 rounded px-2 py-1"
                     required
-                  />
+                  >
+                    <option value="">Select correct answer</option>
+                    <option value={1}>Option 1</option>
+                    <option value={2}>Option 2</option>
+                    <option value={3}>Option 3</option>
+                  </select>
                 </div>
-              ))}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="answer" className="block mb-1">
-                Correct Answer:
-              </label>
-              <select
-                id="answer"
-                name="answer"
-                value={formData.answer}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-2 py-1"
-                required
-              >
-                <option value="">Select correct answer</option>
-                <option value={1}>Option 1</option>
-                <option value={2}>Option 2</option>
-                <option value={3}>Option 3</option>
-              </select>
-            </div>
+              </>
+            )}
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
               {editMode ? "Update Question" : "Add Question"}
             </button>
@@ -302,17 +309,19 @@ const CreateQuizForm: React.FC = () => {
                       <p>
                         <strong>Question {index + 1} :</strong> {question}
                       </p>
-                      <p>
-                        <strong>Options:</strong>
-                        {options?.map((option, key) => {
-                          return (
-                            <span key={key}>
-                              {key + 1}:{option}
-                              {"            "}
-                            </span>
-                          );
-                        })}
-                      </p>
+                      {selectEventType == 1 && (
+                        <p>
+                          <strong>Options:</strong>
+                          {options?.map((option, key) => {
+                            return (
+                              <span key={key}>
+                                {key + 1}:{option}
+                                {"            "}
+                              </span>
+                            );
+                          })}
+                        </p>
+                      )}
                       <p>
                         <strong>Answer:</strong> {answer}
                       </p>
