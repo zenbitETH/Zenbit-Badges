@@ -32,10 +32,6 @@ export const HeaderMenuLinks = () => {
   if (connectedAddress) {
     const additionalLinks: HeaderMenuLink[] = [
       {
-        label: "Quiz",
-        href: "/quiz",
-      },
-      {
         label: "Profile",
         href: "/profile",
       },
