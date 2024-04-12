@@ -11,10 +11,11 @@ import { Wallet as EtherWallet } from "@ethersproject/wallet";
 import { Wallet, hashMessage } from "ethers";
 // import { ethers } from "ethers";
 import { useAccount } from "wagmi";
+import Loader from "~~/components/Loader";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { abi } from "~~/utils/scaffold-eth/abi";
+import { abi, deployedContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
 async function grantAttestation(easContract: any, data: any, recipient: any) {
@@ -46,16 +47,16 @@ const provider = new JsonRpcProvider("https://sepolia.optimism.io/");
 
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const privateKey = process.env.PRIVATE_KEY || "";
   const wallet = new EtherWallet(privateKey).connect(provider);
 
   // EAS Contract information
-  const easContractAddress = "0x4200000000000000000000000000000000000021"; // Address of the EAS contract
+  const easContractAddress = abi.address; // Address of the EAS contract
   const easABI = abi.abi;
-
+  const easOnboardingContract = new Contract(deployedContract.address, deployedContract.abi, wallet);
   // Connect to the EAS contract
   const easContract = new Contract(easContractAddress, easABI, wallet);
 
@@ -107,41 +108,47 @@ const Quiz = () => {
     args: [1n, 1n, "0x", "0x"],
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt for getting the attestation ", txnReceipt);
+      setLoading(true);
       attachAttestation();
     },
   });
 
-  const { writeAsync: addAttestation } = useScaffoldContractWrite({
-    contractName: "EASOnboarding",
-    functionName: "addAttestation",
-    args: ["0x", "0x"],
-    onBlockConfirmation: txnReceipt => {
-      console.log("txnReceipt for the Adding attestation after the EAS", txnReceipt);
-      router.push("/profile");
-    },
-  });
-
   const attachAttestation = async () => {
-    if (connectedAddress && eventDetails) {
-      const schemaEncoder = new SchemaEncoder(
-        "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
-      );
-      const encodedData = schemaEncoder.encodeData([
-        { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
-        { name: "Event_Name", value: eventDetails[5], type: "string" },
-        { name: "Description", value: eventDetails[6], type: "string" },
-        { name: "Mentor_Name", value: eventDetails[7], type: "string" },
-      ]);
+    try {
+      if (connectedAddress && eventDetails) {
+        const schemaEncoder = new SchemaEncoder(
+          "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
+        );
+        const encodedData = schemaEncoder.encodeData([
+          { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
+          { name: "Event_Name", value: eventDetails[5], type: "string" },
+          { name: "Description", value: eventDetails[6], type: "string" },
+          { name: "Mentor_Name", value: eventDetails[7], type: "string" },
+        ]);
 
-      const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
-      console.log(schemaUID);
+        const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
-      // // grantAttestation();
-      if (schemaUID && schemaUID?.events?.[0]?.args) {
-        addAttestation({
-          args: [schemaUID?.events?.[0]?.args?.uid as `0x${string}`, connectedAddress as `0x${string}`],
-        });
+        // // grantAttestation();
+        if (schemaUID && schemaUID?.events?.[0]?.args) {
+          addAttestation(easOnboardingContract, schemaUID?.events?.[0]?.args?.uid, connectedAddress);
+          setLoading(true);
+        }
       }
+    } catch (error) {
+      console.error("Error granting attestation:", error);
+      setLoading(false);
+    }
+  };
+
+  const addAttestation = async (easOnboardingContract: any, id: string, address: string) => {
+    try {
+      const txResponse = await easOnboardingContract.addAttestation(id, address);
+      if (txResponse) {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error granting attestation:", error);
+      setLoading(false);
     }
   };
 
@@ -179,6 +186,7 @@ const Quiz = () => {
       if (result && result.data) {
         onSubmit();
       } else {
+        setLoading(false);
         alert("All answers are not correct. Please retry the quiz");
         router.push("/");
       }
@@ -199,14 +207,21 @@ const Quiz = () => {
     const signature = await wallet.signMessage(arrayify(msgHash));
 
     if (msgHash && signature) {
+      setLoading(true);
+
       writeAsync({
         args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
       });
+    } else {
+      setLoading(false);
+      console.log("Error in signing the message");
     }
   };
 
   // // Check for the access to the questions before rendering the component
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="min-w-xl max-w-xl mx-auto flex justify-center m-10">
       {questions.length > 0 ? (
         <div className="min-w-xl max-w-xl rounded-lg">
