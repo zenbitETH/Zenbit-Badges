@@ -14,7 +14,7 @@ import { useAccount } from "wagmi";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { abi } from "~~/utils/scaffold-eth/abi";
+import { abi, deployedContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
 async function grantAttestation(easContract: any, data: any, recipient: any) {
@@ -53,9 +53,9 @@ const Quiz = () => {
   const wallet = new EtherWallet(privateKey).connect(provider);
 
   // EAS Contract information
-  const easContractAddress = "0x4200000000000000000000000000000000000021"; // Address of the EAS contract
+  const easContractAddress = abi.address; // Address of the EAS contract
   const easABI = abi.abi;
-
+  const easOnboardingContract = new Contract(deployedContract.address, deployedContract.abi, wallet);
   // Connect to the EAS contract
   const easContract = new Contract(easContractAddress, easABI, wallet);
 
@@ -111,16 +111,6 @@ const Quiz = () => {
     },
   });
 
-  const { writeAsync: addAttestation } = useScaffoldContractWrite({
-    contractName: "EASOnboarding",
-    functionName: "addAttestation",
-    args: ["0x", "0x"],
-    onBlockConfirmation: txnReceipt => {
-      console.log("txnReceipt for the Adding attestation after the EAS", txnReceipt);
-      router.push("/profile");
-    },
-  });
-
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
       const schemaEncoder = new SchemaEncoder(
@@ -138,10 +128,17 @@ const Quiz = () => {
 
       // // grantAttestation();
       if (schemaUID && schemaUID?.events?.[0]?.args) {
-        addAttestation({
-          args: [schemaUID?.events?.[0]?.args?.uid as `0x${string}`, connectedAddress as `0x${string}`],
-        });
+        addAttestation(easOnboardingContract, schemaUID?.events?.[0]?.args?.uid, connectedAddress);
       }
+    }
+  };
+
+  const addAttestation = async (easOnboardingContract: any, id: string, address: string) => {
+    try {
+      const txResponse = await easOnboardingContract.addAttestation(id, address);
+      console.log("txResponse", txResponse);
+    } catch (error) {
+      console.error("Error granting attestation:", error);
     }
   };
 
