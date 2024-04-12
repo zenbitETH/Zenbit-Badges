@@ -13,7 +13,7 @@ export const EventCard = ({
     <div
       className={`border ${
         userData && userData?.[1].includes(eventDetails?.eventId) ? "border-green-500" : "border-gray-300"
-      } rounded-lg shadow-md p-6 max-w-xl`}
+      } rounded-lg shadow-md p-6 max-w-xl m-3`}
       onClick={() => {
         if (
           !userData?.[1].includes(eventDetails?.eventId) &&

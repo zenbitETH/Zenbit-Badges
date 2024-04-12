@@ -30,7 +30,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center pt-10 flex-wrap">
+      <div className="flex items-center justify-center m-10 flex-wrap">
         {events
           ? events?.map((eventDetails, index) => {
               return (
