@@ -23,9 +23,9 @@ const QuestionComponent: React.FC<QuestionProps> = ({
       <h3 className="text-lg font-semibold mb-4">
         {questionIndex + 1}. {question.question}
       </h3>
-      {eventData[0] == 1 && (
+      {eventData?.[0] == 1 && (
         <div className="flex justify-between">
-          {question.options.map((option, index) => (
+          {question?.options?.map((option, index) => (
             <label key={index} className="flex items-center ">
               <input
                 type="radio"
@@ -40,7 +40,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
           ))}
         </div>
       )}
-      {eventData[0] == 2 && (
+      {eventData?.[0] == 2 && (
         <div className="flex justify-between">
           <input
             type="text"
