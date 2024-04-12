@@ -111,15 +111,15 @@ const Quiz = () => {
     },
   });
 
-  // const { writeAsync: addAttestation } = useScaffoldContractWrite({
-  //   contractName: "EASOnboarding",
-  //   functionName: "addAttestation",
-  //   args: ["0x", "0x"],
-  //   onBlockConfirmation: txnReceipt => {
-  //     console.log("txnReceipt for the Adding attestation after the EAS", txnReceipt);
-  //     router.push("/profile");
-  //   },
-  // });
+  const { writeAsync: addAttestation } = useScaffoldContractWrite({
+    contractName: "EASOnboarding",
+    functionName: "addAttestation",
+    args: ["0x", "0x"],
+    onBlockConfirmation: txnReceipt => {
+      console.log("txnReceipt for the Adding attestation after the EAS", txnReceipt);
+      router.push("/profile");
+    },
+  });
 
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
@@ -127,7 +127,7 @@ const Quiz = () => {
         "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
       );
       const encodedData = schemaEncoder.encodeData([
-        { name: "Event_ID", value: eventDetails[1]?.toString(), type: "string" },
+        { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
         { name: "Event_Name", value: eventDetails[5], type: "string" },
         { name: "Description", value: eventDetails[6], type: "string" },
         { name: "Mentor_Name", value: eventDetails[7], type: "string" },
@@ -137,12 +137,11 @@ const Quiz = () => {
       console.log(schemaUID);
 
       // // grantAttestation();
-      // if (newAttestationUID) {
-      //   // set the attestation to the chain
-      //   addAttestation({
-      //     args: [newAttestationUID as `0x${string}`, connectedAddress as `0x${string}`],
-      //   });
-      // }
+      if (schemaUID && schemaUID?.events?.[0]?.args) {
+        addAttestation({
+          args: [schemaUID?.events?.[0]?.args?.uid as `0x${string}`, connectedAddress as `0x${string}`],
+        });
+      }
     }
   };
 
