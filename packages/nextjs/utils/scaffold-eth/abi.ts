@@ -1030,7 +1030,7 @@ export const abi = {
 };
 
 export const deployedContract = {
-  address: "0x8322613104582ef6f03206013B5A90A145e0ddC3",
+  address: "0x4CE6EC617d7DebC5c1CF3386E5bf0927cACFFf8B",
   abi: [
     {
       inputs: [],
