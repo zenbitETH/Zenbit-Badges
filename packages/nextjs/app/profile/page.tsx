@@ -22,6 +22,8 @@ const Profile = () => {
     args: [connectedAddress],
   });
 
+  console.log("attestationData", attestationData);
+
   return (
     <div>
       <div className="flex items-center justify-center mt-40">
@@ -42,7 +44,7 @@ const Profile = () => {
                     <a
                       className="text-xs"
                       style={{ marginTop: "-1rem" }}
-                      href={`https://optimism-sepolia.easscan.org/attestation/view/${doc}`}
+                      href={`${process.env.ATTESTATION_VIEW_URL}/${doc}`}
                     >
                       See on EAS explorer
                     </a>

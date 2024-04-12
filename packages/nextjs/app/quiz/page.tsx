@@ -15,40 +15,41 @@ import Loader from "~~/components/Loader";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { abi, deployedContract } from "~~/utils/scaffold-eth/abi";
+import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
-
-async function grantAttestation(easContract: any, data: any, recipient: any) {
-  const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
-
-  const expirationTime = 0;
-  const revocable = true;
-
-  try {
-    const body = {
-      schema,
-      data: {
-        recipient: recipient,
-        data,
-        expirationTime: expirationTime,
-        revocable: revocable,
-        refUID: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        value: 0n,
-      },
-    };
-    const txResponse = await easContract.attest(body);
-    const txReceipt = await txResponse.wait();
-    return txReceipt;
-  } catch (error) {
-    console.error("Error granting attestation:", error);
-  }
-}
-const provider = new JsonRpcProvider("https://sepolia.optimism.io/");
 
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://sepolia.base.org");
+
+  async function grantAttestation(easContract: any, data: any, recipient: any) {
+    const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
+
+    const expirationTime = 0;
+    const revocable = true;
+
+    try {
+      const body = {
+        schema,
+        data: {
+          recipient: recipient,
+          data,
+          expirationTime: expirationTime,
+          revocable: revocable,
+          refUID: "0x0000000000000000000000000000000000000000000000000000000000000000",
+          value: 0n,
+        },
+      };
+      const txResponse = await easContract.attest(body);
+      const txReceipt = await txResponse.wait();
+      return txReceipt;
+    } catch (error) {
+      console.error("Error granting attestation:", error);
+      throw error;
+    }
+  }
 
   const privateKey = process.env.PRIVATE_KEY || "";
   const wallet = new EtherWallet(privateKey).connect(provider);
@@ -143,8 +144,12 @@ const Quiz = () => {
   const addAttestation = async (easOnboardingContract: any, id: string, address: string) => {
     try {
       const txResponse = await easOnboardingContract.addAttestation(id, address);
+      console.log("txResponse", txResponse);
       if (txResponse) {
-        setLoading(false);
+        router.push("/");
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       }
     } catch (error) {
       console.error("Error granting attestation:", error);
@@ -190,6 +195,11 @@ const Quiz = () => {
         alert("All answers are not correct. Please retry the quiz");
         router.push("/");
       }
+    } else if (eventDetails?.[0] == 2) {
+      const gnosisContractObj = new Contract(answers[0], gnosisContract.abi, provider);
+
+      const txResponse = await gnosisContractObj.getOwners();
+      console.log("txResponse", txResponse);
     }
 
     // TODO handle for the only only questions type
