@@ -15,7 +15,7 @@ import Loader from "~~/components/Loader";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { abi, deployedContract } from "~~/utils/scaffold-eth/abi";
+import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
 async function grantAttestation(easContract: any, data: any, recipient: any) {
@@ -190,6 +190,11 @@ const Quiz = () => {
         alert("All answers are not correct. Please retry the quiz");
         router.push("/");
       }
+    } else if (eventDetails?.[0] == 2) {
+      const gnosisContractObj = new Contract(answers[0], gnosisContract.abi, provider);
+
+      const txResponse = await gnosisContractObj.getOwners();
+      console.log("txResponse", txResponse);
     }
 
     // TODO handle for the only only questions type
