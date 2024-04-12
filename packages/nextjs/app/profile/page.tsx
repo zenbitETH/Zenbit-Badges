@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-// import Image from "next/image";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-// import { useAccount } from "wagmi";
-// import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { useAccount } from "wagmi";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 const Profile = () => {
   const router = useRouter();
-  // const { address: connectedAddress } = useAccount();
+  const { address: connectedAddress } = useAccount();
 
   // const { data: eventDetails } = useScaffoldContractRead({
   //   contractName: "EASOnboarding",
@@ -17,46 +16,42 @@ const Profile = () => {
   //   args: [1n],
   // });
 
-  // const { data: attestationData } = useScaffoldContractRead({
-  //   contractName: "EASOnboarding",
-  //   functionName: "attestationProfile",
-  //   args: [connectedAddress],
-  // });
+  const { data: attestationData } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "getEventsCompleted",
+    args: [connectedAddress],
+  });
+
   return (
     <div>
       <div className="flex items-center justify-center mt-40">
-        {/* {eventDetails && eventDetails[0] != 0n && (
-          <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg">
-            <div className="px-6 py-6">
-              <div className="flex justify-center items-center">
-                <div className="flex flex-row items-center justify-between">
-                  <div className="mr-4">
-                    <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
-                  </div>
-                  <div className="ml-4">
-                    <h1 className="text-2xl font-semibold mt-4"></h1>
-                    <p className="">{eventDetails[4]}</p>
-                    <p className="">{eventDetails[5]}</p>
+        {attestationData?.[2]?.map((doc, index) => {
+          return (
+            <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg m-2" key={index}>
+              <div className="px-6 py-6">
+                <div className="flex justify-center items-center">
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="mr-4">
+                      <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="mt-6 text-center">
-                <div className="m-3">
-                  <p className="text-base">Onboarding Attestation Granted!</p>
-                  <p className="text-xs" style={{ marginTop: "-1rem" }}>
-                    See on EAS explorer
-                  </p>
+                <div className="mt-6 text-center">
+                  <div className="m-3">
+                    <p className="text-base">Onboarding Attestation Granted!</p>
+                    <a
+                      className="text-xs"
+                      style={{ marginTop: "-1rem" }}
+                      href={`https://optimism-sepolia.easscan.org/attestation/view/${doc}`}
+                    >
+                      See on EAS explorer
+                    </a>
+                  </div>
                 </div>
-
-                <p></p>
-                <p className="text-sm">{connectedAddress}</p>
-
-                <p className="text-sm">Mentor</p>
-
               </div>
             </div>
-          </div>
-        )} */}
+          );
+        })}
       </div>
       <div className="mt-6 flex justify-center">
         <button
