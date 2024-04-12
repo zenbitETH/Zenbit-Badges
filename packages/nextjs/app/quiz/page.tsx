@@ -3,24 +3,62 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { Contract } from "@ethersproject/contracts";
+// Import necessary components from ethers
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { Wallet as EtherWallet } from "@ethersproject/wallet";
 import { Wallet, hashMessage } from "ethers";
+// import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { useSigner } from "~~/hooks/scaffold-eth/useEther";
-// import Question from "~/components/Question";
+import { abi } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
-const easContractAddress = "0x4200000000000000000000000000000000000021";
-const schemaUID = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b";
-const eas = new EAS(easContractAddress);
+async function grantAttestation(easContract: any, data: any, recipient: any) {
+  const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
+
+  const expirationTime = 0;
+  const revocable = true;
+
+  try {
+    const body = {
+      schema,
+      data: {
+        recipient: recipient,
+        data,
+        expirationTime: expirationTime,
+        revocable: revocable,
+        refUID: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        value: 0n,
+      },
+    };
+    const txResponse = await easContract.attest(body);
+    const txReceipt = await txResponse.wait();
+    return txReceipt;
+  } catch (error) {
+    console.error("Error granting attestation:", error);
+  }
+}
+const provider = new JsonRpcProvider("https://sepolia.optimism.io/");
 
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
+
   const router = useRouter();
-  const signer = useSigner();
+
+  const privateKey = process.env.PRIVATE_KEY || "";
+  const wallet = new EtherWallet(privateKey).connect(provider);
+
+  // EAS Contract information
+  const easContractAddress = "0x4200000000000000000000000000000000000021"; // Address of the EAS contract
+  const easABI = abi.abi;
+
+  // Connect to the EAS contract
+  const easContract = new Contract(easContractAddress, easABI, wallet);
+
   const searchParams = useSearchParams();
   const { eventId = "" } = searchParams ? Object.fromEntries(searchParams) : {};
   if (!eventId) {
@@ -85,34 +123,23 @@ const Quiz = () => {
 
   const attachAttestation = async () => {
     if (connectedAddress && eventDetails) {
-      if (signer) {
-        eas.connect(signer);
-      }
-      // Initialize SchemaEncoder with the schema string
       const schemaEncoder = new SchemaEncoder(
         "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
       );
       const encodedData = schemaEncoder.encodeData([
-        { name: "Event_ID", value: eventDetails[1], type: "uint256" },
+        { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
         { name: "Event_Name", value: eventDetails[5], type: "string" },
         { name: "Description", value: eventDetails[6], type: "string" },
         { name: "Mentor_Name", value: eventDetails[7], type: "string" },
       ]);
-      const tx = await eas.attest({
-        schema: schemaUID,
-        data: {
-          recipient: "0x0000000000000000000000000000000000000000",
-          expirationTime: 0n,
-          revocable: true, // Be aware that if your schema is not revocable, this MUST be false
-          data: encodedData,
-        },
-      });
-      const newAttestationUID = await tx.wait();
 
-      if (newAttestationUID) {
-        // set the attestation to the chain
+      const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
+      console.log(schemaUID);
+
+      // // grantAttestation();
+      if (schemaUID && schemaUID?.events?.[0]?.args) {
         addAttestation({
-          args: [newAttestationUID as `0x${string}`, connectedAddress as `0x${string}`],
+          args: [schemaUID?.events?.[0]?.args?.uid as `0x${string}`, connectedAddress as `0x${string}`],
         });
       }
     }

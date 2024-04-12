@@ -12,7 +12,7 @@ export const connectToDatabase = async () => {
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URI, {
-      dbName: "local-1",
+      dbName: process.env.DB_NAME,
       bufferCommands: false,
     });
 
