@@ -218,22 +218,27 @@ const Quiz = () => {
   }
 
   const onSubmit = async () => {
-    const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
-    const msgHash = hashMessage(msg + connectedAddress);
-    const privateKey = process.env.PRIVATE_KEY ?? ""; // Provide a default value for privateKey
+    try {
+      const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
+      const msgHash = hashMessage(msg + connectedAddress);
+      const privateKey = process.env.PRIVATE_KEY ?? ""; // Provide a default value for privateKey
 
-    const wallet = new Wallet(privateKey);
-    const signature = await wallet.signMessage(arrayify(msgHash));
+      const wallet = new Wallet(privateKey);
+      const signature = await wallet.signMessage(arrayify(msgHash));
 
-    if (msgHash && signature) {
-      setLoading(true);
+      if (msgHash && signature) {
+        setLoading(true);
 
-      writeAsync({
-        args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
-      });
-    } else {
+        await writeAsync({
+          args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
+        });
+      } else {
+        setLoading(false);
+        console.log("Error in signing the message");
+      }
+    } catch (error) {
+      console.log("Error in signing the message-----------------------------------------------------", error);
       setLoading(false);
-      console.log("Error in signing the message");
     }
   };
 
