@@ -21,6 +21,10 @@ contract EASOnboarding is EASOnboardingStorage {
         public
         returns (bool)
     {
+        // This should take care of failed attempt to getAttested
+        require(
+            studentEventMap[msg.sender][_eventId].attestation == bytes32(0), "Student already attested for this event"
+        );
         require(isVerified(_msgHash, _signature), "Invalid Txn Source");
         require(events[_eventId].isActive || !events[_eventId].overrideClosingTimestamp, "Event is no longer active");
         require(
@@ -31,7 +35,12 @@ contract EASOnboarding is EASOnboardingStorage {
         events[_eventId].attendees.push(msg.sender);
         attestationProfile[msg.sender].eventsCompleted.push(_eventId);
         attestationProfile[msg.sender].studentLevel = _level;
-        studentEventMap[msg.sender][_eventId] = true;
+        studentEventMap[msg.sender][_eventId].eventId = _eventId;
+        studentEventMap[msg.sender][_eventId].eventName = events[_eventId].eventName;
+        studentEventMap[msg.sender][_eventId].eventDescription = events[_eventId].eventDescription;
+        studentEventMap[msg.sender][_eventId].mentorName = events[_eventId].mentorName;
+        studentEventMap[msg.sender][_eventId].mentorAddress = events[_eventId].mentorAddress;
+        studentEventMap[msg.sender][_eventId].level = _level;
         return true;
     }
 
