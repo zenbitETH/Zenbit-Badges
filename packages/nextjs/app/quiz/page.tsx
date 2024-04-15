@@ -8,7 +8,7 @@ import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet as EtherWallet } from "@ethersproject/wallet";
-import { Wallet, hashMessage } from "ethers";
+import { Wallet, hashMessage, isAddress } from "ethers";
 // import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Loader from "~~/components/Loader";
@@ -196,10 +196,19 @@ const Quiz = () => {
         router.push("/");
       }
     } else if (eventDetails?.[0] == 2) {
-      const gnosisContractObj = new Contract(answers[0], gnosisContract.abi, provider);
+      const answer = Object.values(answers)[0];
+
+      const result = isAddress(answer);
+
+      if (!result) {
+        alert("Please enter a valid DAO address");
+        return;
+      }
+      const gnosisContractObj = new Contract(answer, gnosisContract.abi, provider);
 
       const txResponse = await gnosisContractObj.getOwners();
       console.log("txResponse", txResponse);
+      return;
     }
 
     // TODO handle for the only only questions type

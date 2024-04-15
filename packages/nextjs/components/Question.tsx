@@ -41,13 +41,14 @@ const QuestionComponent: React.FC<QuestionProps> = ({
         </div>
       )}
       {eventData?.[0] == 2 && (
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between border border-gray-300 rounded-md p-2">
           <input
             type="text"
-            className="mr-2"
+            className="flex-1 outline-none"
             name={`question-${questionIndex}`}
             value={answer}
             onChange={e => handleOptionChange(question?._id, e.target.value)}
+            placeholder="Enter the DAO address"
           />
         </div>
       )}
