@@ -237,7 +237,6 @@ const Quiz = () => {
         console.log("Error in signing the message");
       }
     } catch (error) {
-      console.log("Error in signing the message-----------------------------------------------------", error);
       setLoading(false);
     }
   };

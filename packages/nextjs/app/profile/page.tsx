@@ -44,7 +44,7 @@ const Profile = () => {
                     <a
                       className="text-xs"
                       style={{ marginTop: "-1rem" }}
-                      href={`${process.env.ATTESTATION_VIEW_URL}/${doc}`}
+                      href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${doc}`}
                     >
                       See on EAS explorer
                     </a>
