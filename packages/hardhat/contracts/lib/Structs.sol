@@ -22,4 +22,14 @@ library Structs {
         uint256[] eventsCompleted;
         bytes32[] attestations;
     }
+
+    struct metaEvent {
+        bytes32 attestation;
+        uint256 eventId;
+        uint256 level;
+        string eventName;
+        string eventDescription;
+        string mentorName;
+        address mentorAddress;
+    }
 }
