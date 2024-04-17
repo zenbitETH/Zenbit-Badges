@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   84532: {
     EASOnboarding: {
-      address: "0x4CE6EC617d7DebC5c1CF3386E5bf0927cACFFf8B",
+      address: "0x2a16df6f0D15535e3C44feb12457065a64496E35",
       abi: [
         {
           inputs: [],
@@ -25,6 +25,11 @@ const deployedContracts = {
               internalType: "address",
               name: "_studentAddress",
               type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_eventId",
+              type: "uint256",
             },
           ],
           name: "addAttestation",
@@ -434,9 +439,39 @@ const deployedContracts = {
           name: "studentEventMap",
           outputs: [
             {
-              internalType: "bool",
-              name: "",
-              type: "bool",
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "level",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "eventDescription",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "mentorName",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
             },
           ],
           stateMutability: "view",
@@ -473,7 +508,7 @@ const deployedContracts = {
   },
   11155420: {
     EASOnboarding: {
-      address: "0x4CE6EC617d7DebC5c1CF3386E5bf0927cACFFf8B",
+      address: "0x4dB3581Bc77588497dCC596cCf27e0091Fa902Cb",
       abi: [
         {
           inputs: [],
@@ -900,9 +935,39 @@ const deployedContracts = {
           name: "studentEventMap",
           outputs: [
             {
-              internalType: "bool",
-              name: "",
-              type: "bool",
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "level",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "eventDescription",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "mentorName",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
             },
           ],
           stateMutability: "view",
