@@ -25,7 +25,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className="absolute inset-0 z-0 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#008A8A_75%)]">
+      <div className="absolute inset-0 z-0 h-full w-full [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#008A8A_75%)]">
         <Header />
         <main className="relative flex flex-col flex-1">{children}</main>
       </div>

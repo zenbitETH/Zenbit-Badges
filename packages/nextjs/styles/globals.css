@@ -29,6 +29,10 @@ p {
   @apply shadow-md;
 }
 
+.btn-sm {
+  @apply hover:bg-dai text-white hover:text-black
+}
+
 .btn.btn-ghost {
   @apply shadow-none;
 }
