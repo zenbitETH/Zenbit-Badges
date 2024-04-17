@@ -22,8 +22,6 @@ const Profile = () => {
     args: [connectedAddress],
   });
 
-  console.log("attestationData", attestationData);
-
   return (
     <div>
       <div className="flex items-center justify-center mt-40">
