@@ -12,6 +12,7 @@ import { Wallet, hashMessage, isAddress } from "ethers";
 // import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Loader from "~~/components/Loader";
+import Modal from "~~/components/Modal";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -23,7 +24,14 @@ const Quiz = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://sepolia.base.org");
-
+  const [data, setData] = useState({
+    id: "",
+    address: "",
+    eventName: "",
+    eventId: 0,
+    eventDescription: "",
+    mentorName: "",
+  });
   async function grantAttestation(easContract: any, data: any, recipient: any) {
     const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
 
@@ -89,7 +97,9 @@ const Quiz = () => {
     args: [connectedAddress],
   });
 
-  if (userData && userData[1].includes(BigInt(eventId))) {
+  const [open, setOpen] = useState(false);
+
+  if (userData && userData[1].includes(BigInt(eventId)) && !open) {
     router.push("/");
   }
 
@@ -131,7 +141,12 @@ const Quiz = () => {
 
         // // grantAttestation();
         if (schemaUID && schemaUID?.events?.[0]?.args) {
-          addAttestation(easOnboardingContract, schemaUID?.events?.[0]?.args?.uid, connectedAddress);
+          addAttestation(
+            easOnboardingContract,
+            schemaUID?.events?.[0]?.args?.uid,
+            connectedAddress,
+            Number(eventDetails?.[1]) || 0,
+          );
           setLoading(true);
         }
       }
@@ -141,13 +156,21 @@ const Quiz = () => {
     }
   };
 
-  const addAttestation = async (easOnboardingContract: any, id: string, address: string) => {
+  const addAttestation = async (easOnboardingContract: any, id: string, address: string, eventId: number) => {
     try {
-      const txResponse = await easOnboardingContract.addAttestation(id, address);
-      console.log("txResponse", txResponse);
+      const txResponse = await easOnboardingContract.addAttestation(id, address, eventId);
+
       if (txResponse) {
-        router.push("/");
         setTimeout(() => {
+          setOpen(true);
+          setData({
+            id: id,
+            address: address,
+            eventName: eventDetails?.[5] || "",
+            eventId: eventId,
+            eventDescription: eventDetails?.[6] || "",
+            mentorName: eventDetails?.[7] || "",
+          });
           setLoading(false);
         }, 1000);
       }
@@ -290,6 +313,8 @@ const Quiz = () => {
       ) : (
         <p>No questions available</p>
       )}
+
+      <Modal isOpen={open} close={() => setOpen(false)} data={data} />
     </div>
   );
 };

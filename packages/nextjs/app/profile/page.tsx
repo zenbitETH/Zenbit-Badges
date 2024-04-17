@@ -22,8 +22,6 @@ const Profile = () => {
     args: [connectedAddress],
   });
 
-  console.log("attestationData", attestationData);
-
   return (
     <div>
       <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-3  ">
