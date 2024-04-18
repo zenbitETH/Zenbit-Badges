@@ -26,9 +26,10 @@ contract EASOnboardingStorage {
         view
         returns (Structs.metaEvent[] memory)
     {
-        Structs.metaEvent[] memory metaArray = new Structs.metaEvent[](eventIdCounter - 1);
-        for (uint256 i = 1; i < eventIdCounter; i++) {
-            metaArray[i - 1] = studentEventMap[_studentAddress][i];
+        Structs.metaEvent[] memory metaArray =
+            new Structs.metaEvent[](attestationProfile[_studentAddress].eventsCompleted.length - 1);
+        for (uint256 i = 1; i < attestationProfile[_studentAddress].eventsCompleted.length - 1; i++) {
+            metaArray[i - 1] = studentEventMap[_studentAddress][attestationProfile[_studentAddress].eventsCompleted[i]];
         }
         return metaArray;
     }
