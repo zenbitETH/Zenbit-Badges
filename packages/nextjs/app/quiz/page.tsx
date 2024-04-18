@@ -19,6 +19,17 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
+const schemaIds = [
+  {
+    key: 1,
+    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
+  },
+  {
+    key: 2,
+    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
+  },
+];
+
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
@@ -33,8 +44,8 @@ const Quiz = () => {
     mentorName: "",
   });
   async function grantAttestation(easContract: any, data: any, recipient: any) {
-    const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
-
+    const questionType = eventDetails?.[0];
+    const schema = schemaIds.find(schema => schema.key === questionType)?.value;
     const expirationTime = 0;
     const revocable = true;
 
@@ -201,37 +212,46 @@ const Quiz = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (eventDetails?.[0] == 1) {
-      const response = await fetch("/api/userQuiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.API_KEY || "",
-        },
-        body: JSON.stringify({ eventId: eventId, value: answers }),
-      });
-      const result = await response.json();
-      if (result && result.data) {
-        onSubmit();
-      } else {
-        setLoading(false);
-        alert("All answers are not correct. Please retry the quiz");
-        router.push("/");
-      }
-    } else if (eventDetails?.[0] == 2) {
-      const answer = Object.values(answers)[0];
+    try {
+      if (eventDetails?.[0] == 1) {
+        const response = await fetch("/api/userQuiz", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.API_KEY || "",
+          },
+          body: JSON.stringify({ eventId: eventId, value: answers }),
+        });
+        const result = await response.json();
+        if (result && result.data) {
+          onSubmit();
+        } else {
+          setLoading(false);
+          alert("All answers are not correct. Please retry the quiz");
+          router.push("/");
+        }
+      } else if (eventDetails?.[0] == 2) {
+        const answer = Object.values(answers)[0];
 
-      const result = isAddress(answer);
+        const result = isAddress(answer);
 
-      if (!result) {
-        alert("Please enter a valid DAO address");
+        if (!result) {
+          alert("Please enter a valid DAO address");
+          return;
+        }
+        const gnosisContractObj = new Contract(answer, gnosisContract.abi, provider);
+
+        const txResponse = await gnosisContractObj.getOwners();
+        if (!txResponse.includes(connectedAddress)) {
+          alert("You are not the valid owner of this multiSig wallet. Please try again with the valid owner address.");
+        } else {
+          onSubmit();
+        }
         return;
       }
-      const gnosisContractObj = new Contract(answer, gnosisContract.abi, provider);
-
-      const txResponse = await gnosisContractObj.getOwners();
-      console.log("txResponse", txResponse);
-      return;
+    } catch (error) {
+      alert("Please select a valid Safe address");
+      console.log("Error in submitting the answers", error);
     }
 
     // TODO handle for the only only questions type
