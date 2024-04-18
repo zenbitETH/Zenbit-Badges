@@ -3,30 +3,52 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet as EtherWallet } from "@ethersproject/wallet";
 import { Wallet, hashMessage } from "ethers";
+import { http } from "viem";
+import { mainnet } from "viem/chains";
 // import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Loader from "~~/components/Loader";
+import Modal from "~~/components/Modal";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
+const schemaIds = [
+  {
+    key: 1,
+    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
+  },
+  {
+    key: 2,
+    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
+  },
+];
+
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://sepolia.base.org");
-
+  const [data, setData] = useState({
+    id: "",
+    address: "",
+    eventName: "",
+    eventId: 0,
+    eventDescription: "",
+    mentorName: "",
+  });
   async function grantAttestation(easContract: any, data: any, recipient: any) {
-    const schema = "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b"; // Schema identifier
-
+    const questionType = eventDetails?.[0];
+    const schema = schemaIds.find(schema => schema.key === questionType)?.value;
     const expirationTime = 0;
     const revocable = true;
 
@@ -88,8 +110,14 @@ const Quiz = () => {
     functionName: "getEventsCompleted",
     args: [connectedAddress],
   });
+  const client = createEnsPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
 
-  if (userData && userData[1].includes(BigInt(eventId))) {
+  const [open, setOpen] = useState(false);
+
+  if (userData && userData[1].includes(BigInt(eventId)) && !open) {
     router.push("/");
   }
 
@@ -131,7 +159,12 @@ const Quiz = () => {
 
         // // grantAttestation();
         if (schemaUID && schemaUID?.events?.[0]?.args) {
-          addAttestation(easOnboardingContract, schemaUID?.events?.[0]?.args?.uid, connectedAddress);
+          addAttestation(
+            easOnboardingContract,
+            schemaUID?.events?.[0]?.args?.uid,
+            connectedAddress,
+            Number(eventDetails?.[1]) || 0,
+          );
           setLoading(true);
         }
       }
@@ -141,13 +174,21 @@ const Quiz = () => {
     }
   };
 
-  const addAttestation = async (easOnboardingContract: any, id: string, address: string) => {
+  const addAttestation = async (easOnboardingContract: any, id: string, address: string, eventId: number) => {
     try {
-      const txResponse = await easOnboardingContract.addAttestation(id, address);
-      console.log("txResponse", txResponse);
+      const txResponse = await easOnboardingContract.addAttestation(id, address, eventId);
+
       if (txResponse) {
-        router.push("/");
         setTimeout(() => {
+          setOpen(true);
+          setData({
+            id: id,
+            address: address,
+            eventName: eventDetails?.[5] || "",
+            eventId: eventId,
+            eventDescription: eventDetails?.[6] || "",
+            mentorName: eventDetails?.[7] || "",
+          });
           setLoading(false);
         }, 1000);
       }
@@ -178,28 +219,47 @@ const Quiz = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (eventDetails?.[0] == 1) {
-      const response = await fetch("/api/userQuiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.API_KEY || "",
-        },
-        body: JSON.stringify({ eventId: eventId, value: answers }),
-      });
-      const result = await response.json();
-      if (result && result.data) {
-        onSubmit();
-      } else {
-        setLoading(false);
-        alert("All answers are not correct. Please retry the quiz");
-        router.push("/");
-      }
-    } else if (eventDetails?.[0] == 2) {
-      const gnosisContractObj = new Contract(answers[0], gnosisContract.abi, provider);
+    try {
+      if (eventDetails?.[0] == 1) {
+        const response = await fetch("/api/userQuiz", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.API_KEY || "",
+          },
+          body: JSON.stringify({ eventId: eventId, value: answers }),
+        });
+        const result = await response.json();
+        if (result && result.data) {
+          onSubmit();
+        } else {
+          setLoading(false);
+          alert("All answers are not correct. Please retry the quiz");
+          router.push("/");
+        }
+      } else if (eventDetails?.[0] == 2) {
+        const answer = Object.values(answers)[0];
 
-      const txResponse = await gnosisContractObj.getOwners();
-      console.log("txResponse", txResponse);
+        const result = await client.getAddressRecord({ name: answer });
+
+        if (!result) {
+          alert("Please enter a valid DAO address");
+          return;
+        }
+
+        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+
+        const txResponse = await gnosisContractObj.getOwners();
+        if (!txResponse.includes(connectedAddress)) {
+          alert("You are not the valid owner of this multiSig wallet. Please try again with the valid owner address.");
+        } else {
+          onSubmit();
+        }
+        return;
+      }
+    } catch (error) {
+      alert("Please select a valid Safe address");
+      console.log("Error in submitting the answers", error);
     }
 
     // TODO handle for the only only questions type
@@ -209,22 +269,26 @@ const Quiz = () => {
   }
 
   const onSubmit = async () => {
-    const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
-    const msgHash = hashMessage(msg + connectedAddress);
-    const privateKey = process.env.PRIVATE_KEY ?? ""; // Provide a default value for privateKey
+    try {
+      const msg = `0xf8604e13c79da26c9b862fb0cc410e1df7fd95bd017fed2e01506b14328e1287`;
+      const msgHash = hashMessage(msg + connectedAddress);
+      const privateKey = process.env.PRIVATE_KEY ?? ""; // Provide a default value for privateKey
 
-    const wallet = new Wallet(privateKey);
-    const signature = await wallet.signMessage(arrayify(msgHash));
+      const wallet = new Wallet(privateKey);
+      const signature = await wallet.signMessage(arrayify(msgHash));
 
-    if (msgHash && signature) {
-      setLoading(true);
+      if (msgHash && signature) {
+        setLoading(true);
 
-      writeAsync({
-        args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
-      });
-    } else {
+        await writeAsync({
+          args: [BigInt(eventId), eventDetails?.[2], msgHash as `0x${string}`, signature as `0x${string}`],
+        });
+      } else {
+        setLoading(false);
+        console.log("Error in signing the message");
+      }
+    } catch (error) {
       setLoading(false);
-      console.log("Error in signing the message");
     }
   };
 
@@ -277,6 +341,8 @@ const Quiz = () => {
       ) : (
         <p>No questions available</p>
       )}
+
+      <Modal isOpen={open} close={() => setOpen(false)} data={data} />
     </div>
   );
 };

@@ -1030,7 +1030,7 @@ export const abi = {
 };
 
 export const deployedContract = {
-  address: "0x4CE6EC617d7DebC5c1CF3386E5bf0927cACFFf8B",
+  address: "0xc32268c2733848924F9F567f31072B4839379b58",
   abi: [
     {
       inputs: [],
@@ -1048,6 +1048,11 @@ export const deployedContract = {
           internalType: "address",
           name: "_studentAddress",
           type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_eventId",
+          type: "uint256",
         },
       ],
       name: "addAttestation",
@@ -1285,6 +1290,62 @@ export const deployedContract = {
     {
       inputs: [
         {
+          internalType: "address",
+          name: "_studentAddress",
+          type: "address",
+        },
+      ],
+      name: "getAllStudentEventsWithAttestations",
+      outputs: [
+        {
+          components: [
+            {
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "level",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "eventDescription",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "mentorName",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          internalType: "struct Structs.metaEvent[]",
+          name: "",
+          type: "tuple[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
           internalType: "uint256",
           name: "_eventId",
           type: "uint256",
@@ -1457,9 +1518,39 @@ export const deployedContract = {
       name: "studentEventMap",
       outputs: [
         {
-          internalType: "bool",
-          name: "",
-          type: "bool",
+          internalType: "bytes32",
+          name: "attestation",
+          type: "bytes32",
+        },
+        {
+          internalType: "uint256",
+          name: "eventId",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "eventName",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "eventDescription",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "mentorName",
+          type: "string",
+        },
+        {
+          internalType: "address",
+          name: "mentorAddress",
+          type: "address",
         },
       ],
       stateMutability: "view",
