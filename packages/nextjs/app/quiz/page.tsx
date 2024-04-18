@@ -3,12 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Wallet as EtherWallet } from "@ethersproject/wallet";
-import { Wallet, hashMessage, isAddress } from "ethers";
+import { Wallet, hashMessage } from "ethers";
+import { http } from "viem";
+import { mainnet } from "viem/chains";
 // import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Loader from "~~/components/Loader";
@@ -106,6 +109,10 @@ const Quiz = () => {
     contractName: "EASOnboarding",
     functionName: "getEventsCompleted",
     args: [connectedAddress],
+  });
+  const client = createEnsPublicClient({
+    chain: mainnet,
+    transport: http(),
   });
 
   const [open, setOpen] = useState(false);
@@ -233,13 +240,14 @@ const Quiz = () => {
       } else if (eventDetails?.[0] == 2) {
         const answer = Object.values(answers)[0];
 
-        const result = isAddress(answer);
+        const result = await client.getAddressRecord({ name: answer });
 
         if (!result) {
           alert("Please enter a valid DAO address");
           return;
         }
-        const gnosisContractObj = new Contract(answer, gnosisContract.abi, provider);
+
+        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
 
         const txResponse = await gnosisContractObj.getOwners();
         if (!txResponse.includes(connectedAddress)) {
