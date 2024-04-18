@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const EventCard = ({
   eventDetails,
   userData,
@@ -34,8 +36,10 @@ export const EventCard = ({
         Open until: {Number(eventDetails.closingTimestamp)}
       </div>
       <div className=" grid items-center text-center">
-        <div className="grid items-center h-full py-12">
-          <div className="rounded-full bg-red-500 h-32 w-32 m-auto"></div>
+        <div className="grid items-center h-full pt-12">
+          <div className="mx-auto rounded-full">
+            <Image alt="Badge" width={150} height={150} src="/badge1.png" className=" rounded-full" />
+          </div>
         </div>
       </div>
       <div className="col-span-3 grid pb-10 font-cha text-center">
