@@ -21,6 +21,18 @@ contract EASOnboardingStorage {
     }
     // Function to get eventsCompleted
 
+    function getAllStudentEventsWithAttestations(address _studentAddress)
+        public
+        view
+        returns (Structs.metaEvent[] memory)
+    {
+        Structs.metaEvent[] memory metaArray = new Structs.metaEvent[](eventIdCounter - 1);
+        for (uint256 i = 1; i < eventIdCounter; i++) {
+            metaArray[i - 1] = studentEventMap[_studentAddress][i];
+        }
+        return metaArray;
+    }
+
     function getEventsCompleted(address _studentAddress)
         public
         view
