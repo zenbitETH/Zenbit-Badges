@@ -65,8 +65,8 @@ export const HeaderMenuLinks = () => {
         const isActive = pathname === href;
         return (
           <li className="text-xl" key={href}>
-            <Link href={href} passHref className={`${isActive ? "bg-dai p-1" : ""}`}>
-              <span className=" px-3 text-black rounded-full hover:text-dai">{label}</span>
+            <Link href={href} passHref className={`${isActive ? "bg-zen p-1" : ""}`}>
+              <span className=" px-3 text-black rounded-full hover:text-zen">{label}</span>
             </Link>
           </li>
         );

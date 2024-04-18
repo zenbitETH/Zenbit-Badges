@@ -78,11 +78,12 @@ module.exports = {
     extend: {
       colors: {
         display: ["group-hover"],
-        dai: "#F5A82F",
-        sdai: "#008B8A",
+        zen: "#F5A82F",
+        bit: "#008B8A",
       },
       fontFamily: {
-        mus: ["MuseoModerno"], 
+        mus: ["MuseoModerno"],
+        cha: ["Chakra Petch"],
       },
       borderRadius: {
         md: "32px",

@@ -30,7 +30,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="grid items-center justify-center m-10 grid-cols-4 text-black">
+      <div className="grid items-center justify-center xl:m-10 md:grid-cols-3 text-black overflow-auto scrollbar-hide">
         {events
           ? events?.map((eventDetails, index) => {
               return (

@@ -59,7 +59,7 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
 
   return (
     <button
-      className={`text-sdai text-sm flex flex-col font-normal items-center hover:bg-transparent ${className}`}
+      className={`text-bit text-sm flex flex-col font-normal items-center hover:bg-transparent ${className}`}
       onClick={toggleBalanceMode}
     >
       <div className="w-full flex items-center justify-center">
