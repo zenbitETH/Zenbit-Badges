@@ -1030,7 +1030,7 @@ export const abi = {
 };
 
 export const deployedContract = {
-  address: "0x2a16df6f0D15535e3C44feb12457065a64496E35",
+  address: "0xA3c39cD435f4cdf157E894054D831632BaA960fd",
   abi: [
     {
       inputs: [],
@@ -1280,6 +1280,62 @@ export const deployedContract = {
             },
           ],
           internalType: "struct Structs.Event[]",
+          name: "",
+          type: "tuple[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_studentAddress",
+          type: "address",
+        },
+      ],
+      name: "getAllStudentEventsWithAttestations",
+      outputs: [
+        {
+          components: [
+            {
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "level",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "eventDescription",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "mentorName",
+              type: "string",
+            },
+            {
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          internalType: "struct Structs.metaEvent[]",
           name: "",
           type: "tuple[]",
         },
