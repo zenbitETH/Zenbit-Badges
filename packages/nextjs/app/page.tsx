@@ -29,8 +29,8 @@ const Home = () => {
   });
 
   return (
-    <>
-      <div className="grid items-center justify-center xl:m-10 md:grid-cols-3 text-black overflow-auto scrollbar-hide">
+    <div className="my-12">
+      <div className="xl:col-span-10 grid items-center justify-center xl:m-10 md:grid-cols-3 text-black overflow-auto scrollbar-hide place-content-start">
         {events
           ? events?.map((eventDetails, index) => {
               return (
@@ -46,7 +46,7 @@ const Home = () => {
             })
           : "No events available"}
       </div>
-    </>
+    </div>
   );
 };
 
