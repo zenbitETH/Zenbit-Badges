@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "../lib/Structs.sol";
+import "hardhat/console.sol";
 
 contract EASOnboardingStorage {
     address deployer;
@@ -27,9 +28,9 @@ contract EASOnboardingStorage {
         returns (Structs.metaEvent[] memory)
     {
         Structs.metaEvent[] memory metaArray =
-            new Structs.metaEvent[](attestationProfile[_studentAddress].eventsCompleted.length - 1);
-        for (uint256 i = 1; i < attestationProfile[_studentAddress].eventsCompleted.length - 1; i++) {
-            metaArray[i - 1] = studentEventMap[_studentAddress][attestationProfile[_studentAddress].eventsCompleted[i]];
+            new Structs.metaEvent[](attestationProfile[_studentAddress].eventsCompleted.length);
+        for (uint256 i = 0; i <attestationProfile[_studentAddress].eventsCompleted.length ; i++) {
+            metaArray[i] = studentEventMap[_studentAddress][attestationProfile[_studentAddress].eventsCompleted[i]];
         }
         return metaArray;
     }
