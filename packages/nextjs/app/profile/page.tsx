@@ -27,7 +27,7 @@ const Profile = () => {
       <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-3  ">
         {eventDetails?.map((doc, index) => {
           return (
-            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 cursor-pointer" key={index}>
+            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 " key={index}>
               <div className="px-6 py-6">
                 <div className="flex justify-center items-center">
                   <div className="flex flex-row items-center justify-between">
@@ -43,7 +43,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="mt-6 text-center hover:text-bit">
-                  <div className="m-3">
+                  <div className="m-3 cursor-pointer">
                     <a
                       className="text-xl"
                       style={{ marginTop: "-1rem" }}
