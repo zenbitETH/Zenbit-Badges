@@ -26,23 +26,22 @@ const Profile = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center mt-40">
+      <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-3  ">
         {attestationData?.[2]?.map((doc, index) => {
           return (
-            <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg m-2" key={index}>
+            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60" key={index}>
               <div className="px-6 py-6">
                 <div className="flex justify-center items-center">
                   <div className="flex flex-row items-center justify-between">
                     <div className="mr-4">
-                      <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
+                      <Image src="/badge1.png" alt="Profile" width={300} height={300} className="rounded-full" />
                     </div>
                   </div>
                 </div>
-                <div className="mt-6 text-center">
+                <div className="mt-6 text-center hover:text-bit">
                   <div className="m-3">
-                    <p className="text-base">Onboarding Attestation Granted!</p>
                     <a
-                      className="text-xs"
+                      className="text-xl"
                       style={{ marginTop: "-1rem" }}
                       href={`${process.env.ATTESTATION_VIEW_URL}/${doc}`}
                     >
@@ -57,7 +56,7 @@ const Profile = () => {
       </div>
       <div className="mt-6 flex justify-center">
         <button
-          className="bg-green-500 text-white px-6 py-3 rounded-md"
+          className="bg-zen text-black hover:text-white hover:bg-bit px-6 py-3 rounded-md font-mus text-lg"
           onClick={() => {
             router.push("/");
           }}
