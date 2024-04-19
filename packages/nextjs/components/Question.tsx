@@ -19,7 +19,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   eventData,
 }) => {
   return (
-    <div className="p-6 border rounded-lg mb-6">
+    <div className="p-6 rounded-lg mb-6">
       <h3 className="text-lg font-semibold mb-4">
         {questionIndex + 1}. {question.question}
       </h3>

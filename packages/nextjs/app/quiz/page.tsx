@@ -232,10 +232,10 @@ const Quiz = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="min-w-xl max-w-xl mx-auto flex justify-center m-10">
+    <div className="min-w-xl max-w-xl mx-auto flex justify-center p-5 bg-gray-300 rounded-md">
       {questions.length > 0 ? (
-        <div className="min-w-xl max-w-xl rounded-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="min-w-xl max-w-xl ">
+          <form onSubmit={handleSubmit} className="space-y-4 ">
             {questions.map((question, index) => {
               return (
                 <QuestionComponent
@@ -265,9 +265,9 @@ const Quiz = () => {
             </div> */}
             <button
               type="submit"
-              className={`${
-                allQuestionsAnswered ? "bg-green-500 text-white" : "bg-gray-300 text-gray-600"
-              } px-4 py-2 rounded mx-auto block ${allQuestionsAnswered ? "" : "pointer-events-none"}`}
+              className={`${allQuestionsAnswered ? "bg-green-500 text-white" : "bg-red-300"} px-4 py-2 mx-auto block ${
+                allQuestionsAnswered ? "" : "pointer-events-none"
+              }`}
               disabled={!allQuestionsAnswered}
             >
               Submit
