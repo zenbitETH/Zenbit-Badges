@@ -16,8 +16,6 @@ const Profile = () => {
     args: [connectedAddress],
   });
 
-  console.log(eventDetails);
-
   // const { data: attestationData } = useScaffoldContractRead({
   //   contractName: "EASOnboarding",
   //   functionName: "getEventsCompleted",
@@ -26,38 +24,35 @@ const Profile = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center mt-40">
-        {eventDetails?.map((data, index) => {
-          return (
-            <div className="flex" key={index}>
-              <div className="max-w-lg overflow-hidden border border-gray-300 rounded-lg m-2">
-                <div className="px-6 py-6">
-                  <div className="flex justify-center items-center">
-                    <div className="flex flex-row items-center justify-between">
-                      <div className="mr-4">
-                        <Image src="/image.png" alt="Profile" width={150} height={150} className="rounded-full" />
-                      </div>
+      <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-3  ">
+        {eventDetails?.map((doc, index) => {
+          const src = Number(doc?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
 
-                      <div>
-                        <div>Event Name:{data?.eventName}</div>
-                        <div>Event Description:{data?.eventDescription}</div>
-                        <div>Mentor Name:{data?.mentorName}</div>
-                      </div>
+          return (
+            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 " key={index}>
+              <div className="px-6 py-6">
+                <div className="flex justify-center items-center">
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="mr-4">
+                      <Image src={src} alt="Profile" width={300} height={300} className="rounded-full" />
+                    </div>
+
+                    <div>
+                      <div>Event Name:{doc?.eventName}</div>
+                      <div>Event Description:{doc?.eventDescription}</div>
+                      <div>Mentor Name:{doc?.mentorName}</div>
                     </div>
                   </div>
-                  <div className="mt-6 text-center">
-                    <p className="text-base">Address : {data?.attestation}</p>
-                    <div className="m-3">
-                      <p className="text-base">Onboarding Attestation Granted!</p>
-                      <a
-                        className="text-xs"
-                        style={{ marginTop: "-1rem" }}
-                        target="_blank"
-                        href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${data.attestation}`}
-                      >
-                        See on EAS explorer
-                      </a>
-                    </div>
+                </div>
+                <div className="mt-6 text-center hover:text-bit">
+                  <div className="m-3 cursor-pointer">
+                    <a
+                      className="text-xl"
+                      style={{ marginTop: "-1rem" }}
+                      href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${doc?.attestation}`}
+                    >
+                      See on EAS explorer
+                    </a>
                   </div>
                 </div>
               </div>
@@ -67,7 +62,7 @@ const Profile = () => {
       </div>
       <div className="mt-6 flex justify-center">
         <button
-          className="bg-green-500 text-white px-6 py-3 rounded-md"
+          className="bg-zen text-black hover:text-white hover:bg-bit px-6 py-3 rounded-md font-mus text-lg"
           onClick={() => {
             router.push("/");
           }}

@@ -29,8 +29,8 @@ const Home = () => {
   });
 
   return (
-    <>
-      <div className="flex items-center justify-center m-10 flex-wrap">
+    <div className="my-12">
+      <div className="grid items-center justify-center xl:m-10 md:grid-cols-3 ">
         {events
           ? events?.map((eventDetails, index) => {
               return (
@@ -46,7 +46,7 @@ const Home = () => {
             })
           : "No events available"}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -89,9 +89,9 @@ const CreateQuizForm: React.FC = () => {
   });
 
   return (
-    <div className="m-10">
+    <div className="my-40">
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
+        <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4">
           <div className="mb-4">
             <label htmlFor="name" className="block mb-1">
               Event Name:
@@ -102,7 +102,7 @@ const CreateQuizForm: React.FC = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
+              className=""
               required
             />
           </div>
@@ -117,7 +117,7 @@ const CreateQuizForm: React.FC = () => {
               name="desc"
               value={formData.desc}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
+              className=" "
               required
             />
           </div>
@@ -132,7 +132,7 @@ const CreateQuizForm: React.FC = () => {
               name="level"
               value={formData.level}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
+              className=""
               required
             />
           </div>
@@ -141,14 +141,7 @@ const CreateQuizForm: React.FC = () => {
             <label htmlFor="level" className="block mb-1">
               Type of Questions:
             </label>
-            <select
-              id="answer"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
-              required
-            >
+            <select id="answer" name="type" value={formData.type} onChange={handleChange} className="" required>
               <option value={1}>MCQ </option>
               <option value={2}>Only Questions</option>
             </select>
@@ -164,7 +157,7 @@ const CreateQuizForm: React.FC = () => {
               name="timeStamp"
               value={formData.timeStamp}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
+              className=""
               required
             />
           </div>
@@ -179,14 +172,15 @@ const CreateQuizForm: React.FC = () => {
               name="mentorName"
               value={formData.mentorName}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-2 py-1"
+              className=""
               required
             />
           </div>
-
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-            Add Event
-          </button>
+          <div className="text-center w-full">
+            <button type="submit" className="bg-zen">
+              Add Event
+            </button>
+          </div>
         </form>
 
         {eventData && eventData.length > 0 && (
@@ -212,7 +206,8 @@ const CreateQuizForm: React.FC = () => {
                       <strong>Type of Question :</strong> {typeOf == 1 ? "MCQ" : "Only Questions"}
                     </p>
                     <p>
-                      <strong>TimeStamp:</strong> {String(closingTimestamp)}
+                      <strong>Closing TimeStamp:</strong>{" "}
+                      {moment(Number(closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
                     </p>
                   </li>
                 ),

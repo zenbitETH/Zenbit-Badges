@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
 type HeaderMenuLink = {
@@ -19,20 +19,15 @@ export const HeaderMenuLinks = () => {
 
   const menuLinks: HeaderMenuLink[] = [
     {
-      label: "Home",
+      label: "Events",
       href: "/",
-    },
-    {
-      label: "Debug Contracts",
-      href: "/debug",
-      icon: <BugAntIcon className="h-4 w-4" />,
     },
   ];
 
   if (connectedAddress) {
     const additionalLinks: HeaderMenuLink[] = [
       {
-        label: "Profile",
+        label: "My Badges",
         href: "/profile",
       },
     ];
@@ -57,6 +52,11 @@ export const HeaderMenuLinks = () => {
           label: "Create Quiz",
           href: "/create-quiz",
         },
+        {
+          label: "Debug Contracts",
+          href: "/debug",
+          icon: <BugAntIcon className="h-4 w-4" />,
+        },
       );
     }
     menuLinks.push(...additionalLinks);
@@ -64,19 +64,12 @@ export const HeaderMenuLinks = () => {
 
   return (
     <>
-      {menuLinks.map(({ label, href, icon }) => {
+      {menuLinks.map(({ label, href }) => {
         const isActive = pathname === href;
         return (
-          <li key={href}>
-            <Link
-              href={href}
-              passHref
-              className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
-            >
-              {icon}
-              <span>{label}</span>
+          <li className="text-xl" key={href}>
+            <Link href={href} passHref className={`${isActive ? "bg-zen p-1" : ""}`}>
+              <span className=" px-3 text-black rounded-full hover:text-zen">{label}</span>
             </Link>
           </li>
         );
@@ -94,8 +87,8 @@ export const Header = () => {
   );
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
+    <div className="fixed font-mus backdrop-blur-lg top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2 text-black">
+      <div className="navbar w-full">
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
             tabIndex={0}
@@ -109,7 +102,7 @@ export const Header = () => {
           {isDrawerOpen && (
             <ul
               tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+              className="menu menu-compact dropdown-content mt-3 p-2  bg-base-100 rounded-box w-52"
               onClick={() => {
                 setIsDrawerOpen(false);
               }}
@@ -118,22 +111,24 @@ export const Header = () => {
             </ul>
           )}
         </div>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
+        <Link
+          href="/"
+          passHref
+          className="hidden navbar-start lg:flex items-center gap-2 shrink-0 text-2xl text-center"
+        >
           <div className="flex relative w-10 h-10">
-            <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
+            <Image alt="SE2 logo" className="cursor-pointer" fill src="/zblogo.png" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-ETH</span>
-            <span className="text-xs">Ethereum dev stack</span>
+            <span className="font-bold leading-tight">Zenbit Badges</span>
           </div>
         </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
+        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2 mx-auto">
           <HeaderMenuLinks />
         </ul>
       </div>
       <div className="navbar-end flex-grow mr-4">
         <RainbowKitCustomConnectButton />
-        <FaucetButton />
       </div>
     </div>
   );
