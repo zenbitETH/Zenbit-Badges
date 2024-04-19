@@ -37,7 +37,7 @@ const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://sepolia.base.org");
+  const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://optimism.drpc.org");
   const [data, setData] = useState({
     id: "",
     address: "",
