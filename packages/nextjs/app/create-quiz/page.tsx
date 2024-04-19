@@ -212,7 +212,7 @@ const CreateQuizForm: React.FC = () => {
   };
 
   return (
-    <div className="m-10">
+    <div className="my-20">
       <label htmlFor="pet-select">Choose Event</label>
       <select
         name="events"
