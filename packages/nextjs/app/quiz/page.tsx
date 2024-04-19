@@ -29,7 +29,7 @@ const schemaIds = [
   },
   {
     key: 2,
-    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
+    value: "0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a",
   },
 ];
 
@@ -46,9 +46,14 @@ const Quiz = () => {
     eventDescription: "",
     mentorName: "",
   });
+
+  const [state, setState] = useState({
+    answer: "",
+    safeAddress: "",
+  });
   async function grantAttestation(easContract: any, data: any, recipient: any) {
-    const questionType = eventDetails?.[0];
-    const schema = schemaIds.find(schema => schema.key === questionType)?.value;
+    const eventId = Number(eventDetails?.[1]);
+    const schema = schemaIds.find(schema => schema.key == eventId)?.value;
     const expirationTime = 0;
     const revocable = true;
 
@@ -148,13 +153,18 @@ const Quiz = () => {
         const schemaEncoder = new SchemaEncoder(
           "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
         );
-        const encodedData = schemaEncoder.encodeData([
+        const dataToEncode = [
           { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
           { name: "Event_Name", value: eventDetails[5], type: "string" },
           { name: "Description", value: eventDetails[6], type: "string" },
           { name: "Mentor_Name", value: eventDetails[7], type: "string" },
-        ]);
+        ];
 
+        if (Number(eventDetails?.[1]) == 2) {
+          dataToEncode.push({ name: "DAO_Multisig", value: state?.safeAddress, type: "address" });
+          dataToEncode.push({ name: "DAO_ENS_Name", value: state?.answer, type: "string" });
+        }
+        const encodedData = schemaEncoder.encodeData(dataToEncode);
         const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
         // // grantAttestation();
@@ -253,6 +263,7 @@ const Quiz = () => {
         if (!txResponse.includes(connectedAddress)) {
           alert("You are not the valid owner of this multiSig wallet. Please try again with the valid owner address.");
         } else {
+          setState({ safeAddress: result?.value, answer: answer });
           onSubmit();
         }
         return;
