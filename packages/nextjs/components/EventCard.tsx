@@ -1,4 +1,5 @@
 import Image from "next/image";
+import moment from "moment";
 
 export const EventCard = ({
   eventDetails,
@@ -33,7 +34,7 @@ export const EventCard = ({
         Lv: {eventDetails.level.toString()}
       </div>
       <div className="absolute bottom-0 right-0 left-0 bg-gray-400 text-lg py-1 rounded-b-md text-white font-cha text-center">
-        Open until: {Number(eventDetails.closingTimestamp)}
+        Open until: {moment(Number(eventDetails.closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
       </div>
       <div className=" grid items-center text-center">
         <div className="grid items-center h-full pt-12">

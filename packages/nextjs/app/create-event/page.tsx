@@ -206,7 +206,8 @@ const CreateQuizForm: React.FC = () => {
                       <strong>Type of Question :</strong> {typeOf == 1 ? "MCQ" : "Only Questions"}
                     </p>
                     <p>
-                      <strong>TimeStamp:</strong> {String(closingTimestamp)}
+                      <strong>Closing TimeStamp:</strong>{" "}
+                      {moment(Number(closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
                     </p>
                   </li>
                 ),
