@@ -12,11 +12,12 @@ export const EventCard = ({
   connectedAddress: any;
   router: any;
 }) => {
+  const src = Number(eventDetails?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
   return (
     <button
       className={` ${
         userData && userData?.[1].includes(eventDetails?.eventId)
-          ? "bg-gray-500/60"
+          ? "bg-green-500/60"
           : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
           ? "bg-gray-500"
           : "bg-gray-200/60"
@@ -43,6 +44,7 @@ export const EventCard = ({
         {!(userData && userData?.[1].includes(eventDetails?.eventId)) &&
           Number(eventDetails.closingTimestamp) * 1000 < Date.now() &&
           "Expired"}
+        {userData && userData?.[1].includes(eventDetails?.eventId) && "Claimed"}
       </div>
       <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-xl">
         Lv: {eventDetails.level.toString()}
@@ -53,7 +55,7 @@ export const EventCard = ({
       <div className=" grid items-center text-center">
         <div className="grid items-center h-full pt-12">
           <div className="mx-auto rounded-full">
-            <Image alt="Badge" width={150} height={150} src="/badge1.png" className=" rounded-full" />
+            <Image alt="Badge" width={150} height={150} src={src} className=" rounded-full" />
           </div>
         </div>
       </div>

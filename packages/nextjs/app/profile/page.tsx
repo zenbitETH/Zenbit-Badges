@@ -26,13 +26,15 @@ const Profile = () => {
     <div>
       <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-3  ">
         {eventDetails?.map((doc, index) => {
+          const src = Number(doc?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
+
           return (
             <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 " key={index}>
               <div className="px-6 py-6">
                 <div className="flex justify-center items-center">
                   <div className="flex flex-row items-center justify-between">
                     <div className="mr-4">
-                      <Image src="/badge1.png" alt="Profile" width={300} height={300} className="rounded-full" />
+                      <Image src={src} alt="Profile" width={300} height={300} className="rounded-full" />
                     </div>
 
                     <div>
