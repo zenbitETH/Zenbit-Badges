@@ -13,10 +13,14 @@ export const EventCard = ({
   router: any;
 }) => {
   return (
-    <div
+    <button
       className={` ${
-        userData && userData?.[1].includes(eventDetails?.eventId) ? "bg-gray-200/60" : "bg-gray-500/60"
-      } rounded-md shadow-md m-2 relative`}
+        userData && userData?.[1].includes(eventDetails?.eventId)
+          ? "bg-gray-500/60"
+          : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
+          ? "bg-gray-500"
+          : "bg-gray-200/60"
+      } rounded-md shadow-md m-2 relative cursor-pointer`}
       onClick={() => {
         if (
           !userData?.[1].includes(eventDetails?.eventId) &&
@@ -26,9 +30,19 @@ export const EventCard = ({
           router.push(`/quiz?eventId=${eventDetails.eventId.toString()}`);
         }
       }}
+      disabled={
+        !(
+          !userData?.[1].includes(eventDetails?.eventId) &&
+          connectedAddress &&
+          eventDetails.level <= (userData?.[0] ?? 0)
+        ) || Number(eventDetails.closingTimestamp) * 1000 < Date.now()
+      }
     >
       <div className="absolute top-0 left-0 bg-zen rounded-br-md rounded-tl-md px-4 py-1 font-mus text-xl">
-        Event {eventDetails.level.toString()}
+        Event {eventDetails.eventId.toString()}{" "}
+        {!(userData && userData?.[1].includes(eventDetails?.eventId)) &&
+          Number(eventDetails.closingTimestamp) * 1000 < Date.now() &&
+          "Expired"}
       </div>
       <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-xl">
         Lv: {eventDetails.level.toString()}
@@ -48,6 +62,6 @@ export const EventCard = ({
         <div className="text-xl italic">Mentor: {String(eventDetails.mentorName)}</div>
         <div className="">{String(eventDetails.eventDescription)}</div>
       </div>
-    </div>
+    </button>
   );
 };
