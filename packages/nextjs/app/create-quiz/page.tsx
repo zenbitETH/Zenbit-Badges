@@ -212,29 +212,31 @@ const CreateQuizForm: React.FC = () => {
   };
 
   return (
-    <div className="my-20">
-      <label htmlFor="pet-select">Choose Event</label>
-      <select
-        name="events"
-        id="eventId"
-        onChange={e => {
-          const selectedValue = e.target.value;
-          const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
-          setSelectedEventType(selectedEventData?.typeOf || 0);
-          setSelectedEvent(selectedValue);
-        }}
-      >
-        <option value="">Please Select</option>
-        {eventData &&
-          eventData?.map((option, index) => (
-            <option key={index} value={option.eventId.toString()}>
-              {option.eventName}
-            </option>
-          ))}
-      </select>
+    <div className="my-12 mx-auto text-lg">
+      <div className="bg-gray-300 rounded-md p-5 mb-5">
+        <label htmlFor="pet-select">Choose Event</label>
+        <select
+          name="events"
+          id="eventId"
+          onChange={e => {
+            const selectedValue = e.target.value;
+            const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
+            setSelectedEventType(selectedEventData?.typeOf || 0);
+            setSelectedEvent(selectedValue);
+          }}
+        >
+          <option value="">Please Select</option>
+          {eventData &&
+            eventData?.map((option, index) => (
+              <option key={index} value={option.eventId.toString()}>
+                {option.eventName}
+              </option>
+            ))}
+        </select>
+      </div>
       {selectedEvent && (
         <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="border border-gray-300 rounded p-4 mb-4">
+          <form onSubmit={handleSubmit} className="rounded-md bg-gray-500 p-4 mb-4 text-white">
             <div className="mb-4">
               <label htmlFor="question" className="block mb-1">
                 Question:
@@ -245,7 +247,7 @@ const CreateQuizForm: React.FC = () => {
                 name="question"
                 value={formData.question}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-2 py-1"
+                className=""
                 required
               />
             </div>
@@ -264,7 +266,7 @@ const CreateQuizForm: React.FC = () => {
                         data-index={index}
                         value={option}
                         onChange={handleChange}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                        className=""
                       />
                     </div>
                   ))}
@@ -273,13 +275,7 @@ const CreateQuizForm: React.FC = () => {
                   <label htmlFor="answer" className="block mb-1">
                     Correct Answer:
                   </label>
-                  <select
-                    id="answer"
-                    name="answer"
-                    value={formData.answer}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  >
+                  <select id="answer" name="answer" value={formData.answer} onChange={handleChange} className="">
                     <option value="">Select correct answer</option>
                     <option value={1}>Option 1</option>
                     <option value={2}>Option 2</option>
@@ -288,9 +284,11 @@ const CreateQuizForm: React.FC = () => {
                 </div>
               </>
             )}
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-              {editMode ? "Update Question" : "Add Question"}
-            </button>
+            <div className="text-center w-full">
+              <button type="submit" className="bg-zen">
+                {editMode ? "Update Question" : "Add Question"}
+              </button>
+            </div>
           </form>
 
           {data.length > 0 && (
@@ -330,10 +328,10 @@ const CreateQuizForm: React.FC = () => {
                         </>
                       )}
 
-                      <button onClick={() => handleEdit(_id)} className="mr-2 bg-blue-500 text-white px-2 py-1 rounded">
+                      <button onClick={() => handleEdit(_id)} className="">
                         Edit
                       </button>
-                      <button onClick={() => handleDelete(_id)} className="bg-red-500 text-white px-2 py-1 rounded">
+                      <button onClick={() => handleDelete(_id)} className="bg-red-500 text-white">
                         Delete
                       </button>
                     </li>

@@ -91,7 +91,7 @@ const CreateQuizForm: React.FC = () => {
   return (
     <div className="my-40">
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} className="rounded-md bg-zen -md p-4 mb-4">
+        <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4">
           <div className="mb-4">
             <label htmlFor="name" className="block mb-1">
               Event Name:
@@ -176,10 +176,11 @@ const CreateQuizForm: React.FC = () => {
               required
             />
           </div>
-
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-            Add Event
-          </button>
+          <div className="text-center w-full">
+            <button type="submit" className="bg-zen">
+              Add Event
+            </button>
+          </div>
         </form>
 
         {eventData && eventData.length > 0 && (

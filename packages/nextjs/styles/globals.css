@@ -40,3 +40,8 @@ p {
 input, select {
   @apply placeholder:italic px-6 py-3 text-black w-full border-zen mx-auto rounded-md bg-white;
 }
+
+button {
+  @apply
+  text-black hover:text-white hover:bg-bit px-6 py-3 rounded-md font-mus text-lg 
+}
