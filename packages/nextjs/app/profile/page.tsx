@@ -29,23 +29,12 @@ const Profile = () => {
           const src = Number(doc?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
 
           return (
-            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 " key={index}>
-              <div className="px-6 py-6">
-                <div className="flex justify-center items-center">
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="mr-4">
-                      <Image src={src} alt="Profile" width={300} height={300} className="rounded-full" />
-                    </div>
-
-                    <div>
-                      <div>Event Name:{doc?.eventName}</div>
-                      <div>Event Description:{doc?.eventDescription}</div>
-                      <div>Mentor Name:{doc?.mentorName}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 text-center hover:text-bit">
-                  <div className="m-3 cursor-pointer">
+            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 text-center" key={index}>
+              <div className="p-6">
+                <div className="text-2xl font-bold font-mus ">{doc?.eventName}</div>
+                <Image src={src} alt="Profile" width={300} height={300} className="rounded-full mx-auto my-6" />
+                <div className=" text-center hover:text-bit">
+                  <div className="cursor-pointer">
                     <a
                       className="text-xl"
                       style={{ marginTop: "-1rem" }}
