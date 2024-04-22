@@ -29,22 +29,25 @@ const Profile = () => {
           const src = Number(doc?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
 
           return (
-            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 text-center" key={index}>
-              <div className="p-6">
-                <div className="text-2xl font-bold font-mus ">{doc?.eventName}</div>
-                <Image src={src} alt="Profile" width={300} height={300} className="rounded-full mx-auto my-6" />
-                <div className=" text-center hover:text-bit">
-                  <div className="cursor-pointer">
-                    <a
-                      className="text-xl"
-                      style={{ marginTop: "-1rem" }}
-                      href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${doc?.attestation}`}
-                    >
-                      See on EAS explorer
-                    </a>
-                  </div>
-                </div>
+            <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 text-center p-6 relative" key={index}>
+              <div className="absolute bottom-0 left-0 bg-zen rounded-tr-md rounded-bl-md px-4 py-1 font-mus text-xl">
+                Event No.
               </div>
+              <div className="absolute bottom-0 right-0 bg-bit rounded-br-md rounded-tl-md px-4 py-1 text-white font-mus text-xl">
+                Lv: 0
+              </div>
+              <div className="absolute bottom-0 right-0 left-0 text-center bg-white hover:bg-gray-500 rounded-t-md w-fit mx-auto px-4 py-1 hover:text-white">
+                <a
+                  className="text-xl"
+                  style={{ marginTop: "-1rem" }}
+                  href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${doc?.attestation}`}
+                >
+                  See on EAS explorer
+                </a>
+              </div>
+              <div className="text-2xl font-bold font-mus ">{doc?.eventName}</div>
+              <Image src={src} alt="Profile" width={300} height={300} className="rounded-full mx-auto my-3" />
+              <div className="text-xl italic pb-6">Mentor: habacuc.eth</div>
             </div>
           );
         })}
