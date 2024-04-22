@@ -307,24 +307,23 @@ const Quiz = () => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="min-w-xl max-w-xl mx-auto flex justify-center p-5 bg-gray-300 rounded-md">
+    <div className="min-w-xl  mx-auto flex justify-center p-6 mt-24 rounded-md text-center">
       {questions.length > 0 ? (
-        <div className="min-w-xl max-w-xl ">
-          <form onSubmit={handleSubmit} className="space-y-4 ">
-            {questions.map((question, index) => {
-              return (
-                <QuestionComponent
-                  key={index}
-                  question={question}
-                  questionIndex={index}
-                  handleOptionChange={handleOptionChange}
-                  answer={answers[(question as { _id: string })?._id]}
-                  eventData={eventDetails}
-                />
-              );
-            })}
+        <form onSubmit={handleSubmit} className="space-y-4 grid gap-5">
+          {questions.map((question, index) => {
+            return (
+              <QuestionComponent
+                key={index}
+                question={question}
+                questionIndex={index}
+                handleOptionChange={handleOptionChange}
+                answer={answers[(question as { _id: string })?._id]}
+                eventData={eventDetails}
+              />
+            );
+          })}
 
-            {/* <div className="flex justify-center align-middle items-center">
+          {/* <div className="flex justify-center align-middle items-center">
               <div className="mr-10">Mentor</div>
               <select
                 className="px-4 py-2 border border-gray-300 rounded-md"
@@ -338,17 +337,16 @@ const Quiz = () => {
                 <option value="option3">Option 3</option>
               </select>
             </div> */}
-            <button
-              type="submit"
-              className={`${allQuestionsAnswered ? "bg-green-500 text-white" : "bg-red-300"} px-4 py-2 mx-auto block ${
-                allQuestionsAnswered ? "" : "pointer-events-none"
-              }`}
-              disabled={!allQuestionsAnswered}
-            >
-              Submit
-            </button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            className={`${allQuestionsAnswered ? "bg-green-500 text-white" : "bg-red-300"} px-4 py-2 mx-auto block ${
+              allQuestionsAnswered ? "" : "pointer-events-none"
+            }`}
+            disabled={!allQuestionsAnswered}
+          >
+            Submit
+          </button>
+        </form>
       ) : (
         <p>No questions available</p>
       )}
