@@ -17,7 +17,7 @@ export const EventCard = ({
     <button
       className={` ${
         userData && userData?.[1].includes(eventDetails?.eventId)
-          ? "bg-zen/40"
+          ? "bg-bit/100 text-white hover:cursor-not-allowed"
           : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
           ? "bg-gray-500"
           : "bg-gray-200/60"

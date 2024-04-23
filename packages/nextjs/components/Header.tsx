@@ -45,11 +45,11 @@ export const HeaderMenuLinks = () => {
     ) {
       additionalLinks.push(
         {
-          label: "Create Event",
+          label: "New Event",
           href: "/create-event",
         },
         {
-          label: "Create Quiz",
+          label: "Add Quiz",
           href: "/create-quiz",
         },
         {
@@ -127,7 +127,7 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end flex-grow mr-4">
+      <div className="navbar-end flex-grow mr-3 w-full">
         <RainbowKitCustomConnectButton />
       </div>
     </div>
