@@ -45,3 +45,14 @@ button {
   @apply
   text-black hover:text-white hover:bg-bit px-6 py-3 rounded-md font-mus text-lg 
 }
+
+.radio {
+  @apply 
+  h-14 w-14 bg-gray-500
+}
+
+.radio:checked {
+  @apply
+  bg-zen
+  animate-pulse
+}
