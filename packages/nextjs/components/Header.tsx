@@ -67,9 +67,9 @@ export const HeaderMenuLinks = () => {
       {menuLinks.map(({ label, href }) => {
         const isActive = pathname === href;
         return (
-          <li className="text-xl" key={href}>
+          <li className="xl:text-xl " key={href}>
             <Link href={href} passHref className={`${isActive ? "bg-zen p-1" : ""}`}>
-              <span className=" px-3 text-black rounded-full hover:text-zen">{label}</span>
+              <span className=" px-2   text-black rounded-full hover:text-zen">{label}</span>
             </Link>
           </li>
         );
@@ -92,7 +92,7 @@ export const Header = () => {
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
             tabIndex={0}
-            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
+            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-zen" : ""}`}
             onClick={() => {
               setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
             }}
@@ -102,7 +102,7 @@ export const Header = () => {
           {isDrawerOpen && (
             <ul
               tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2  bg-base-100 rounded-box w-52"
+              className="menu menu-compact dropdown-content mt-3 p-2  bg-bit  rounded-box w-52"
               onClick={() => {
                 setIsDrawerOpen(false);
               }}
@@ -127,7 +127,7 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end flex-grow mr-3 w-full">
+      <div className="navbar-end mr-3 w-full">
         <RainbowKitCustomConnectButton />
       </div>
     </div>

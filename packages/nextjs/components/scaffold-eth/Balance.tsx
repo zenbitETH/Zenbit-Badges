@@ -58,11 +58,11 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
   const formattedBalance = balance ? Number(balance.formatted) : 0;
 
   return (
-    <button
+    <div
       className={`text-bit text-sm flex flex-col font-normal items-center hover:bg-transparent ${className}`}
       onClick={toggleBalanceMode}
     >
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-center cursor-pointer">
         {displayUsdMode ? (
           <>
             <span className="text-[0.8em] font-bold mr-1">$</span>
@@ -75,6 +75,6 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
           </>
         )}
       </div>
-    </button>
+    </div>
   );
 };

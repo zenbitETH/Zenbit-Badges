@@ -43,7 +43,7 @@ input, select {
 
 button {
   @apply
-  text-black hover:text-white hover:bg-bit px-6 py-3 rounded-md font-mus text-lg 
+  text-black hover:text-white hover:bg-bit px-6 py-1 rounded-md font-mus xl:text-lg 
 }
 
 .radio {
