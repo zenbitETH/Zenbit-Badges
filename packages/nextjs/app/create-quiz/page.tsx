@@ -212,7 +212,7 @@ const CreateQuizForm: React.FC = () => {
   };
 
   return (
-    <div className="my-12 mx-auto text-lg">
+    <div className="my-28 mx-auto text-lg">
       <div className="bg-gray-300 rounded-md p-5 mb-5">
         <label htmlFor="pet-select">Choose Event</label>
         <select
