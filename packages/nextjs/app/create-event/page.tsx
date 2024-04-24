@@ -197,7 +197,7 @@ const CreateQuizForm: React.FC = () => {
                   <div className="py-3 text-xl font-bold">{typeOf == 1 ? "3-Option Quiz" : "Written Answers"} </div>
                   <div className="text-base xl:text-lg text-justify">{eventDescription}</div>
                   <div className="xl:text-xl italic py-3">Mentor:{mentorName}</div>
-                  <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-xl">
+                  <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus">
                     Lv:{String(level)}
                   </div>
 

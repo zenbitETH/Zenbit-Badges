@@ -212,9 +212,9 @@ const CreateQuizForm: React.FC = () => {
   };
 
   return (
-    <div className="my-28 mx-auto text-lg">
-      <div className="bg-gray-300 rounded-md p-5 mb-5">
-        <label htmlFor="pet-select">Choose Event</label>
+    <div className="my-28 mx-3">
+      <div className="bg-gray-300 rounded-md p-5 mb-5 max-w-4xl mx-auto">
+        <label htmlFor="Choose Event">Choose Event</label>
         <select
           name="events"
           id="eventId"
@@ -235,8 +235,8 @@ const CreateQuizForm: React.FC = () => {
         </select>
       </div>
       {selectedEvent && (
-        <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="rounded-md bg-gray-500 p-4 mb-4 text-white">
+        <div className="mx-auto">
+          <form onSubmit={handleSubmit} className="rounded-md bg-gray-500 p-4 mb-4 text-white max-w-4xl mx-auto">
             <div className="mb-4">
               <label htmlFor="question" className="block mb-1">
                 Question:
@@ -292,9 +292,9 @@ const CreateQuizForm: React.FC = () => {
           </form>
 
           {data.length > 0 && (
-            <div className="border border-gray-300 rounded p-4">
-              <h2 className="text-lg font-semibold mb-2">Created Questions:</h2>
-              <ul>
+            <div className="my-6 text-center">
+              <div className="text-2xl mb-2 font-mus ">Event Questions:</div>
+              <ul className="grid md:grid-cols-2 2xl:grid-cols-3 gap-3">
                 {data.map(
                   (
                     {
@@ -305,35 +305,42 @@ const CreateQuizForm: React.FC = () => {
                     }: { eventId: string; question: string; options: string[]; answer: string; _id: string },
                     index: number,
                   ) => (
-                    <li key={index} className="mb-4 p-2 border">
+                    <li key={index} className="p-6 rounded-md bg-gray-200/60 relative text-left">
                       <p>
-                        <strong>Question {index + 1} :</strong> {question}
+                        <strong className="font-mus">Question {index + 1} :</strong> <br />
+                        {question}
                       </p>
                       {selectEventType == 1 && (
                         <>
-                          <p>
-                            <strong>Options:</strong>
+                          <div className="grid gap-1 ">
+                            <strong className="font-mus">Options:</strong>
                             {options?.map((option, key) => {
                               return (
                                 <span key={key}>
-                                  {key + 1}:{option}
+                                  {key + 1}: {option}
                                   {"            "}
                                 </span>
                               );
                             })}
-                          </p>
+                          </div>
                           <p>
-                            <strong>Answer:</strong> {answer}
+                            <strong className="font-mus">Answer:</strong> {answer}
                           </p>
                         </>
                       )}
 
-                      <button onClick={() => handleEdit(_id)} className="">
+                      <div
+                        onClick={() => handleEdit(_id)}
+                        className=" absolute top-0 left-0 bg-zen hover:bg-bit rounded-br-md rounded-tl-md px-4 py-1 font-mus cursor-pointer hover:text-white"
+                      >
                         Edit
-                      </button>
-                      <button onClick={() => handleDelete(_id)} className="bg-red-500 text-white">
+                      </div>
+                      <div
+                        onClick={() => handleDelete(_id)}
+                        className="absolute top-0 right-0 bg-red-500 hover:bg-white hover:text-red-500 rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus cursor-pointer"
+                      >
                         Delete
-                      </button>
+                      </div>
                     </li>
                   ),
                 )}
