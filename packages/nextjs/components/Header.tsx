@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+// import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -19,7 +19,7 @@ export const HeaderMenuLinks = () => {
 
   const menuLinks: HeaderMenuLink[] = [
     {
-      label: "Events",
+      label: "Eventos",
       href: "/",
     },
   ];
@@ -27,7 +27,7 @@ export const HeaderMenuLinks = () => {
   if (connectedAddress) {
     const additionalLinks: HeaderMenuLink[] = [
       {
-        label: "My Badges",
+        label: "Ver Badges",
         href: "/profile",
       },
     ];
@@ -45,18 +45,18 @@ export const HeaderMenuLinks = () => {
     ) {
       additionalLinks.push(
         {
-          label: "New Event",
+          label: "Crear Evento",
           href: "/create-event",
         },
         {
-          label: "Add Quiz",
+          label: "Agregar Quiz",
           href: "/create-quiz",
         },
-        {
-          label: "Debug Contracts",
-          href: "/debug",
-          icon: <BugAntIcon className="h-4 w-4" />,
-        },
+        //      {
+        //        label: "Debug Contracts",
+        //        href: "/debug",
+        //        icon: <BugAntIcon className="h-4 w-4" />,
+        //      },
       );
     }
     menuLinks.push(...additionalLinks);
@@ -96,9 +96,7 @@ export const Header = () => {
             onClick={() => {
               setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
             }}
-          >
-            <Bars3Icon className="h-1/2" />
-          </label>
+          ></label>
           {isDrawerOpen && (
             <ul
               tabIndex={0}

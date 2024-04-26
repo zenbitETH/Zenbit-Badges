@@ -40,17 +40,17 @@ export const EventCard = ({
       }
     >
       <div className="absolute top-0 left-0 bg-zen rounded-br-md rounded-tl-md px-4 py-1 font-mus">
-        Event {eventDetails.eventId.toString()}{" "}
+        Evento {eventDetails.eventId.toString()}{" "}
         {!(userData && userData?.[1].includes(eventDetails?.eventId)) &&
           Number(eventDetails.closingTimestamp) * 1000 < Date.now() &&
           "Expired"}
         {userData && userData?.[1].includes(eventDetails?.eventId) && "Claimed"}
       </div>
       <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-xl">
-        Lv: {eventDetails.level.toString()}
+        Nv: {eventDetails.level.toString()}
       </div>
       <div className="absolute bottom-0 right-0 left-0 bg-gray-500 text-base xl:text-lg py-1 rounded-b-md text-white font-cha text-center">
-        Open until: {moment(Number(eventDetails.closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
+        Disponible hasta: {moment(Number(eventDetails.closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
       </div>
       <div className=" grid items-center text-center">
         <div className="grid items-center h-full pt-12">
