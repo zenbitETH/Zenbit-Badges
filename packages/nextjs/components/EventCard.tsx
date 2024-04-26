@@ -21,7 +21,7 @@ export const EventCard = ({
           : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
           ? "bg-gray-500"
           : "bg-gray-200/60"
-      } rounded-md shadow-md m-2 relative cursor-pointer`}
+      } rounded-md shadow-md m-2 relative cursor-pointer h-full`}
       onClick={() => {
         if (
           !userData?.[1].includes(eventDetails?.eventId) &&

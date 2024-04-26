@@ -186,7 +186,7 @@ const CreateQuizForm: React.FC = () => {
       {eventData && eventData.length > 0 && (
         <div className="text-center mx-3 my-10">
           <div className="text-2xl mb-2 font-mus">Created Events:</div>
-          <ul className="grid md:grid-cols-2 2xl:grid-cols-3">
+          <ul className="grid md:grid-cols-2 2xl:grid-cols-3 gap-3">
             {eventData.map(
               ({ eventId, eventName, typeOf, eventDescription, mentorName, level, closingTimestamp }, index) => (
                 <li key={eventId} className="mb-4 p-6 py-9 rounded-md bg-gray-200/60 relative">
