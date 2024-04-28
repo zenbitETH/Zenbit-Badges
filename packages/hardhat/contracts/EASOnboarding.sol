@@ -31,9 +31,6 @@ contract EASOnboarding is EASOnboardingStorage {
             (events[_eventId].closingTimestamp > block.timestamp) || !events[_eventId].overrideClosingTimestamp,
             "Event is past closing timestamp"
         );
-
-        events[_eventId].attendees.push(msg.sender);
-        attestationProfile[msg.sender].eventsCompleted.push(_eventId);
         attestationProfile[msg.sender].studentLevel = _level;
         studentEventMap[msg.sender][_eventId].eventId = _eventId;
         studentEventMap[msg.sender][_eventId].eventName = events[_eventId].eventName;
@@ -46,6 +43,12 @@ contract EASOnboarding is EASOnboardingStorage {
 
     function addAttestation(bytes32 _attestation, address _studentAddress, uint256 _eventId) public {
         require(msg.sender == deployer);
+        require(
+            studentEventMap[_studentAddress][_eventId].attestation == bytes32(0), "Student already attested for this event"
+        );
+        events[_eventId].attendees.push(_studentAddress);
+        events[_eventId].attendeeCount++;
+        attestationProfile[_studentAddress].eventsCompleted.push(_eventId);
         attestationProfile[_studentAddress].attestations.push(_attestation);
         studentEventMap[_studentAddress][_eventId].attestation = _attestation;
     }
@@ -60,7 +63,9 @@ contract EASOnboarding is EASOnboardingStorage {
         uint8 _type,
         string memory _eventName,
         string memory _eventDescription,
-        string memory _mentorName
+        string memory _mentorName,
+        string memory _badgeUri,
+        bytes32  _schemaUID
     ) public isMentorAddress(msg.sender) {
         require(_closingTimestamp > block.timestamp, "Closing timestamp cannot be in the past.");
 
@@ -72,10 +77,12 @@ contract EASOnboarding is EASOnboardingStorage {
         events[eventIdCounter].eventName = _eventName;
         events[eventIdCounter].eventDescription = _eventDescription;
         events[eventIdCounter].mentorName = _mentorName;
+        events[eventIdCounter].badgeUri = _badgeUri;
         events[eventIdCounter].mentorAddress = msg.sender;
         events[eventIdCounter].attendees.push(msg.sender);
         events[eventIdCounter].isActive = true;
         events[eventIdCounter].overrideClosingTimestamp = false;
+        events[eventIdCounter].schemaUID = _schemaUID;
         eventIdCounter++;
     }
 
