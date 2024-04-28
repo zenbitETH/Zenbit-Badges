@@ -17,6 +17,16 @@ contract EASOnboarding is EASOnboardingStorage {
         _;
     }
 
+    event EventCreated(
+        uint256 indexed eventId, string eventName, address indexed mentorAddress, uint256 closingTimestamp
+    );
+
+    event AttestationAdded(address indexed studentAddress, uint256 indexed eventId, bytes32 attestation);
+
+    event MentorAdded(address indexed mentorAddress);
+
+    event OverrideEventFlagToggled(uint256 indexed eventId, bool status);
+
     function getAttested(uint256 _eventId, uint256 _level, bytes32 _msgHash, bytes memory _signature)
         public
         returns (bool)
@@ -44,13 +54,16 @@ contract EASOnboarding is EASOnboardingStorage {
     function addAttestation(bytes32 _attestation, address _studentAddress, uint256 _eventId) public {
         require(msg.sender == deployer);
         require(
-            studentEventMap[_studentAddress][_eventId].attestation == bytes32(0), "Student already attested for this event"
+            studentEventMap[_studentAddress][_eventId].attestation == bytes32(0),
+            "Student already attested for this event"
         );
         events[_eventId].attendees.push(_studentAddress);
         events[_eventId].attendeeCount++;
         attestationProfile[_studentAddress].eventsCompleted.push(_eventId);
         attestationProfile[_studentAddress].attestations.push(_attestation);
         studentEventMap[_studentAddress][_eventId].attestation = _attestation;
+
+        emit AttestationAdded(_studentAddress, _eventId, _attestation);
     }
 
     function toggleOverrideEventFlag(uint256 _eventId, bool _res) public isMentorAddress(msg.sender) {
@@ -65,7 +78,7 @@ contract EASOnboarding is EASOnboardingStorage {
         string memory _eventDescription,
         string memory _mentorName,
         string memory _badgeUri,
-        bytes32  _schemaUID
+        bytes32 _schemaUID
     ) public isMentorAddress(msg.sender) {
         require(_closingTimestamp > block.timestamp, "Closing timestamp cannot be in the past.");
 
