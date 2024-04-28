@@ -22,10 +22,9 @@ contract EASOnboarding is EASOnboardingStorage {
     );
 
     event AttestationAdded(address indexed studentAddress, uint256 indexed eventId, bytes32 attestation);
-
     event MentorAdded(address indexed mentorAddress);
-
     event OverrideEventFlagToggled(uint256 indexed eventId, bool status);
+    event MentorRemoved(address indexed mentorAddress);
 
     function getAttested(uint256 _eventId, uint256 _level, bytes32 _msgHash, bytes memory _signature)
         public
@@ -68,6 +67,7 @@ contract EASOnboarding is EASOnboardingStorage {
 
     function toggleOverrideEventFlag(uint256 _eventId, bool _res) public isMentorAddress(msg.sender) {
         events[_eventId].overrideClosingTimestamp = _res;
+        emit OverrideEventFlagToggled(_eventId, _res);
     }
 
     function createEvent(
@@ -97,6 +97,8 @@ contract EASOnboarding is EASOnboardingStorage {
         events[eventIdCounter].overrideClosingTimestamp = false;
         events[eventIdCounter].schemaUID = _schemaUID;
         eventIdCounter++;
+
+        emit EventCreated(eventIdCounter - 1, _eventName, msg.sender, _closingTimestamp);
     }
 
     function isVerified(bytes32 _messageHash, bytes memory _signature) public view returns (bool) {
@@ -114,6 +116,18 @@ contract EASOnboarding is EASOnboardingStorage {
     function addMentors(address[] memory _newMentors) public isMentorAddress(msg.sender) {
         for (uint256 i = 0; i < _newMentors.length; i++) {
             isMentor[_newMentors[i]] = true;
+            emit MentorAdded(_newMentors[i]);
+        }
+    }
+
+    function removeMentors(address[] memory _mentors) public {
+        require(msg.sender == deployer, "Only deployer can remove mentors");
+
+        for (uint256 i = 0; i < _mentors.length; i++) {
+            if (isMentor[_mentors[i]]) {
+                isMentor[_mentors[i]] = false;
+                emit MentorRemoved(_mentors[i]);
+            }
         }
     }
 
