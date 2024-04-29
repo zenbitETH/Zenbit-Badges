@@ -7,6 +7,7 @@ import { NFTStorage } from "nft.storage";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import schemas from "~~/schema/index.json";
 
 interface FormData {
   name: string;
@@ -34,6 +35,8 @@ const CreateQuizForm: React.FC = () => {
     type: 1,
     schemaId: "",
   });
+
+  const [schemaIds] = useState<string[]>(Object.keys(schemas));
 
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
@@ -217,8 +220,13 @@ const CreateQuizForm: React.FC = () => {
           </label>
           <select id="schemaId" name="schemaId" value={formData.schemaId} onChange={handleChange} className="" required>
             <option value={""}>Please Select </option>
-            <option value={1}>3-Option Quiz </option>
-            <option value={2}>Written Answers</option>
+            {schemaIds.map(schemaId => {
+              return (
+                <option key={schemaId} value={schemaId}>
+                  {schemaId}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="mb-4">
