@@ -16,7 +16,7 @@ interface FormData {
   timeStamp: number;
   mentorName: string;
   type: number;
-  schemaId: string;
+  schemaId: "0x";
 }
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
@@ -33,7 +33,7 @@ const CreateQuizForm: React.FC = () => {
     timeStamp: 0,
     mentorName: "",
     type: 1,
-    schemaId: "",
+    schemaId: "0x",
   });
 
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
@@ -57,7 +57,11 @@ const CreateQuizForm: React.FC = () => {
         level: 0,
         timeStamp: 0,
         type: 1,
-        schemaId: "",
+        schemaId: "0x",
+      });
+      setSelectedImage({
+        imageFile: null,
+        previewURL: null,
       });
     },
   });
@@ -104,7 +108,7 @@ const CreateQuizForm: React.FC = () => {
           formData.desc,
           formData.mentorName,
           cid,
-          `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
+          `${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
         ],
       });
     });
