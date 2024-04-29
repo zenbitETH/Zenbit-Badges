@@ -37,7 +37,7 @@ const CreateQuizForm: React.FC = () => {
     },
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     setFormData(prevState => ({
@@ -111,13 +111,12 @@ const CreateQuizForm: React.FC = () => {
           <label htmlFor="desc" className="block mb-1">
             Event Description:
           </label>
-          <input
-            type="text"
+          <textarea
             id="desc"
             name="desc"
             value={formData.desc}
             onChange={handleChange}
-            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder:italic h-32 bg-white"
+            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder-italic h-32 bg-white"
             required
           />
         </div>
