@@ -1,0 +1,16 @@
+{
+  "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b": {
+    "Event_ID": "uint256",
+    "Event_Name": "string",
+    "Description": "string",
+    "Mentor_Name": "string"
+  },
+  "0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a": {
+    "Event_ID": "uint256",
+    "Event_Name": "string",
+    "Description": "string",
+    "Mentor_Name": "string",
+    "DAO_Multisig": "address",
+    "DAO_ENS_Name": "string"
+  }
+}

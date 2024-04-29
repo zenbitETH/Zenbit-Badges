@@ -1,7 +1,9 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import Image from "next/image";
 import moment from "moment";
+import { NFTStorage } from "nft.storage";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -13,9 +15,14 @@ interface FormData {
   timeStamp: number;
   mentorName: string;
   type: number;
+  schemaId: string;
 }
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
+
+const client = new NFTStorage({
+  token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || "",
+});
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -25,15 +32,30 @@ const CreateQuizForm: React.FC = () => {
     timeStamp: 0,
     mentorName: "",
     type: 1,
+    schemaId: "",
   });
+
+  const [selectedImage, setSelectedImage] = useState<{
+    imageFile: File | null;
+    previewURL: string | null;
+  } | null>(null);
 
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",
     functionName: "createEvent",
-    args: [1n, 1n, 1, "", "", ""],
+    args: [1n, 1n, 1, "", "", "", "", "0x"],
     onBlockConfirmation: async txnReceipt => {
-      console.log("txnReceipt for the create Event ", txnReceipt);
-      // attachAttestation();
+      console.log("txnReceipt", txnReceipt);
+
+      setFormData({
+        name: "",
+        desc: "",
+        mentorName: "",
+        level: 0,
+        timeStamp: 0,
+        type: 1,
+        schemaId: "",
+      });
     },
   });
 
@@ -53,34 +75,46 @@ const CreateQuizForm: React.FC = () => {
       !formData.desc ||
       !formData.mentorName ||
       formData.level == undefined ||
-      !formData.timeStamp
+      !formData.timeStamp ||
+      !formData.schemaId
     ) {
       return;
     }
+
     const isValidDate = moment(formData.timeStamp).valueOf();
     const currentTimestamp = moment().valueOf();
     if (isValidDate < currentTimestamp) {
       return;
     }
-    writeAsync({
-      args: [
-        BigInt(formData.timeStamp),
-        BigInt(formData.level),
-        formData.type,
-        formData.name,
-        formData.desc,
-        formData.mentorName,
-      ],
-    });
 
-    setFormData({
-      name: "",
-      desc: "",
-      mentorName: "",
-      level: 0,
-      timeStamp: 0,
-      type: 1,
+    if (!selectedImage || !selectedImage.imageFile) {
+      return;
+    }
+
+    client.storeBlob((selectedImage as any).imageFile).then(cid => {
+      writeAsync({
+        args: [
+          BigInt(formData.timeStamp),
+          BigInt(formData.level),
+          formData.type,
+          formData.name,
+          formData.desc,
+          formData.mentorName,
+          cid,
+          `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
+        ],
+      });
     });
+  };
+
+  const handleImageChange = (e: any) => {
+    if (e.target.files && e.target.files[0]) {
+      const img = e.target.files[0];
+      setSelectedImage({
+        imageFile: img,
+        previewURL: URL.createObjectURL(img),
+      });
+    }
   };
 
   const { data: eventData } = useScaffoldContractRead({
@@ -176,6 +210,40 @@ const CreateQuizForm: React.FC = () => {
             required
           />
         </div>
+
+        <div className="mb-4">
+          <label htmlFor="schemaId" className="block mb-1">
+            Schema Id:
+          </label>
+          <select id="schemaId" name="schemaId" value={formData.schemaId} onChange={handleChange} className="" required>
+            <option value={""}>Please Select </option>
+            <option value={1}>3-Option Quiz </option>
+            <option value={2}>Written Answers</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="placeImage" className="block mb-1">
+            PlaceImage
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100
+          "
+          />
+        </div>
+        {selectedImage && selectedImage.previewURL && (
+          <div className="mb-4">
+            <p className="block white text-sm font-bold mb-2">Preview</p>
+            <Image src={selectedImage.previewURL} alt="Preview" width={200} height={200} />
+          </div>
+        )}
         <div className="text-center w-full">
           <button type="submit" className="bg-zen">
             Add Event
