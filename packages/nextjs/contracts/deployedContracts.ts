@@ -1123,7 +1123,7 @@ const deployedContracts = {
   },
   11155420: {
     EASOnboarding: {
-      address: "0x4dB3581Bc77588497dCC596cCf27e0091Fa902Cb",
+      address: "0x53112D945b5257f72AB1Afe7d259B045f5fB47ae",
       abi: [
         {
           inputs: [],
@@ -1141,6 +1141,11 @@ const deployedContracts = {
               internalType: "address",
               name: "_studentAddress",
               type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_eventId",
+              type: "uint256",
             },
           ],
           name: "addAttestation",
@@ -1368,6 +1373,62 @@ const deployedContracts = {
                 },
               ],
               internalType: "struct Structs.Event[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_studentAddress",
+              type: "address",
+            },
+          ],
+          name: "getAllStudentEventsWithAttestations",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "attestation",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "uint256",
+                  name: "eventId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "level",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "eventName",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "eventDescription",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "mentorName",
+                  type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "mentorAddress",
+                  type: "address",
+                },
+              ],
+              internalType: "struct Structs.metaEvent[]",
               name: "",
               type: "tuple[]",
             },
