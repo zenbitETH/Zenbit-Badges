@@ -27,6 +27,8 @@ const Profile = () => {
       <div className="my-12 grid items-center justify-center xl:m-10 md:grid-cols-2 2xl:grid-cols-3  ">
         {eventDetails?.map((doc, index) => {
           const src = Number(doc?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
+          // const src = "https://ipfs.io/ipfs/"+doc.imgUri;
+
           return (
             <div className="overflow-hidden rounded-md m-2 bg-gray-200/60 text-center p-6 relative" key={index}>
               <div className="absolute bottom-0 left-0 bg-zen rounded-tr-md rounded-bl-md px-4 py-1 font-mus text-sm xl:text-base">
