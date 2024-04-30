@@ -172,8 +172,7 @@ const Quiz = () => {
 
         const encodedData = schemaEncoder.encodeData(dataToEncode);
         const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
-        console.log("Schema UID", schemaUID);
-        // // grantAttestation();
+
         if (schemaUID && schemaUID?.events?.[0]?.args) {
           addAttestation(
             easOnboardingContract,
