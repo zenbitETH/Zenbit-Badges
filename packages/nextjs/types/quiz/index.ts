@@ -12,3 +12,13 @@ export interface MyObject {
   eventId: string;
   value: Record<string, string>;
 }
+
+export interface EventDetailsSchema {
+  type: string;
+  value: string;
+  state: boolean;
+}
+
+export interface Schemas {
+  [key: string]: EventDetailsSchema;
+}

@@ -1,5 +1,5 @@
 {
-  "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b": {
+  "e3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b": {
     "Event_ID": {
       "type": "uint256",
       "value": "eventDetails[1]",
@@ -7,21 +7,21 @@
     },
     "Event_Name": {
       "type": "string",
-      "value": "eventDetails[6]",
+      "value": "eventDetails[5]",
       "state": false
     },
     "Description": {
       "type": "string",
-      "value": "eventDetails[7]",
+      "value": "eventDetails[6]",
       "state": false
     },
     "Mentor_Name": {
       "type": "string",
-      "value": "eventDetails[8]",
+      "value": "eventDetails[7]",
       "state": false
     }
   },
-  "0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a": {
+  "ddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a": {
     "Event_ID": {
       "type": "uint256",
       "value": "eventDetails[1]",
@@ -29,17 +29,17 @@
     },
     "Event_Name": {
       "type": "string",
-      "value": "eventDetails[6]",
+      "value": "eventDetails[5]",
       "state": false
     },
     "Description": {
       "type": "string",
-      "value": "eventDetails[7]",
+      "value": "eventDetails[6]",
       "state": false
     },
     "Mentor_Name": {
       "type": "string",
-      "value": "eventDetails[8]",
+      "value": "eventDetails[7]",
       "state": false
     },
     "DAO_Multisig": {
