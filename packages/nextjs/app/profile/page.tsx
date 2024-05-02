@@ -40,6 +40,7 @@ const Profile = () => {
               <div className="absolute bottom-0 right-0 left-0 text-center bg-white hover:bg-gray-500 rounded-t-md w-fit mx-auto px-4 py-1 hover:text-white text-sm xl:text-base">
                 <a
                   className=""
+                  target="_blank"
                   style={{ marginTop: "-1rem" }}
                   href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${doc?.attestation}`}
                 >

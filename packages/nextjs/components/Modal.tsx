@@ -23,6 +23,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, close, data }) => {
           <a
             className="text-xl"
             style={{ marginTop: "-1rem" }}
+            target="_blank"
             href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${data.id}`}
           >
             View on EAS explorer
