@@ -11,10 +11,12 @@ library Structs {
         string eventName;
         string eventDescription;
         string mentorName;
+        string badgeUri;
         address mentorAddress;
         address[] attendees;
         bool isActive;
         bool overrideClosingTimestamp;
+        bytes32 schemaUID;
     }
 
     struct AttestationProfile {

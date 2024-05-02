@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     EASOnboarding: {
-      address: "0x6B3cC5aeedB91F2B72e42d75c45E8daf93Dcc7d3",
+      address: "0xAA154a1E888336099110F07Ab25dF0137125a833",
       abi: [
         {
           inputs: [],
@@ -565,12 +565,113 @@ const deployedContracts = {
   },
   84532: {
     EASOnboarding: {
-      address: "0x6B3cC5aeedB91F2B72e42d75c45E8daf93Dcc7d3",
+      address: "0xfD8a9aa985113570deCa2DFd0e638743402cEEa3",
       abi: [
         {
           inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "studentAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+          ],
+          name: "AttestationAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "closingTimestamp",
+              type: "uint256",
+            },
+          ],
+          name: "EventCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          name: "MentorAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          name: "MentorRemoved",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "status",
+              type: "bool",
+            },
+          ],
+          name: "OverrideEventFlagToggled",
+          type: "event",
         },
         {
           inputs: [
@@ -659,6 +760,16 @@ const deployedContracts = {
               name: "_mentorName",
               type: "string",
             },
+            {
+              internalType: "string",
+              name: "_badgeUri",
+              type: "string",
+            },
+            {
+              internalType: "bytes32",
+              name: "_schemaUID",
+              type: "bytes32",
+            },
           ],
           name: "createEvent",
           outputs: [],
@@ -729,6 +840,11 @@ const deployedContracts = {
               type: "string",
             },
             {
+              internalType: "string",
+              name: "badgeUri",
+              type: "string",
+            },
+            {
               internalType: "address",
               name: "mentorAddress",
               type: "address",
@@ -742,6 +858,11 @@ const deployedContracts = {
               internalType: "bool",
               name: "overrideClosingTimestamp",
               type: "bool",
+            },
+            {
+              internalType: "bytes32",
+              name: "schemaUID",
+              type: "bytes32",
             },
           ],
           stateMutability: "view",
@@ -794,6 +915,11 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
+                  internalType: "string",
+                  name: "badgeUri",
+                  type: "string",
+                },
+                {
                   internalType: "address",
                   name: "mentorAddress",
                   type: "address",
@@ -812,6 +938,11 @@ const deployedContracts = {
                   internalType: "bool",
                   name: "overrideClosingTimestamp",
                   type: "bool",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "schemaUID",
+                  type: "bytes32",
                 },
               ],
               internalType: "struct Structs.Event[]",
@@ -873,6 +1004,11 @@ const deployedContracts = {
               internalType: "struct Structs.metaEvent[]",
               name: "",
               type: "tuple[]",
+            },
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
             },
           ],
           stateMutability: "view",
@@ -1011,6 +1147,19 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "address[]",
+              name: "_mentors",
+              type: "address[]",
+            },
+          ],
+          name: "removeMentors",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "bytes",
               name: "sig",
               type: "bytes",
@@ -1123,7 +1272,7 @@ const deployedContracts = {
   },
   11155420: {
     EASOnboarding: {
-      address: "0x53112D945b5257f72AB1Afe7d259B045f5fB47ae",
+      address: "0x4dB3581Bc77588497dCC596cCf27e0091Fa902Cb",
       abi: [
         {
           inputs: [],
@@ -1141,11 +1290,6 @@ const deployedContracts = {
               internalType: "address",
               name: "_studentAddress",
               type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "_eventId",
-              type: "uint256",
             },
           ],
           name: "addAttestation",
@@ -1373,62 +1517,6 @@ const deployedContracts = {
                 },
               ],
               internalType: "struct Structs.Event[]",
-              name: "",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "_studentAddress",
-              type: "address",
-            },
-          ],
-          name: "getAllStudentEventsWithAttestations",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "bytes32",
-                  name: "attestation",
-                  type: "bytes32",
-                },
-                {
-                  internalType: "uint256",
-                  name: "eventId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "level",
-                  type: "uint256",
-                },
-                {
-                  internalType: "string",
-                  name: "eventName",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "eventDescription",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "mentorName",
-                  type: "string",
-                },
-                {
-                  internalType: "address",
-                  name: "mentorAddress",
-                  type: "address",
-                },
-              ],
-              internalType: "struct Structs.metaEvent[]",
               name: "",
               type: "tuple[]",
             },

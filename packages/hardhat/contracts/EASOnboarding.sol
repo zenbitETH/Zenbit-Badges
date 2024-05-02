@@ -17,6 +17,15 @@ contract EASOnboarding is EASOnboardingStorage {
         _;
     }
 
+    event EventCreated(
+        uint256 indexed eventId, string eventName, address indexed mentorAddress, uint256 closingTimestamp
+    );
+
+    event AttestationAdded(address indexed studentAddress, uint256 indexed eventId, bytes32 attestation);
+    event MentorAdded(address indexed mentorAddress);
+    event OverrideEventFlagToggled(uint256 indexed eventId, bool status);
+    event MentorRemoved(address indexed mentorAddress);
+
     function getAttested(uint256 _eventId, uint256 _level, bytes32 _msgHash, bytes memory _signature)
         public
         returns (bool)
@@ -31,9 +40,6 @@ contract EASOnboarding is EASOnboardingStorage {
             (events[_eventId].closingTimestamp > block.timestamp) || !events[_eventId].overrideClosingTimestamp,
             "Event is past closing timestamp"
         );
-
-        events[_eventId].attendees.push(msg.sender);
-        attestationProfile[msg.sender].eventsCompleted.push(_eventId);
         attestationProfile[msg.sender].studentLevel = _level;
         studentEventMap[msg.sender][_eventId].eventId = _eventId;
         studentEventMap[msg.sender][_eventId].eventName = events[_eventId].eventName;
@@ -46,12 +52,22 @@ contract EASOnboarding is EASOnboardingStorage {
 
     function addAttestation(bytes32 _attestation, address _studentAddress, uint256 _eventId) public {
         require(msg.sender == deployer);
+        require(
+            studentEventMap[_studentAddress][_eventId].attestation == bytes32(0),
+            "Student already attested for this event"
+        );
+        events[_eventId].attendees.push(_studentAddress);
+        events[_eventId].attendeeCount++;
+        attestationProfile[_studentAddress].eventsCompleted.push(_eventId);
         attestationProfile[_studentAddress].attestations.push(_attestation);
         studentEventMap[_studentAddress][_eventId].attestation = _attestation;
+
+        emit AttestationAdded(_studentAddress, _eventId, _attestation);
     }
 
     function toggleOverrideEventFlag(uint256 _eventId, bool _res) public isMentorAddress(msg.sender) {
         events[_eventId].overrideClosingTimestamp = _res;
+        emit OverrideEventFlagToggled(_eventId, _res);
     }
 
     function createEvent(
@@ -60,7 +76,9 @@ contract EASOnboarding is EASOnboardingStorage {
         uint8 _type,
         string memory _eventName,
         string memory _eventDescription,
-        string memory _mentorName
+        string memory _mentorName,
+        string memory _badgeUri,
+        bytes32 _schemaUID
     ) public isMentorAddress(msg.sender) {
         require(_closingTimestamp > block.timestamp, "Closing timestamp cannot be in the past.");
 
@@ -72,11 +90,15 @@ contract EASOnboarding is EASOnboardingStorage {
         events[eventIdCounter].eventName = _eventName;
         events[eventIdCounter].eventDescription = _eventDescription;
         events[eventIdCounter].mentorName = _mentorName;
+        events[eventIdCounter].badgeUri = _badgeUri;
         events[eventIdCounter].mentorAddress = msg.sender;
         events[eventIdCounter].attendees.push(msg.sender);
         events[eventIdCounter].isActive = true;
         events[eventIdCounter].overrideClosingTimestamp = false;
+        events[eventIdCounter].schemaUID = _schemaUID;
         eventIdCounter++;
+
+        emit EventCreated(eventIdCounter - 1, _eventName, msg.sender, _closingTimestamp);
     }
 
     function isVerified(bytes32 _messageHash, bytes memory _signature) public view returns (bool) {
@@ -94,6 +116,18 @@ contract EASOnboarding is EASOnboardingStorage {
     function addMentors(address[] memory _newMentors) public isMentorAddress(msg.sender) {
         for (uint256 i = 0; i < _newMentors.length; i++) {
             isMentor[_newMentors[i]] = true;
+            emit MentorAdded(_newMentors[i]);
+        }
+    }
+
+    function removeMentors(address[] memory _mentors) public {
+        require(msg.sender == deployer, "Only deployer can remove mentors");
+
+        for (uint256 i = 0; i < _mentors.length; i++) {
+            if (isMentor[_mentors[i]]) {
+                isMentor[_mentors[i]] = false;
+                emit MentorRemoved(_mentors[i]);
+            }
         }
     }
 

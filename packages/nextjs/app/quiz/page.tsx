@@ -19,19 +19,10 @@ import Modal from "~~/components/Modal";
 import QuestionComponent from "~~/components/Question";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import schemas from "~~/schema/index.json";
+import { Schemas } from "~~/types/quiz/index";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
-
-const schemaIds = [
-  {
-    key: 1,
-    value: "0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b",
-  },
-  {
-    key: 2,
-    value: "0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a",
-  },
-];
 
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
@@ -45,15 +36,17 @@ const Quiz = () => {
     eventId: 0,
     eventDescription: "",
     mentorName: "",
+    badgeUri: "",
+    level: 0,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, setState] = useState({
     answer: "",
     safeAddress: "",
   });
   async function grantAttestation(easContract: any, data: any, recipient: any) {
-    const eventId = Number(eventDetails?.[1]);
-    const schema = schemaIds.find(schema => schema.key == eventId)?.value;
+    const schema = eventDetails?.[12];
     const expirationTime = 0;
     const revocable = true;
 
@@ -75,6 +68,17 @@ const Quiz = () => {
     } catch (error) {
       console.error("Error granting attestation:", error);
       throw error;
+    }
+  }
+
+  function getValue(value: any, type: boolean) {
+    if (type) {
+      return value.substring(1, value.length - 1);
+    } else if (value.match("123")) {
+      return "";
+    } else {
+      const index = Number(value.match(/\[(\d+)\]/)[1]);
+      return eventDetails?.[index];
     }
   }
 
@@ -150,24 +154,30 @@ const Quiz = () => {
   const attachAttestation = async () => {
     try {
       if (connectedAddress && eventDetails) {
-        const schemaEncoder = new SchemaEncoder(
-          "uint256 Event_ID,string Event_Name,string Description,string Mentor_Name",
-        );
-        const dataToEncode = [
-          { name: "Event_ID", value: Number(eventDetails?.[1]) || 0, type: "uint256" },
-          { name: "Event_Name", value: eventDetails[5], type: "string" },
-          { name: "Description", value: eventDetails[6], type: "string" },
-          { name: "Mentor_Name", value: eventDetails[7], type: "string" },
-        ];
-
-        if (Number(eventDetails?.[1]) == 2) {
-          dataToEncode.push({ name: "DAO_Multisig", value: state?.safeAddress, type: "address" });
-          dataToEncode.push({ name: "DAO_ENS_Name", value: state?.answer, type: "string" });
+        let encodedString = "";
+        let eventDetailsKey: string = eventDetails?.[12] as string;
+        eventDetailsKey = eventDetailsKey.replace("0x", "");
+        const eventDetailsSchema: Schemas = schemas[eventDetailsKey as keyof typeof schemas];
+        for (const key in eventDetailsSchema) {
+          if (Object.hasOwnProperty.call(eventDetailsSchema, key)) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            encodedString += `${eventDetailsSchema[key].type} ${key},`;
+          }
         }
+
+        encodedString = encodedString.slice(0, -1);
+        const schemaEncoder = new SchemaEncoder(encodedString);
+
+        const dataToEncode = Object.entries(eventDetailsSchema).map(([key, { type, value, state }]) => ({
+          name: key,
+          value: getValue(value, state), // Getting the actual value from eventDetails
+          type: type,
+        }));
+
+        console.log("Data to encode", dataToEncode);
         const encodedData = schemaEncoder.encodeData(dataToEncode);
         const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
-        // // grantAttestation();
         if (schemaUID && schemaUID?.events?.[0]?.args) {
           addAttestation(
             easOnboardingContract,
@@ -198,6 +208,8 @@ const Quiz = () => {
             eventId: eventId,
             eventDescription: eventDetails?.[6] || "",
             mentorName: eventDetails?.[7] || "",
+            badgeUri: eventDetails?.[8] || "",
+            level: Number(eventDetails?.[2]) || 0,
           });
           setLoading(false);
         }, 1000);
@@ -351,7 +363,14 @@ const Quiz = () => {
         <p>No questions available</p>
       )}
 
-      <Modal isOpen={open} close={() => setOpen(false)} data={data} />
+      <Modal
+        isOpen={open}
+        close={() => {
+          setOpen(false);
+          router.push("/");
+        }}
+        data={data}
+      />
     </div>
   );
 };

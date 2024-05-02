@@ -22,6 +22,9 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  images: {
+    domains: ["ipfs.io", "img.icons8.com"],
+  },
 };
 
 module.exports = nextConfig;
