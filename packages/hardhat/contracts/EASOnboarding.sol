@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "./lib/Structs.sol";
 import "./storage/EASOnboardingStorage.sol";
 
