@@ -565,7 +565,7 @@ const deployedContracts = {
   },
   84532: {
     EASOnboarding: {
-      address: "0xAA154a1E888336099110F07Ab25dF0137125a833",
+      address: "0xFf06B2A02c86FEd414661bDB7bFD712cDBde45D1",
       abi: [
         {
           inputs: [],
