@@ -7,12 +7,113 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     EASOnboarding: {
-      address: "0x0F6E9aAF3a32E607b874d089D2322d8e78a567CB",
+      address: "0x34358c3016a77A4e5835bd5CF867E0c7785b41A2",
       abi: [
         {
           inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "studentAddress",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "attestation",
+              type: "bytes32",
+            },
+          ],
+          name: "AttestationAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "eventName",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "closingTimestamp",
+              type: "uint256",
+            },
+          ],
+          name: "EventCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          name: "MentorAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "mentorAddress",
+              type: "address",
+            },
+          ],
+          name: "MentorRemoved",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "eventId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "status",
+              type: "bool",
+            },
+          ],
+          name: "OverrideEventFlagToggled",
+          type: "event",
         },
         {
           inputs: [
@@ -101,6 +202,16 @@ const deployedContracts = {
               name: "_mentorName",
               type: "string",
             },
+            {
+              internalType: "string",
+              name: "_badgeUri",
+              type: "string",
+            },
+            {
+              internalType: "bytes32",
+              name: "_schemaUID",
+              type: "bytes32",
+            },
           ],
           name: "createEvent",
           outputs: [],
@@ -171,6 +282,11 @@ const deployedContracts = {
               type: "string",
             },
             {
+              internalType: "string",
+              name: "badgeUri",
+              type: "string",
+            },
+            {
               internalType: "address",
               name: "mentorAddress",
               type: "address",
@@ -184,6 +300,11 @@ const deployedContracts = {
               internalType: "bool",
               name: "overrideClosingTimestamp",
               type: "bool",
+            },
+            {
+              internalType: "bytes32",
+              name: "schemaUID",
+              type: "bytes32",
             },
           ],
           stateMutability: "view",
@@ -236,6 +357,11 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
+                  internalType: "string",
+                  name: "badgeUri",
+                  type: "string",
+                },
+                {
                   internalType: "address",
                   name: "mentorAddress",
                   type: "address",
@@ -254,6 +380,11 @@ const deployedContracts = {
                   internalType: "bool",
                   name: "overrideClosingTimestamp",
                   type: "bool",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "schemaUID",
+                  type: "bytes32",
                 },
               ],
               internalType: "struct Structs.Event[]",
@@ -315,6 +446,11 @@ const deployedContracts = {
               internalType: "struct Structs.metaEvent[]",
               name: "",
               type: "tuple[]",
+            },
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
             },
           ],
           stateMutability: "view",
@@ -448,6 +584,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address[]",
+              name: "_mentors",
+              type: "address[]",
+            },
+          ],
+          name: "removeMentors",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
