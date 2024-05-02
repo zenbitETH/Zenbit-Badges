@@ -1,0 +1,373 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x1322E10435ea815c3A41d1c3d07C5E462B5D0B6C",
+      "txHash": "0x9a899f911964d22ae240033f9ac7c82ff55616be1170e969de6829e14e210540",
+      "kind": "uups"
+    },
+    {
+      "address": "0x11739d93fBC2D91a6396B38E42528cE26F887361",
+      "txHash": "0xbe8381367b122ab21dc96911e395f5c2ae47e917c0664078f4628368dc3ba03f",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB9c8BC661e373EdD129f2383D45591AE8735dbc2",
+      "txHash": "0xf98a135799c070091d68b85afe529525ca5506a9aa6a8a4f109fda9d96575333",
+      "kind": "uups"
+    },
+    {
+      "address": "0x27d8a68648f6189e3e2e87e91eD83dBd1164b8D1",
+      "txHash": "0xd77cf073fd7e4472851a78d5957a80facf9a552000b0bc3b357096e54c9fecee",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB1b39fb6c1ca1010D924F6Af94Fe650F7D4e3fA2",
+      "txHash": "0x741d64628d52f6976f879e84ac7c3d319d8be9fb6140278792114063b16362c8",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "7e47fde0a14cc711d77629ddb26c87b81bc2f47ab4018144145ace672582c7f1": {
+      "address": "0x547442D5eb3D86534C163C02d5e35045A0008c4A",
+      "txHash": "0xdda86b6d3e1fa304ddc708f736ce8e5efc2a6dd8dee9524a3c6af463217f36e8",
+      "layout": {
+        "solcVersion": "0.8.20",
+        "storage": [
+          {
+            "label": "eventIdCounter",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:9"
+          },
+          {
+            "label": "deployer",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:15"
+          },
+          {
+            "label": "attestationProfile",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_struct(AttestationProfile)2098_storage)",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:17"
+          },
+          {
+            "label": "studentEventMap",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_struct(metaEvent)2113_storage))",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:18"
+          },
+          {
+            "label": "events",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Event)2089_storage)",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:19"
+          },
+          {
+            "label": "isMentor",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "EASOnboardingStorage",
+            "src": "contracts/storage/EASOnboardingStorage.sol:20"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)65_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)14_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_struct(metaEvent)2113_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct Structs.metaEvent))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(AttestationProfile)2098_storage)": {
+            "label": "mapping(address => struct Structs.AttestationProfile)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Event)2089_storage)": {
+            "label": "mapping(uint256 => struct Structs.Event)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(metaEvent)2113_storage)": {
+            "label": "mapping(uint256 => struct Structs.metaEvent)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AttestationProfile)2098_storage": {
+            "label": "struct Structs.AttestationProfile",
+            "members": [
+              {
+                "label": "studentLevel",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "eventsCompleted",
+                "type": "t_array(t_uint256)dyn_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "attestations",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Event)2089_storage": {
+            "label": "struct Structs.Event",
+            "members": [
+              {
+                "label": "typeOf",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "level",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "closingTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "attendeeCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "eventName",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "eventDescription",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "mentorName",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "badgeUri",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "mentorAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "attendees",
+                "type": "t_array(t_address)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "overrideClosingTimestamp",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "11"
+              },
+              {
+                "label": "schemaUID",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "12"
+              }
+            ],
+            "numberOfBytes": "416"
+          },
+          "t_struct(metaEvent)2113_storage": {
+            "label": "struct Structs.metaEvent",
+            "members": [
+              {
+                "label": "attestation",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "level",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "eventName",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "eventDescription",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "mentorName",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "mentorAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "6"
+              }
+            ],
+            "numberOfBytes": "224"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

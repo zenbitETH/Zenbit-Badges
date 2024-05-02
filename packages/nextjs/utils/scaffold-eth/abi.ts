@@ -1038,6 +1038,107 @@ export const deployedContract = {
       type: "constructor",
     },
     {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "studentAddress",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "eventId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "bytes32",
+          name: "attestation",
+          type: "bytes32",
+        },
+      ],
+      name: "AttestationAdded",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "eventId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "string",
+          name: "eventName",
+          type: "string",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "mentorAddress",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "closingTimestamp",
+          type: "uint256",
+        },
+      ],
+      name: "EventCreated",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "mentorAddress",
+          type: "address",
+        },
+      ],
+      name: "MentorAdded",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "mentorAddress",
+          type: "address",
+        },
+      ],
+      name: "MentorRemoved",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "eventId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "bool",
+          name: "status",
+          type: "bool",
+        },
+      ],
+      name: "OverrideEventFlagToggled",
+      type: "event",
+    },
+    {
       inputs: [
         {
           internalType: "bytes32",
@@ -1124,6 +1225,16 @@ export const deployedContract = {
           name: "_mentorName",
           type: "string",
         },
+        {
+          internalType: "string",
+          name: "_badgeUri",
+          type: "string",
+        },
+        {
+          internalType: "bytes32",
+          name: "_schemaUID",
+          type: "bytes32",
+        },
       ],
       name: "createEvent",
       outputs: [],
@@ -1194,6 +1305,11 @@ export const deployedContract = {
           type: "string",
         },
         {
+          internalType: "string",
+          name: "badgeUri",
+          type: "string",
+        },
+        {
           internalType: "address",
           name: "mentorAddress",
           type: "address",
@@ -1207,6 +1323,11 @@ export const deployedContract = {
           internalType: "bool",
           name: "overrideClosingTimestamp",
           type: "bool",
+        },
+        {
+          internalType: "bytes32",
+          name: "schemaUID",
+          type: "bytes32",
         },
       ],
       stateMutability: "view",
@@ -1259,6 +1380,11 @@ export const deployedContract = {
               type: "string",
             },
             {
+              internalType: "string",
+              name: "badgeUri",
+              type: "string",
+            },
+            {
               internalType: "address",
               name: "mentorAddress",
               type: "address",
@@ -1277,6 +1403,11 @@ export const deployedContract = {
               internalType: "bool",
               name: "overrideClosingTimestamp",
               type: "bool",
+            },
+            {
+              internalType: "bytes32",
+              name: "schemaUID",
+              type: "bytes32",
             },
           ],
           internalType: "struct Structs.Event[]",
@@ -1471,6 +1602,19 @@ export const deployedContract = {
         },
       ],
       stateMutability: "pure",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address[]",
+          name: "_mentors",
+          type: "address[]",
+        },
+      ],
+      name: "removeMentors",
+      outputs: [],
+      stateMutability: "nonpayable",
       type: "function",
     },
     {
