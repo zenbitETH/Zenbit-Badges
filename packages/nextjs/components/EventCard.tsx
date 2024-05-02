@@ -73,7 +73,10 @@ export const EventCard = ({
       </div>
       <div className="col-span-3 grid pb-10 font-cha text-center">
         <div className="xl:text-xl italic pb-3">Mentor: {String(eventDetails.mentorName)}</div>
-        <div className="text-base xl:text-lg text-justify">{String(eventDetails.eventDescription)}</div>
+        <div
+          className="text-base xl:text-lg text-justify"
+          dangerouslySetInnerHTML={{ __html: eventDetails.eventDescription }}
+        ></div>
       </div>
     </button>
   );

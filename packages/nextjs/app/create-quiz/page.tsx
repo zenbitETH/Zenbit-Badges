@@ -229,7 +229,11 @@ const CreateQuizForm: React.FC = () => {
           {eventData &&
             eventData?.map((option, index) => (
               <option key={index} value={option.eventId.toString()}>
-                {option.eventName}
+                <div className="justify-between">
+                  <div>{option.eventName}</div>
+                  <div> Level {String(option.level)}</div>
+                  <div> Event Id {String(option.eventId)}</div>
+                </div>
               </option>
             ))}
         </select>

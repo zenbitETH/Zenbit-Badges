@@ -62,7 +62,7 @@ const CreateQuizForm: React.FC = () => {
     },
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     setFormData(prevState => ({
@@ -174,13 +174,12 @@ const CreateQuizForm: React.FC = () => {
           <label htmlFor="desc" className="block mb-1">
             Event Description:
           </label>
-          <input
-            type="text"
+          <textarea
             id="desc"
             name="desc"
             value={formData.desc}
             onChange={handleChange}
-            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder:italic h-32 bg-white"
+            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder-italic h-32 bg-white"
             required
           />
         </div>
@@ -297,7 +296,10 @@ const CreateQuizForm: React.FC = () => {
                   </div>
                   <div className="xl:text-2xl font-bold font-mus">{eventName}</div>
                   <div className="py-3 text-xl font-bold">{typeOf == 1 ? "3-Option Quiz" : "Written Answers"} </div>
-                  <div className="text-base xl:text-lg text-justify">{eventDescription}</div>
+                  <div
+                    className="text-base xl:text-lg text-justify"
+                    dangerouslySetInnerHTML={{ __html: eventDescription }}
+                  ></div>
                   <div className="xl:text-xl italic py-3">Mentor:{mentorName}</div>
                   <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus">
                     Lv:{String(level)}
