@@ -36,6 +36,8 @@ const Quiz = () => {
     eventId: 0,
     eventDescription: "",
     mentorName: "",
+    badgeUri: "",
+    level: 0,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,6 +74,8 @@ const Quiz = () => {
   function getValue(value: any, type: boolean) {
     if (type) {
       return value.substring(1, value.length - 1);
+    } else if (value.match("123")) {
+      return "";
     } else {
       const index = Number(value.match(/\[(\d+)\]/)[1]);
       return eventDetails?.[index];
@@ -170,6 +174,7 @@ const Quiz = () => {
           type: type,
         }));
 
+        console.log("Data to encode", dataToEncode);
         const encodedData = schemaEncoder.encodeData(dataToEncode);
         const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
@@ -203,6 +208,8 @@ const Quiz = () => {
             eventId: eventId,
             eventDescription: eventDetails?.[6] || "",
             mentorName: eventDetails?.[7] || "",
+            badgeUri: eventDetails?.[8] || "",
+            level: Number(eventDetails?.[2]) || 0,
           });
           setLoading(false);
         }, 1000);
@@ -356,7 +363,14 @@ const Quiz = () => {
         <p>No questions available</p>
       )}
 
-      <Modal isOpen={open} close={() => setOpen(false)} data={data} />
+      <Modal
+        isOpen={open}
+        close={() => {
+          setOpen(false);
+          router.push("/");
+        }}
+        data={data}
+      />
     </div>
   );
 };
