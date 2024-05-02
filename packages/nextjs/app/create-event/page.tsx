@@ -2,8 +2,8 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
+import axios from "axios";
 import moment from "moment";
-import { NFTStorage } from "nft.storage";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -20,10 +20,6 @@ interface FormData {
 }
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
-
-const client = new NFTStorage({
-  token: process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY || "",
-});
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -75,7 +71,7 @@ const CreateQuizForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       !formData.name ||
@@ -98,7 +94,17 @@ const CreateQuizForm: React.FC = () => {
       return;
     }
 
-    client.storeBlob((selectedImage as any).imageFile).then(cid => {
+    const form = new FormData();
+    form.append("file", selectedImage.imageFile);
+
+    const responseData = await axios({
+      method: "post",
+      url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      headers: { Authorization: "Bearer " + process.env.NEXT_PUBLIC_PINATA_JWT, "Content-Type": "multipart/form-data" },
+      data: form,
+    });
+
+    if (responseData?.data?.IpfsHash) {
       writeAsync({
         args: [
           BigInt(formData.timeStamp),
@@ -107,16 +113,32 @@ const CreateQuizForm: React.FC = () => {
           formData.name,
           formData.desc,
           formData.mentorName,
-          cid,
-          `${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
+          responseData.data.IpfsHash,
+          `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
         ],
       });
-    });
+    }
+    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
+    //   console.log("cid", cid);
+    //   writeAsync({
+    //     args: [
+    //       BigInt(formData.timeStamp),
+    //       BigInt(formData.level),
+    //       formData.type,
+    //       formData.name,
+    //       formData.desc,
+    //       formData.mentorName,
+    //       cid,
+    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
+    //     ],
+    //   });
+    // });
   };
 
   const handleImageChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
       const img = e.target.files[0];
+
       setSelectedImage({
         imageFile: img,
         previewURL: URL.createObjectURL(img),
