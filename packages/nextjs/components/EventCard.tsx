@@ -59,7 +59,13 @@ export const EventCard = ({
               alt="Badge"
               width={150}
               height={150}
-              src={"https://ipfs.io/ipfs/" + String(eventDetails.badgeUri)}
+              src={
+                String(eventDetails.badgeUri).includes("tsetipfs") && eventDetails?.eventId == 1
+                  ? "/badge1.png"
+                  : eventDetails?.eventId == 2
+                  ? "/badge2.png"
+                  : "https://ipfs.io/ipfs/" + String(eventDetails.badgeUri)
+              }
               className=" rounded-full my-3"
             />
           </div>
