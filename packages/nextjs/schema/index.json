@@ -12,7 +12,7 @@
     },
     "Description": {
       "type": "string",
-      "value": "eventDetails[6]",
+      "value": "",
       "state": false
     },
     "Mentor_Name": {
@@ -34,7 +34,7 @@
     },
     "Description": {
       "type": "string",
-      "value": "eventDetails[6]",
+      "value": "",
       "state": false
     },
     "Mentor_Name": {

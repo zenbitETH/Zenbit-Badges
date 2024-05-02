@@ -565,7 +565,7 @@ const deployedContracts = {
   },
   84532: {
     EASOnboarding: {
-      address: "0xFf06B2A02c86FEd414661bDB7bFD712cDBde45D1",
+      address: "0xfD8a9aa985113570deCa2DFd0e638743402cEEa3",
       abi: [
         {
           inputs: [],
@@ -1004,6 +1004,11 @@ const deployedContracts = {
               internalType: "struct Structs.metaEvent[]",
               name: "",
               type: "tuple[]",
+            },
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
             },
           ],
           stateMutability: "view",

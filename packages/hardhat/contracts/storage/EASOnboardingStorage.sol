@@ -25,7 +25,7 @@ contract EASOnboardingStorage {
     function getAllStudentEventsWithAttestations(address _studentAddress)
         public
         view
-        returns (Structs.metaEvent[] memory)
+        returns (Structs.metaEvent[] memory, string[] memory)
     {
         string[] memory uris = new string[](attestationProfile[_studentAddress].eventsCompleted.length);
         Structs.metaEvent[] memory metaArray =
@@ -34,7 +34,7 @@ contract EASOnboardingStorage {
             metaArray[i] = studentEventMap[_studentAddress][attestationProfile[_studentAddress].eventsCompleted[i]];
             uris[i] = events[attestationProfile[_studentAddress].eventsCompleted[i]].badgeUri; 
         }
-        return metaArray;
+        return (metaArray, uris);
     }
 
     function getEventsCompleted(address _studentAddress)
