@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     EASOnboarding: {
-      address: "0x6B3cC5aeedB91F2B72e42d75c45E8daf93Dcc7d3",
+      address: "0x0F6E9aAF3a32E607b874d089D2322d8e78a567CB",
       abi: [
         {
           inputs: [],
@@ -565,7 +565,7 @@ const deployedContracts = {
   },
   84532: {
     EASOnboarding: {
-      address: "0xc32268c2733848924F9F567f31072B4839379b58",
+      address: "0x0F6E9aAF3a32E607b874d089D2322d8e78a567CB",
       abi: [
         {
           inputs: [],
