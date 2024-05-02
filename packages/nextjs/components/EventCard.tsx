@@ -12,7 +12,6 @@ export const EventCard = ({
   connectedAddress: any;
   router: any;
 }) => {
-  const src = Number(eventDetails?.eventId) == 1 ? "/badge1.png" : "/badge2.png";
   return (
     <button
       className={` ${
@@ -56,13 +55,28 @@ export const EventCard = ({
         <div className="grid items-center h-full pt-12">
           <div className="xl:text-2xl font-bold font-mus">{String(eventDetails.eventName)}</div>
           <div className="mx-auto rounded-full">
-            <Image alt="Badge" width={150} height={150} src={src} className=" rounded-full my-3" />
+            <Image
+              alt="Badge"
+              width={150}
+              height={150}
+              src={
+                String(eventDetails.badgeUri).includes("tsetipfs") && eventDetails?.eventId == 1
+                  ? "/badge1.png"
+                  : eventDetails?.eventId == 2
+                  ? "/badge2.png"
+                  : "https://ipfs.io/ipfs/" + String(eventDetails.badgeUri)
+              }
+              className=" rounded-full my-3"
+            />
           </div>
         </div>
       </div>
       <div className="col-span-3 grid pb-10 font-cha text-center">
         <div className="xl:text-xl italic pb-3">Mentor: {String(eventDetails.mentorName)}</div>
-        <div className="text-base xl:text-lg text-justify">{String(eventDetails.eventDescription)}</div>
+        <div
+          className="text-base xl:text-lg text-justify"
+          dangerouslySetInnerHTML={{ __html: eventDetails.eventDescription }}
+        ></div>
       </div>
     </button>
   );
