@@ -256,7 +256,7 @@ const Quiz = () => {
           onSubmit();
         } else {
           setLoading(false);
-          alert("All answers are not correct. Please retry the quiz");
+          alert("Respuestas incorrectas, intenta de nuevo");
           router.push("/");
         }
       } else if (eventDetails?.[0] == 2) {
@@ -265,7 +265,7 @@ const Quiz = () => {
         const result = await client.getAddressRecord({ name: answer });
 
         if (!result) {
-          alert("Please enter a valid DAO address");
+          alert("No perteneces a esa DAO, por favor verifica");
           return;
         }
 
@@ -273,7 +273,7 @@ const Quiz = () => {
 
         const txResponse = await gnosisContractObj.getOwners();
         if (!txResponse.includes(connectedAddress)) {
-          alert("You are not the valid owner of this multiSig wallet. Please try again with the valid owner address.");
+          alert("No perteneces a esa DAO, por favor verifica");
         } else {
           setState({ safeAddress: result?.value, answer: answer });
           onSubmit();
@@ -356,11 +356,11 @@ const Quiz = () => {
             }`}
             disabled={!allQuestionsAnswered}
           >
-            Submit
+            Verificar respuestas
           </button>
         </form>
       ) : (
-        <p>No questions available</p>
+        <p>No hay preguntas disponibles</p>
       )}
 
       <Modal
