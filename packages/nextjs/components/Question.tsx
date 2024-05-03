@@ -48,7 +48,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
             name={`question-${questionIndex}`}
             value={answer}
             onChange={e => handleOptionChange(question?._id, e.target.value)}
-            placeholder="Enter the DAO address"
+            placeholder="Escribe el dominio ENS de tu DAO"
           />
         </div>
       )}

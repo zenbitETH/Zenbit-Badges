@@ -11,7 +11,7 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 
 const title = "Zenbit Badges";
 const titleTemplate = "Zenbit Badges";
-const description = "Assit to events, attest your ethereum skills 🎖️";
+const description = "Asiste a eventos y certifica tus habilidades en ethereum 🎖️";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
