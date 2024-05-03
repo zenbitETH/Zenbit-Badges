@@ -10,7 +10,7 @@ contract EASOnboardingStorage {
     mapping(address => Structs.AttestationProfile) public attestationProfile;
     mapping(address => mapping(uint256 => Structs.metaEvent)) public studentEventMap;
     mapping(uint256 => Structs.Event) public events;
-    mapping(address => bool) isMentor;
+    mapping(address => bool) public isMentor;
     uint256 public eventIdCounter = 1;
 
     function getAllEvents() public view returns (Structs.Event[] memory) {
