@@ -85,9 +85,12 @@ module.exports = {
         mus: ["MuseoModerno"],
         cha: ["Chakra Petch"],
       },
+      screens: {
+        "2xl": "1601px",
+      },
       borderRadius: {
         md: "32px",
-        in: "20px"
+        in: "20px",
       },
       boxShadow: {
         center: "0 0 12px -2px rgb(0 0 0 / 0.05)",

@@ -14,10 +14,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, close, data }) => {
     <div className="fixed inset-0 z-20 bg-bit/60 backdrop-blur-md flex justify-center items-center" onClick={close}>
       <div className="max-w-xl overflow-hidden rounded-md bg-gray-200 relative p-6 pt-9">
         <div className="absolute top-0 left-0 bg-zen rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm xl:text-base">
-          Event No. {data?.eventId?.toString()}
+          Evento No. {data?.eventId?.toString()}
         </div>
         <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-sm xl:text-base">
-          Lv: {data?.level?.toString()}
+          Nv: {data?.level?.toString()}
         </div>
         <div className="absolute bottom-0 right-0 left-0 text-center bg-white hover:bg-gray-500 rounded-t-md w-fit mx-auto px-4 py-1 hover:text-white text-sm xl:text-base">
           <a
@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, close, data }) => {
             target="_blank"
             href={`${process.env.NEXT_PUBLIC_ATTESTATION_VIEW_URL}/${data.id}`}
           >
-            View on EAS explorer
+            Ver en registro público
           </a>
         </div>
 
@@ -43,9 +43,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, close, data }) => {
           </div>
         </div>
         <div className="mb-9 text-center xl:text-2xl md:text-xl">
-          <div className="font-mus">Congratulations!</div>
+          <div className="font-mus">¡Felicidades!</div>
           <p className=" animate-pulse">
-            Zenbit Badge granted to: <br /> {data?.address}
+            Zenbit Badge otorgada a: <br /> {data?.address}
           </p>
         </div>
       </div>

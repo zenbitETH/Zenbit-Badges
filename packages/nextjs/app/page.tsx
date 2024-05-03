@@ -29,8 +29,8 @@ const Home = () => {
   });
 
   return (
-    <div className="my-28">
-      <div className="grid items-center justify-center xl:m-10 md:grid-cols-2 2xl:grid-cols-3">
+    <div className="2xl:mt-18 xl:mt-14 mt-24">
+      <div className="grid items-center justify-center gap-3 mx-3 md:grid-cols-2 2xl:grid-cols-3">
         {events
           ? events?.map((eventDetails, index) => {
               return (
