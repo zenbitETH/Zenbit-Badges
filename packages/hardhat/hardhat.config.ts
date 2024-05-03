@@ -123,6 +123,7 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       baseSepolia: `6UGXUFGY5XYIHAA65AAGSM4KI4J3V8EIM4`,
+      optimisticEthereum: `ZF52JI7EI7QPD4312FAPYMF9UVYBRURYN5`,
     },
     customChains: [
       {
