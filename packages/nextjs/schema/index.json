@@ -44,12 +44,12 @@
     },
     "DAO_Multisig": {
       "type": "address",
-      "value": "state?.safeAddress",
+      "value": "safeAddress",
       "state": true
     },
     "DAO_ENS_Name": {
       "type": "string",
-      "value": "state?.answer",
+      "value": "answer",
       "state": true
     }
   }

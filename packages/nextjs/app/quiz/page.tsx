@@ -73,7 +73,7 @@ const Quiz = () => {
 
   function getValue(value: any, type: boolean) {
     if (type) {
-      return value.substring(1, value.length - 1);
+      return state[value as keyof typeof state];
     } else if (value.match("123")) {
       return "";
     } else {
@@ -175,6 +175,7 @@ const Quiz = () => {
         }));
 
         console.log("Data to encode", dataToEncode);
+        // @ts-ignore
         const encodedData = schemaEncoder.encodeData(dataToEncode);
         const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
@@ -259,7 +260,7 @@ const Quiz = () => {
           alert("Respuestas incorrectas, intenta de nuevo");
           router.push("/");
         }
-      } else if (eventDetails?.[0] == 2) {
+      } else if (eventDetails?.[0] == 2 || eventDetails?.[0] == 3) {
         const answer = Object.values(answers)[0];
 
         const result = await client.getAddressRecord({ name: answer });
@@ -272,13 +273,15 @@ const Quiz = () => {
         const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
 
         const txResponse = await gnosisContractObj.getOwners();
-        if (!txResponse.includes(connectedAddress)) {
-          alert("No perteneces a esa DAO, por favor verifica");
-        } else {
-          setState({ safeAddress: result?.value, answer: answer });
-          onSubmit();
+        if (txResponse) {
+          if (!txResponse.includes(connectedAddress)) {
+            alert("No perteneces a esa DAO, por favor verifica");
+          } else {
+            setState({ safeAddress: result?.value, answer: answer });
+            onSubmit();
+          }
+          return;
         }
-        return;
       }
     } catch (error) {
       alert("Please select a valid Safe address");
