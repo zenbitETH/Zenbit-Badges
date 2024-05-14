@@ -18,7 +18,7 @@ export const EventCard = ({
         userData && userData?.[1].includes(eventDetails?.eventId)
           ? "bg-bit/100 text-white hover:cursor-not-allowed"
           : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
-          ? "bg-gray-500"
+          ? "bg-gray-500 text-white hover:bg-gray-500 hover:cursor-not-allowed"
           : "bg-gray-200/60"
       } rounded-md shadow-md relative cursor-pointer h-full`}
       onClick={() => {
@@ -38,11 +38,11 @@ export const EventCard = ({
         ) || Number(eventDetails.closingTimestamp) * 1000 < Date.now()
       }
     >
-      <div className="absolute top-0 left-0 bg-zen rounded-br-md rounded-tl-md px-4 py-1 font-mus">
+      <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus">
         Evento {eventDetails.eventId.toString()}{" "}
         {!(userData && userData?.[1].includes(eventDetails?.eventId)) &&
           Number(eventDetails.closingTimestamp) * 1000 < Date.now() &&
-          "Expirada"}
+          "/ Finalizado"}
         {userData && userData?.[1].includes(eventDetails?.eventId) && "/ 🎖️"}
       </div>
       <div className="absolute top-0 right-0 bg-bit rounded-tr-md rounded-bl-md px-4 py-1 text-white font-mus text-xl">
@@ -68,7 +68,7 @@ export const EventCard = ({
       <div className="col-span-3 pb-10 font-cha text-center">
         <div className=" italic pb-3">Mentor: {String(eventDetails.mentorName)}</div>
         <div
-          className="text-sm 2xl:text-base  text-justify"
+          className="text-justify overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg"
           dangerouslySetInnerHTML={{ __html: eventDetails.eventDescription }}
         ></div>
       </div>

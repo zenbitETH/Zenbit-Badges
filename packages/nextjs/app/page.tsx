@@ -29,7 +29,7 @@ const Home = () => {
   });
 
   return (
-    <div className="2xl:mt-18 xl:mt-14 mt-24">
+    <div className="2xl:my-18 xl:my-18 my-24">
       <div className="grid items-center justify-center gap-3 mx-3 md:grid-cols-2 2xl:grid-cols-3 text-center">
         {events
           ? events?.map((eventDetails, index) => {

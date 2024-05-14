@@ -87,6 +87,9 @@ module.exports = {
       },
       screens: {
         "2xl": "1601px",
+        "h-sm": { raw: "(min-height: 500px)" },
+        "h-md": { raw: "(min-height: 850px)" },
+        "h-lg": { raw: "(min-height: 1000px)" },
       },
       borderRadius: {
         md: "32px",
