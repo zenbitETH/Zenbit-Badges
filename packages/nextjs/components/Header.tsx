@@ -67,7 +67,7 @@ export const HeaderMenuLinks = () => {
       {menuLinks.map(({ label, href }) => {
         const isActive = pathname === href;
         return (
-          <li className="xl:text-xl " key={href}>
+          <li className="xl:text-lg " key={href}>
             <Link href={href} passHref className={`${isActive ? "bg-zen p-1" : ""}`}>
               <span className=" px-2   text-black rounded-full hover:text-zen">{label}</span>
             </Link>
@@ -87,7 +87,7 @@ export const Header = () => {
   );
 
   return (
-    <div className="fixed font-mus backdrop-blur-lg top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2 text-black">
+    <div className="fixed font-mus backdrop-blur-lg top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 p-0 sm:px-2 text-black">
       <div className="navbar w-full">
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
@@ -111,11 +111,7 @@ export const Header = () => {
             </ul>
           )}
         </div>
-        <Link
-          href="/"
-          passHref
-          className="hidden navbar-start lg:flex items-center gap-2 shrink-0 text-2xl text-center"
-        >
+        <Link href="/" passHref className="hidden navbar-start lg:flex items-center gap-2 shrink-0 text-xl text-center">
           <div className="flex relative w-10 h-10">
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/zblogo.png" />
           </div>
