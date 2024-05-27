@@ -1,80 +1,29 @@
-# 🏗 Scaffold-ETH 2
+# 🎖️ Zenbit Badges
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+🧪 Una dapp que facilita el uso de Ethereum Attestation Service (EAS) para certificar onchain el cumplimiento de actividades o el uso de herramientas web3 durante eventos presenciales o virtuales. Zenbit Badges consta de un contrato escrito en solidity que permite llevar el registro de eventos asi como de mentores y participantes, además de emitir atestaciones en nombre de badges.zenbit.eth de manera automatizada.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+## Flujo de usuario
+Zenbit Badges tiene 2 tiempos de usuario: mentores y participantes
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+### 🍎 Mentores
+Los mentores pueden programar eventos educativos para desarrollar habilidades digitales de los participantes y emitir alguna de las Certificaciones Disponibles que verifiquen la comprensión del contenido impartida en el evento. Una vez creado el evento, el mentor puede agregar uno de los tipos de cuestionario disponibles para verificar el cumplimiento de una actividad o comprensión de un concepto clave.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+### 🎒 Participantes
+Los participantes son convocados a eventos presenciales o virtuales para desarrollar conocimientos o habilidades relacionadas con ethereum y web3 a través de mentorias impartidas por talento especializado en talleres o cursos educativos. Al finalizar la mentoria los participantes pueden obtener la certificación correspondiente al evento tras contestar el cuestionario y verificar sus respuestas. 
 
-## Requirements
+## ⚙️ Contratos
+Mayo 2024: [EAS Onboarding en OP Mainnet](https://optimistic.etherscan.io/address/0xe383f2b3ff9024baa09b33923b8dbd0f2af98ad0#code)
 
-Before you begin, you need to install the following tools:
+## ✅ Certificaciones Disponibles
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+1. Introducción a Optimism (Optimism Onboarding): [EAS Schema #423](https://optimism.easscan.org/schema/view/0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b)
+2. Formación de DAO (DAO Formation): [EAS Schema #424](https://optimism.easscan.org/schema/view/0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a)
 
-## Quickstart
+## ⏳ Certificaciones pendientes
+3. Incubación de proyectos
+4. Taller o curso educativo
 
-To get started with Scaffold-ETH 2, follow the steps below:
-
-1. Clone this repo & install dependencies
-
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
-
-2. Run a local network in the first terminal:
-
-```
-yarn chain
-```
-
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/nextjs/pages`
-- Edit your deployment scripts in `packages/hardhat/deploy`
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+## ❓ Cuestionarios disponibles
+1. Pregunta con opción multiple (3 respuestas)
+2. Verificación de multisig  ENS
