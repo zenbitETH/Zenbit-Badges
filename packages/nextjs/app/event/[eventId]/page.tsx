@@ -33,7 +33,6 @@ export default function EventDetailPage() {
     fromBlock: 119579120n,
     filters: { eventId: parseUnits(params?.eventId as string, 0) },
     blockData: true,
-    transactionData: true,
   });
 
   const { data: attestationAddedEvent } = useScaffoldEventHistory({
@@ -42,7 +41,6 @@ export default function EventDetailPage() {
     fromBlock: 119579120n,
     filters: { eventId: parseUnits(params?.eventId as string, 0) },
     blockData: true,
-    transactionData: true,
   });
 
   useEffect(() => {
@@ -72,7 +70,14 @@ export default function EventDetailPage() {
         });
       });
 
-      setTableData(tableDataArray);
+      setTableData(
+        // @ts-expect-error type error expected but the value will exists
+        tableDataArray.sort((a, b) => {
+          if (a.timestamp && b.timestamp && Number(a.timestamp) > Number(b.timestamp)) return -1;
+
+          if (a.timestamp && b.timestamp && Number(a.timestamp) < Number(b.timestamp)) return 1;
+        }),
+      );
       setTableDataIsLoading(false);
     }
   }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
@@ -84,8 +89,8 @@ export default function EventDetailPage() {
           <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
         ) : null}
       </div>
-      <section className="flex flex-row ">
-        <div className="mx-auto ">
+      <section className="flex flex-row mb-4">
+        <div className="mx-auto bg-bit p-10 rounded-xl">
           {eventDetails ? (
             <Image
               alt="Badge"
@@ -96,21 +101,21 @@ export default function EventDetailPage() {
             />
           ) : null}
         </div>
-        <div className=" md:max-w-5xl lg:max-w-5xl px-10 ">
+        <div className=" md:max-w-5xl lg:max-w-5xl pr-20 ">
           {eventDetails ? (
             <div
-              className="text-justify overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg"
+              className="text-justify overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
               dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
             ></div>
           ) : null}
         </div>
       </section>
-      <div className="overflow-x-auto px-20">
-        <table className="table">
+      <div className="overflow-x-auto px-20 h-72 max-h-72 overflow-y-auto ">
+        <table className="table table-pin-rows ">
           {/* head */}
-          <thead>
+          <thead className="text-lg ">
             <tr>
-              <th></th>
+              <th>#</th>
               <th>Event Id</th>
               <th>Student Address</th>
               <th>Action (method name)</th>
