@@ -13,6 +13,7 @@ export const EventCard = ({
   connectedAddress: any;
   router: any;
 }) => {
+  console.log(String(eventDetails?.badgeUri));
   return (
     <div
       className={` p-10 ${
