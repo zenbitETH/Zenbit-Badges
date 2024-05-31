@@ -1,12 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { parseUnits } from "viem";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { formatUnits, parseUnits } from "viem";
+import { useScaffoldContractRead, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
+
+export type TableDataType = {
+  eventId: string;
+  eventName: string;
+  studentAddress: string;
+  methodName: string;
+  mentorAddress: string;
+  timestamp: string;
+}[];
 
 export default function EventDetailPage() {
   const params = useParams<{ eventId: string }>();
+  const [tableDataIsLoading, setTableDataIsLoading] = useState(false);
+  const [tableData, setTableData] = useState<TableDataType>([]);
 
   const { data: eventDetails } = useScaffoldContractRead({
     contractName: "EASOnboarding",
@@ -15,13 +27,61 @@ export default function EventDetailPage() {
     enabled: params?.eventId !== undefined,
   });
 
-  console.log({ eventDetails });
+  const { data: eventCreatedEvent } = useScaffoldEventHistory({
+    contractName: "EASOnboarding",
+    eventName: "EventCreated",
+    fromBlock: 119579120n,
+    filters: { eventId: parseUnits(params?.eventId as string, 0) },
+    blockData: true,
+    transactionData: true,
+  });
+
+  const { data: attestationAddedEvent } = useScaffoldEventHistory({
+    contractName: "EASOnboarding",
+    eventName: "AttestationAdded",
+    fromBlock: 119579120n,
+    filters: { eventId: parseUnits(params?.eventId as string, 0) },
+    blockData: true,
+    transactionData: true,
+  });
+
+  useEffect(() => {
+    setTableDataIsLoading(true);
+    if (params?.eventId && eventCreatedEvent?.length && attestationAddedEvent?.length) {
+      const tableDataArray: TableDataType = [];
+      let mentorAddress = "";
+      eventCreatedEvent.forEach(event => {
+        mentorAddress = event.args.mentorAddress as string;
+        tableDataArray.push({
+          eventId: params?.eventId as string,
+          eventName: event.args.eventName as string,
+          studentAddress: "- -",
+          methodName: event.log.eventName,
+          mentorAddress: mentorAddress,
+          timestamp: formatUnits(event.block.timestamp, 0),
+        });
+      });
+      attestationAddedEvent.forEach(event => {
+        tableDataArray.push({
+          eventId: params?.eventId as string,
+          eventName: event.log.eventName,
+          studentAddress: event.args.studentAddress as string,
+          methodName: event.log.eventName,
+          mentorAddress: mentorAddress,
+          timestamp: formatUnits(event.block.timestamp, 0),
+        });
+      });
+
+      setTableData(tableDataArray);
+      setTableDataIsLoading(false);
+    }
+  }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
 
   return (
     <>
       <div className="text-center">
         {eventDetails ? (
-          <h1 className="text-xl md:text-2xl lg:text-5xl font-bold font-mus">{String(eventDetails[5])}</h1>
+          <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
         ) : null}
       </div>
       <section className="flex flex-row ">
@@ -36,7 +96,7 @@ export default function EventDetailPage() {
             />
           ) : null}
         </div>
-        <div className=" md:max-w-5xl lg:max-w-5xl px-10">
+        <div className=" md:max-w-5xl lg:max-w-5xl px-10 ">
           {eventDetails ? (
             <div
               className="text-justify overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg"
@@ -45,6 +105,41 @@ export default function EventDetailPage() {
           ) : null}
         </div>
       </section>
+      <div className="overflow-x-auto px-20">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th></th>
+              <th>Event Id</th>
+              <th>Student Address</th>
+              <th>Action (method name)</th>
+              <th>Mentor</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableDataIsLoading ? (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <span className="loading loading-dots loading-lg"></span>
+                </td>
+              </tr>
+            ) : tableData.length ? (
+              tableData.map((data, idx) => (
+                <tr key={idx}>
+                  <th>{idx + 1}</th>
+                  <td>{data.eventId}</td>
+                  <td>{data.studentAddress}</td>
+                  <td>{data.methodName}</td>
+                  <td>{data.mentorAddress}</td>
+                  <td>{new Date(Number(data.timestamp) * 1000).toUTCString()}</td>
+                </tr>
+              ))
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
