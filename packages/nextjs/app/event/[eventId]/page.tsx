@@ -100,7 +100,7 @@ export default function EventDetailPage() {
           <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
         ) : null}
       </div>
-      <section className="flex items-center gap-4 sm:gap-0 flex-col justify-center sm:flex-row mb-4 sm:mb-10">
+      <section className="flex items-center gap-4 sm:gap-0 flex-col justify-center lg:flex-col xl:flex-row mb-4 sm:mb-10">
         <div className="flex flex-col mx-auto gap-2">
           <div className="mx-auto bg-bit rounded-xl">
             {eventDetails ? (
@@ -127,20 +127,18 @@ export default function EventDetailPage() {
               />
             ) : null}
           </div>
-          <div className="flex flex-row gap-1">
-            |
+          <div className="flex flex-col sm:gap-1">
             <span className="flex flex-row w-full gap-4">
               Mentor:
               {eventDetails && isAddress(eventDetails[9]) ? <Address address={eventDetails[9]} format="long" /> : null}
             </span>
-            |
+
             <span className="flex flex-row w-full gap-4">
               Closing: {eventDetails ? moment(Number(eventDetails[3]) * 1000).format(" DD/MM/YYYY HH:mm:ss") : null}
             </span>
-            |
           </div>
         </div>
-        <div className="flex max-w-sm sm:max-w-5xl lg:max-w-5xl sm:pr-20 ">
+        <div className="flex max-w-sm sm:max-w-2xl lg:max-w-5xl lg:px-10 xl:pr-20 ">
           {eventDetails ? (
             <div
               className="text-justify  overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
@@ -149,7 +147,7 @@ export default function EventDetailPage() {
           ) : null}
         </div>
       </section>
-      <div className="max-w-sm sm:min-w-full overflow-x-auto px-2 sm:px-20 h-80 max-h-80 overflow-y-auto ">
+      <div className="sm:max-w-sm md:max-w-2xl max-w-xs mx-auto lg:min-w-full overflow-x-auto  lg:px-20 h-80 max-h-80 overflow-y-auto ">
         <table className="table table-pin-rows ">
           {/* head */}
           <thead className="text-lg ">
