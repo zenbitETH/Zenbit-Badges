@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import moment from "moment";
 import { formatUnits, isAddress, parseUnits } from "viem";
+import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractRead, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 
@@ -21,6 +22,8 @@ export default function EventDetailPage() {
   const params = useParams<{ eventId: string }>();
   const [tableDataIsLoading, setTableDataIsLoading] = useState(false);
   const [tableData, setTableData] = useState<TableDataType>([]);
+
+  const { address: connectedAddress } = useAccount();
 
   const { data: eventDetails } = useScaffoldContractRead({
     contractName: "EASOnboarding",
@@ -45,6 +48,12 @@ export default function EventDetailPage() {
     blockData: true,
   });
 
+  const { data: userData } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "getEventsCompleted",
+    args: [connectedAddress],
+  });
+
   useEffect(() => {
     setTableDataIsLoading(true);
     if (params?.eventId && eventCreatedEvent?.length && attestationAddedEvent?.length) {
@@ -66,7 +75,7 @@ export default function EventDetailPage() {
           eventName: event.log.eventName,
           studentAddress: event.args.studentAddress as string,
           attestation: event.args.attestation as string,
-          methodName: "Batch Otorgada",
+          methodName: "Badge Otorgada",
           mentorAddress: mentorAddress,
           timestamp: formatUnits(event.block.timestamp, 0),
         });
@@ -85,25 +94,53 @@ export default function EventDetailPage() {
   }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
 
   return (
-    <div className="flex flex-col gap-6 mt-20 sm:mt-8">
+    <div className="flex flex-col gap-6 mt-20 sm:mt-16">
       <div className="text-center">
         {eventDetails ? (
           <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
         ) : null}
       </div>
-      <section className="flex items-center gap-4 sm:max-h-52 sm:gap-0 flex-col justify-center sm:flex-row mb-4 sm:mb-10">
-        <div className="mx-auto bg-bit p-10 rounded-xl">
-          {eventDetails ? (
-            <Image
-              alt="Badge"
-              width={150}
-              height={150}
-              className="rounded-full "
-              src={`https://ipfs.io/ipfs/${String(eventDetails[8])}`}
-            />
-          ) : null}
+      <section className="flex items-center gap-4 sm:gap-0 flex-col justify-center sm:flex-row mb-4 sm:mb-10">
+        <div className="flex flex-col mx-auto gap-2">
+          <div className="mx-auto bg-bit rounded-xl">
+            {eventDetails ? (
+              <div className="flex flex-row w-full justify-between  ">
+                <div className=" top-0 left-0 bg-zen text-black rounded-br-md px-4 py-1 font-mus rounded-tl-xl">
+                  Evento {eventDetails[0].toString()}{" "}
+                  {!(userData && userData?.[1].includes(parseUnits(String(eventDetails[0]), 0))) &&
+                    Number(eventDetails[3]) * 1000 < Date.now() &&
+                    "/ Finalizado"}
+                  {userData && userData?.[1].includes(parseUnits(String(eventDetails[0]), 0)) && "/ 🎖️"}
+                </div>
+                <div className=" top-0 right-0 bg-zen rounded-tr-xl rounded-bl-md px-4 py-1 text-white font-mus text-xl">
+                  Nv: {eventDetails[2].toString()}
+                </div>
+              </div>
+            ) : null}
+            {eventDetails ? (
+              <Image
+                alt="Badge"
+                width={150}
+                height={150}
+                className="rounded-full w-full h-auto p-6"
+                src={`https://ipfs.io/ipfs/${String(eventDetails[8])}`}
+              />
+            ) : null}
+          </div>
+          <div className="flex flex-row gap-1">
+            |
+            <span className="flex flex-row w-full gap-4">
+              Mentor:
+              {eventDetails && isAddress(eventDetails[9]) ? <Address address={eventDetails[9]} format="long" /> : null}
+            </span>
+            |
+            <span className="flex flex-row w-full gap-4">
+              Closing: {eventDetails ? moment(Number(eventDetails[3]) * 1000).format(" DD/MM/YYYY HH:mm:ss") : null}
+            </span>
+            |
+          </div>
         </div>
-        <div className="flex max-h-56 overflow-y-auto  max-w-sm sm:max-w-5xl lg:max-w-5xl sm:pr-20 ">
+        <div className="flex max-w-sm sm:max-w-5xl lg:max-w-5xl sm:pr-20 ">
           {eventDetails ? (
             <div
               className="text-justify  overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
