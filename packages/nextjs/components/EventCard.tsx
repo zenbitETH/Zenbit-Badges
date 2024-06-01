@@ -15,7 +15,7 @@ export const EventCard = ({
 }) => {
   return (
     <div
-      className={` p-10 ${
+      className={`py-10 sm:p-10 ${
         userData && userData?.[1].includes(eventDetails?.eventId)
           ? "bg-bit/100 text-white hover:cursor-not-allowed"
           : Number(eventDetails.closingTimestamp) * 1000 < Date.now()
@@ -54,7 +54,7 @@ export const EventCard = ({
         <div className=" italic pb-3">Mentor: {String(eventDetails.mentorName)}</div>
       </div>
       <div className="flex flex-row w-full justify-evenly">
-        <Link href={`/event/${eventDetails.eventId}`} /* className="border-2 rounded-full border-bit"*/>
+        <Link href={`/event/${eventDetails.eventId}`} className="border-2 rounded-full border-white">
           <button>Ver detalle</button>
         </Link>
         <button

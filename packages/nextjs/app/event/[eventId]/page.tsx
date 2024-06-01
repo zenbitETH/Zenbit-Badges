@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { formatUnits, parseUnits } from "viem";
+import moment from "moment";
+import { formatUnits, isAddress, parseUnits } from "viem";
+import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractRead, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 
 export type TableDataType = {
-  eventId: string;
   eventName: string;
   studentAddress: string;
+  attestation: string;
   methodName: string;
   mentorAddress: string;
   timestamp: string;
@@ -51,20 +53,20 @@ export default function EventDetailPage() {
       eventCreatedEvent.forEach(event => {
         mentorAddress = event.args.mentorAddress as string;
         tableDataArray.push({
-          eventId: params?.eventId as string,
           eventName: event.args.eventName as string,
           studentAddress: "- -",
-          methodName: event.log.eventName,
+          attestation: "",
+          methodName: "Evento Creado",
           mentorAddress: mentorAddress,
           timestamp: formatUnits(event.block.timestamp, 0),
         });
       });
       attestationAddedEvent.forEach(event => {
         tableDataArray.push({
-          eventId: params?.eventId as string,
           eventName: event.log.eventName,
           studentAddress: event.args.studentAddress as string,
-          methodName: event.log.eventName,
+          attestation: event.args.attestation as string,
+          methodName: "Batch Otorgada",
           mentorAddress: mentorAddress,
           timestamp: formatUnits(event.block.timestamp, 0),
         });
@@ -83,44 +85,43 @@ export default function EventDetailPage() {
   }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
 
   return (
-    <>
+    <div className="flex flex-col gap-6 mt-20 sm:mt-8">
       <div className="text-center">
         {eventDetails ? (
           <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
         ) : null}
       </div>
-      <section className="flex flex-row mb-4">
+      <section className="flex items-center gap-4 sm:max-h-52 sm:gap-0 flex-col justify-center sm:flex-row mb-4 sm:mb-10">
         <div className="mx-auto bg-bit p-10 rounded-xl">
           {eventDetails ? (
             <Image
               alt="Badge"
               width={150}
               height={150}
-              className="rounded-full w-full h-auto my-3"
+              className="rounded-full "
               src={`https://ipfs.io/ipfs/${String(eventDetails[8])}`}
             />
           ) : null}
         </div>
-        <div className=" md:max-w-5xl lg:max-w-5xl pr-20 ">
+        <div className="flex max-h-56 overflow-y-auto  max-w-sm sm:max-w-5xl lg:max-w-5xl sm:pr-20 ">
           {eventDetails ? (
             <div
-              className="text-justify overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
+              className="text-justify  overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
               dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
             ></div>
           ) : null}
         </div>
       </section>
-      <div className="overflow-x-auto px-20 h-72 max-h-72 overflow-y-auto ">
+      <div className="max-w-sm sm:min-w-full overflow-x-auto px-2 sm:px-20 h-80 max-h-80 overflow-y-auto ">
         <table className="table table-pin-rows ">
           {/* head */}
           <thead className="text-lg ">
             <tr>
               <th>#</th>
-              <th>Event Id</th>
-              <th>Student Address</th>
-              <th>Action (method name)</th>
-              <th>Mentor</th>
-              <th>Timestamp</th>
+              <th>Accion</th>
+              <th>Address del Mentor</th>
+              <th>Address del Receptor</th>
+              <th>Fecha y hora</th>
             </tr>
           </thead>
           <tbody>
@@ -134,17 +135,32 @@ export default function EventDetailPage() {
               tableData.map((data, idx) => (
                 <tr key={idx}>
                   <th>{idx + 1}</th>
-                  <td>{data.eventId}</td>
-                  <td>{data.studentAddress}</td>
-                  <td>{data.methodName}</td>
-                  <td>{data.mentorAddress}</td>
-                  <td>{new Date(Number(data.timestamp) * 1000).toUTCString()}</td>
+                  <td>
+                    {data.attestation !== "" ? (
+                      <a
+                        href={`https://optimism.easscan.org/attestation/view/${data.attestation}`}
+                        target="_blank"
+                        className="hover:underline"
+                      >
+                        {data.methodName}
+                      </a>
+                    ) : (
+                      data.methodName
+                    )}
+                  </td>
+                  <td>
+                    {isAddress(data.mentorAddress) ? <Address address={data.mentorAddress} format="long" /> : null}
+                  </td>
+                  <td>
+                    {isAddress(data.studentAddress) ? <Address address={data.studentAddress} format="long" /> : null}
+                  </td>
+                  <td>{moment(Number(data.timestamp) * 1000).format(" DD/MM/YYYY HH:mm:ss")}</td>
                 </tr>
               ))
             ) : null}
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }
