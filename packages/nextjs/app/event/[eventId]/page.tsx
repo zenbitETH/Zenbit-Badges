@@ -175,7 +175,7 @@ export default function EventDetailPage() {
                       <a
                         href={`https://optimism.easscan.org/attestation/view/${data.attestation}`}
                         target="_blank"
-                        className="hover:underline"
+                        className="hover:underline text-blue-600 hover:text-blue-700"
                       >
                         <span className="flex flex-row gap-2">
                           {data.methodName}
