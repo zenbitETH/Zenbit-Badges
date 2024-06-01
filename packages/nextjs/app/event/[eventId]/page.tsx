@@ -177,7 +177,10 @@ export default function EventDetailPage() {
                         target="_blank"
                         className="hover:underline"
                       >
-                        {data.methodName}
+                        <span className="flex flex-row gap-2">
+                          {data.methodName}
+                          <Image src="/external-link.svg" width={15} height={15} alt="Open external Link" />
+                        </span>
                       </a>
                     ) : (
                       data.methodName
