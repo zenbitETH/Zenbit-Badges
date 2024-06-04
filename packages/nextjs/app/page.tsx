@@ -36,7 +36,7 @@ const Home = () => {
 
   return (
     <div className="2xl:my-18 xl:my-18 my-24">
-      <div className="grid items-center justify-center gap-3 mx-3 md:grid-cols-2 2xl:grid-cols-3 text-center">
+      <div className="grid items-center justify-center gap-3 mx-3 md:grid-cols-2 2xl:grid-cols-4 text-center">
         {events
           ? events
               ?.filter(event =>
