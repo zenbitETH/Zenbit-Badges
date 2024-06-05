@@ -93,6 +93,8 @@ export default function EventDetailPage() {
     }
   }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
 
+  console.log({ eventDetails });
+
   return (
     <div className="flex flex-col gap-6 mt-20 sm:mt-16">
       <div className="text-center">
@@ -106,11 +108,11 @@ export default function EventDetailPage() {
             {eventDetails ? (
               <div className="flex flex-row w-full justify-between  ">
                 <div className=" top-0 left-0 bg-zen text-black rounded-br-md px-4 py-1 font-mus rounded-tl-xl">
-                  Evento {eventDetails[0].toString()}{" "}
-                  {!(userData && userData?.[1].includes(parseUnits(String(eventDetails[0]), 0))) &&
+                  Evento {eventDetails[1].toString()}{" "}
+                  {!(userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0))) &&
                     Number(eventDetails[3]) * 1000 < Date.now() &&
                     "/ Finalizado"}
-                  {userData && userData?.[1].includes(parseUnits(String(eventDetails[0]), 0)) && "/ 🎖️"}
+                  {userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0)) && "/ 🎖️"}
                 </div>
                 <div className=" top-0 right-0 bg-zen rounded-tr-xl rounded-bl-md px-4 py-1 text-white font-mus text-xl">
                   Nv: {eventDetails[2].toString()}
