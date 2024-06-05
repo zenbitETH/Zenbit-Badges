@@ -96,64 +96,61 @@ export default function EventDetailPage() {
   console.log({ eventDetails });
 
   return (
-    <div className="flex flex-col gap-6 mt-20 sm:mt-16">
-      <div className="text-center">
+    <div className="my-20 mx-3">
+      <section className="text-center mx-auto rounded-md  relative bg-gradient-to-b bg-gray-200/60 to-gray-500/20 mb-5 p-3 max-w-3xl">
         {eventDetails ? (
-          <h1 className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">{String(eventDetails[5])}</h1>
+          <div className="text-sm">
+            <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md px-4 py-1 font-mus rounded-tl-xl text-sm">
+              Evento {eventDetails[1].toString()} / Nv: {eventDetails[2].toString()}
+            </div>
+            <div className="absolute top-0 right-0 bg-bit rounded-tr-xl rounded-bl-md px-4 py-1 text-white font-mus">
+              {!(userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0))) &&
+                Number(eventDetails[3]) * 1000 < Date.now() &&
+                "No tienes esta Badge :("}
+              {userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0)) && "Tienes esta Badge 🎖️"}
+            </div>
+          </div>
         ) : null}
-      </div>
-      <section className="flex items-center gap-4 sm:gap-0 flex-col justify-center lg:flex-col xl:flex-row mb-4 sm:mb-10">
-        <div className="flex flex-col mx-auto gap-2">
-          <div className="mx-auto bg-bit rounded-xl">
-            {eventDetails ? (
-              <div className="flex flex-row w-full justify-between  ">
-                <div className=" top-0 left-0 bg-zen text-black rounded-br-md px-4 py-1 font-mus rounded-tl-xl">
-                  Evento {eventDetails[1].toString()}{" "}
-                  {!(userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0))) &&
-                    Number(eventDetails[3]) * 1000 < Date.now() &&
-                    "/ Finalizado"}
-                  {userData && userData?.[1].includes(parseUnits(String(eventDetails[1]), 0)) && "/ 🎖️"}
-                </div>
-                <div className=" top-0 right-0 bg-zen rounded-tr-xl rounded-bl-md px-4 py-1 text-white font-mus text-xl">
-                  Nv: {eventDetails[2].toString()}
-                </div>
-              </div>
-            ) : null}
-            {eventDetails ? (
-              <Image
-                alt="Badge"
-                width={150}
-                height={150}
-                className="rounded-full w-full h-auto p-6"
-                src={`https://ipfs.io/ipfs/${String(eventDetails[8])}`}
-              />
+        {eventDetails ? (
+          <Image
+            alt="Badge"
+            width={250}
+            height={250}
+            className="rounded-full p-6 mx-auto"
+            src={`https://ipfs.io/ipfs/${String(eventDetails[8])}`}
+          />
+        ) : null}
+        {eventDetails ? (
+          <h1 id="Event Name" className="text-xl md:text-2xl lg:text-4xl font-bold font-mus">
+            {String(eventDetails[5])}
+          </h1>
+        ) : null}
+        <div className="grid grid-cols-2 mx-auto items-center  text-sm max-w-xs ">
+          <div id="Event Date" className=" mx-auto bg-zen/70 rounded-md px-4 py-1 ">
+            <div className="font-bold">Fecha:‏ ‎</div>
+            {eventDetails ? moment(Number(eventDetails[3]) * 1000).format(" DD/MM/YYYY") : null}
+          </div>
+          <div className=" items-center bg-bit/70 rounded-md mx-auto px-4 py-1 ">
+            <span className="font-bold">Mentor:‏ ‎</span>
+            {eventDetails && isAddress(eventDetails[9]) ? (
+              <Address address={eventDetails[9]} format="long" size="sm" />
             ) : null}
           </div>
-          <div className="flex flex-col sm:gap-1">
-            <span className="flex flex-row w-full gap-4">
-              Mentor:
-              {eventDetails && isAddress(eventDetails[9]) ? <Address address={eventDetails[9]} format="long" /> : null}
-            </span>
-
-            <span className="flex flex-row w-full gap-4">
-              Closing: {eventDetails ? moment(Number(eventDetails[3]) * 1000).format(" DD/MM/YYYY HH:mm:ss") : null}
-            </span>
-          </div>
         </div>
-        <div className="flex max-w-sm sm:max-w-2xl lg:max-w-5xl lg:px-10 xl:pr-20 ">
-          {eventDetails ? (
-            <div
-              className="text-justify  overflow-auto h-sm:text-sm h-md:text-base h-lg:text-lg bg-bit rounded-xl px-4 pb-2 "
-              dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
-            ></div>
-          ) : null}
-        </div>
+        {eventDetails ? (
+          <div
+            id="Event Description"
+            className="text-justify h-sm:text-sm h-md:text-base h-lg:text-lg rounded-xl  "
+            dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
+          ></div>
+        ) : null}
       </section>
-      <div className="sm:max-w-sm md:max-w-2xl max-w-xs mx-auto lg:min-w-full overflow-x-auto  lg:px-20 h-80 max-h-80 overflow-y-auto ">
-        <table className="table table-pin-rows ">
+      <div className="text-xl font-mus text-center my-3">Badges otorgadas en este evento</div>
+      <div className="max-w-xs mx-auto sm:max-w-xl  lg:max-w-6xl overflow-x-auto   bg-black/40 rounded-md text-white">
+        <table className="table  ">
           {/* head */}
           <thead className="text-lg ">
-            <tr>
+            <tr className="bg-bit">
               <th>#</th>
               <th>Accion</th>
               <th>Address del Mentor</th>
@@ -177,21 +174,34 @@ export default function EventDetailPage() {
                       <a
                         href={`https://optimism.easscan.org/attestation/view/${data.attestation}`}
                         target="_blank"
-                        className="hover:underline text-blue-600 hover:text-blue-700"
+                        className="hover:underline
+                        hover:text-zen"
                       >
-                        <span className="flex flex-row gap-2">
+                        <span className="flex flex-row gap-2 group">
+                          <Image
+                            src="/eas.png"
+                            width={25}
+                            height={25}
+                            alt="Open external Link"
+                            className="rounded-full bg-white p-1"
+                          />
                           {data.methodName}
-                          <Image src="/external-link.svg" width={15} height={15} alt="Open external Link" />
                         </span>
                       </a>
                     ) : (
                       data.methodName
                     )}
                   </td>
-                  <td>
+                  <td
+                    className="hover:underline
+                        hover:text-zen"
+                  >
                     {isAddress(data.mentorAddress) ? <Address address={data.mentorAddress} format="long" /> : null}
                   </td>
-                  <td>
+                  <td
+                    className="hover:underline
+                        hover:text-zen"
+                  >
                     {isAddress(data.studentAddress) ? <Address address={data.studentAddress} format="long" /> : null}
                   </td>
                   <td>{moment(Number(data.timestamp) * 1000).format(" DD/MM/YYYY HH:mm:ss")}</td>

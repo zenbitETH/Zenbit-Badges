@@ -37,7 +37,7 @@ export const EventCard = ({
             href={`/quiz?eventId=${eventDetails?.eventId}`}
             className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
           >
-            Reclama esta Badge! 🎖️
+            ¡Reclama esta Badge! 🎖️
           </Link>
         )}
       <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm">
@@ -56,7 +56,7 @@ export const EventCard = ({
         )}
       </div>
       <div className="flex flex-col justify-center items-center ">
-        <span className="flex 2xl:text-lg font-bold font-mus w-96 items-center justify-center">
+        <span className="flex 2xl:text-lg font-bold font-mus px-5 items-center justify-center">
           {String(eventDetails.eventName)}
         </span>
         <span> {moment(Number(eventDetails.closingTimestamp) * 1000).format("DD/MM/YYYY")}</span>
