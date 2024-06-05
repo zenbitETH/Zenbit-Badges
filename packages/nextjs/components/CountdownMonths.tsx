@@ -21,7 +21,8 @@ export const CountdownMonths = ({ timeToExpiration }: Props) => {
   return (
     <div>
       <div>
-        Expira en {timeBetween.days()} días, {timeBetween.hours()}:{timeBetween.minutes()}:{timeBetween.seconds()}
+        Expira en {timeBetween.days()} días, {timeBetween.hours()}:{timeBetween.minutes()}:
+        {timeBetween.seconds() < 10 ? "0" + timeBetween.seconds() : timeBetween.seconds()}
       </div>
     </div>
   );
