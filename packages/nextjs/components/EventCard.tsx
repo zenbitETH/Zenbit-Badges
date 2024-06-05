@@ -29,6 +29,9 @@ export const EventCard = ({
           "Evento Finalizado"}
         {userData && userData?.[1].includes(eventDetails?.eventId) && "¡Obtuviste esta Badge! 🎖️"}
       </span>
+      {userData && !userData?.[1].includes(eventDetails?.eventId) && (
+        <Link href={`/quiz?eventId=${eventDetails?.eventId}`}>Reclama esta Badge! 🎖️</Link>
+      )}
       <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm">
         Evento {eventDetails.eventId.toString()} <span className="">/ Nv: {eventDetails.level.toString()}</span>
       </div>
