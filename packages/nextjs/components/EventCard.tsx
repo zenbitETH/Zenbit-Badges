@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import CountdownClock from "./CountownClock";
 import moment from "moment";
 
 export const EventCard = ({
@@ -41,7 +42,7 @@ export const EventCard = ({
         </Link>
       </div>
       <div className="absolute bottom-0 right-0 left-0 bg-gray-500/60 text-base  py-1 rounded-b-md text-white font-cha text-center">
-        Disponible hasta: {moment(Number(eventDetails.closingTimestamp) * 1000).format("HH:mm:ss DD/MM/YYYY")}
+        <CountdownClock timeToExpiration={Number(eventDetails.closingTimestamp)} />
       </div>
       <div className="flex flex-col justify-center items-center ">
         <span className="flex 2xl:text-lg font-bold font-mus w-96 items-center justify-center">
