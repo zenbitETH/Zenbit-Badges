@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import CountdownClock from "./CountownClock";
+import { CountdownMonths } from "./CountdownMonths";
 import moment from "moment";
 
 export const EventCard = ({
@@ -30,9 +30,16 @@ export const EventCard = ({
           "Evento Finalizado"}
         {userData && userData?.[1].includes(eventDetails?.eventId) && "¡Obtuviste esta Badge! 🎖️"}
       </span>
-      {userData && !userData?.[1].includes(eventDetails?.eventId) && (
-        <Link href={`/quiz?eventId=${eventDetails?.eventId}`}>Reclama esta Badge! 🎖️</Link>
-      )}
+      {userData &&
+        !userData?.[1].includes(eventDetails?.eventId) &&
+        !(Number(eventDetails.closingTimestamp) * 1000 < Date.now()) && (
+          <Link
+            href={`/quiz?eventId=${eventDetails?.eventId}`}
+            className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
+          >
+            Reclama esta Badge! 🎖️
+          </Link>
+        )}
       <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm">
         Evento {eventDetails.eventId.toString()} <span className="">/ Nv: {eventDetails.level.toString()}</span>
       </div>
@@ -42,7 +49,11 @@ export const EventCard = ({
         </Link>
       </div>
       <div className="absolute bottom-0 right-0 left-0 bg-gray-500/60 text-base  py-1 rounded-b-md text-white font-cha text-center">
-        <CountdownClock timeToExpiration={Number(eventDetails.closingTimestamp)} />
+        {!(Number(eventDetails.closingTimestamp) * 1000 < Date.now()) ? (
+          <CountdownMonths timeToExpiration={Number(eventDetails.closingTimestamp) * 1000} />
+        ) : (
+          <span>Evento Finalizado</span>
+        )}
       </div>
       <div className="flex flex-col justify-center items-center ">
         <span className="flex 2xl:text-lg font-bold font-mus w-96 items-center justify-center">
