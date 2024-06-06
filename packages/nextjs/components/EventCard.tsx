@@ -45,7 +45,7 @@ export const EventCard = ({
 
       {!account?.address && (
         <span className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md">
-          Conecta tu wallet
+          Conecta tu cartera web3 🦊 ↗️
         </span>
       )}
       <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm">
