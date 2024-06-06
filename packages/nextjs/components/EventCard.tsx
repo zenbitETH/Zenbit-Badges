@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CountdownMonths } from "./CountdownMonths";
+import { RainbowKitCustomConnectButton } from "./scaffold-eth";
 import moment from "moment";
+import { useAccount } from "wagmi";
 
 export const EventCard = ({
   eventDetails,
@@ -14,6 +16,7 @@ export const EventCard = ({
   connectedAddress: any;
   router: any;
 }) => {
+  const account = useAccount();
   return (
     <div
       className={`py-10 sm:p-10 ${
@@ -40,6 +43,13 @@ export const EventCard = ({
             ¡Reclama esta Badge! 🎖️
           </Link>
         )}
+
+      {!account?.address && (
+        <span className="text-xl absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md">
+          <RainbowKitCustomConnectButton />
+        </span>
+      )}
+
       <div className="absolute top-0 left-0 bg-zen text-black rounded-br-md rounded-tl-md px-4 py-1 font-mus text-sm">
         Evento {eventDetails.eventId.toString()} <span className="">/ Nv: {eventDetails.level.toString()}</span>
       </div>
