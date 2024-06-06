@@ -146,15 +146,14 @@ export default function EventDetailPage() {
         ) : null}
       </section>
       <div className="text-xl font-mus text-center my-3">Badges otorgadas en este evento</div>
-      <div className="max-w-xs mx-auto sm:max-w-xl  lg:max-w-6xl overflow-x-auto   bg-black/40 rounded-md text-white">
+      <div className="max-w-[450px] mx-auto sm:max-w-xl  lg:max-w-6xl overflow-x-auto   bg-black/40 rounded-md text-white">
         <table className="table  ">
           {/* head */}
           <thead className="text-lg ">
             <tr className="bg-bit">
               <th>#</th>
               <th>Accion</th>
-              <th>Address del Mentor</th>
-              <th>Address del Receptor</th>
+              <th>Receptor</th>
               <th>Fecha y hora</th>
             </tr>
           </thead>
@@ -177,13 +176,13 @@ export default function EventDetailPage() {
                         className="hover:underline
                         hover:text-zen"
                       >
-                        <span className="flex flex-row gap-2 group">
+                        <span className="flex flex-row gap-2  ">
                           <Image
                             src="/eas.png"
                             width={25}
                             height={25}
                             alt="Open external Link"
-                            className="rounded-full bg-white p-1"
+                            className="rounded-full bg-white "
                           />
                           {data.methodName}
                         </span>
@@ -191,12 +190,6 @@ export default function EventDetailPage() {
                     ) : (
                       data.methodName
                     )}
-                  </td>
-                  <td
-                    className="hover:underline
-                        hover:text-zen"
-                  >
-                    {isAddress(data.mentorAddress) ? <Address address={data.mentorAddress} format="long" /> : null}
                   </td>
                   <td
                     className="hover:underline
