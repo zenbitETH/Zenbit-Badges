@@ -52,6 +52,18 @@ const QuestionComponent: React.FC<QuestionProps> = ({
           />
         </div>
       )}
+      {eventData?.[0] == 3 && (
+        <div className="flex items-center justify-between border border-gray-300 rounded-md p-2">
+          <input
+            type="text"
+            className="flex-1 outline-none "
+            name={`question-${questionIndex}`}
+            value={answer}
+            onChange={e => handleOptionChange(question?._id, e.target.value)}
+            placeholder="Please enter the link for the sig wallet"
+          />
+        </div>
+      )}
     </div>
   );
 };
