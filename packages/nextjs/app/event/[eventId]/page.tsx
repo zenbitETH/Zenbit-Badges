@@ -55,8 +55,8 @@ export default function EventDetailPage() {
   });
 
   useEffect(() => {
-    setTableDataIsLoading(true);
     if (params?.eventId && eventCreatedEvent?.length && attestationAddedEvent?.length) {
+      setTableDataIsLoading(true);
       const tableDataArray: TableDataType = [];
       let mentorAddress = "";
       eventCreatedEvent.forEach(event => {
@@ -92,8 +92,6 @@ export default function EventDetailPage() {
       setTableDataIsLoading(false);
     }
   }, [eventCreatedEvent, attestationAddedEvent, params?.eventId]);
-
-  console.log({ eventDetails });
 
   return (
     <div className="my-20 mx-3">
@@ -200,7 +198,9 @@ export default function EventDetailPage() {
                   <td>{moment(Number(data.timestamp) * 1000).format(" DD/MM/YYYY HH:mm:ss")}</td>
                 </tr>
               ))
-            ) : null}
+            ) : (
+              <div className="justify-center text-center">No records found</div>
+            )}
           </tbody>
         </table>
       </div>
