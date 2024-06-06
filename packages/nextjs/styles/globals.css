@@ -56,3 +56,13 @@ button {
   bg-zen
   animate-pulse
 }
+
+.finalized-event {
+  @apply
+  bg-gradient-to-b from-gray-600 to-gray-500/20 hover:cursor-not-allowed text-white
+}
+
+.badge-granted {
+  @apply
+  bg-gradient-to-t from-zen/60 to-bit/90 hover:cursor-not-allowed backdrop-blur-md text-white
+}
