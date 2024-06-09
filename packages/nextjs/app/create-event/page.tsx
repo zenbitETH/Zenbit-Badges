@@ -206,6 +206,7 @@ const CreateQuizForm: React.FC = () => {
           <select id="answer" name="type" value={formData.type} onChange={handleChange} className="" required>
             <option value={1}>3-Option Quiz </option>
             <option value={2}>Written Answers</option>
+            <option value={3}>Link</option>
           </select>
         </div>
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { isAddress } from "@ethersproject/address";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
@@ -260,7 +261,7 @@ const Quiz = () => {
           alert("Respuestas incorrectas, intenta de nuevo");
           router.push("/");
         }
-      } else if (eventDetails?.[0] == 2 || eventDetails?.[0] == 3) {
+      } else if (eventDetails?.[0] == 2) {
         const answer = Object.values(answers)[0];
 
         const result = await client.getAddressRecord({ name: answer });
@@ -282,13 +283,47 @@ const Quiz = () => {
           }
           return;
         }
+      } else if (eventDetails?.[0] == 3) {
+        const answer = Object.values(answers)[0];
+        const urlObj = new URL(answer);
+        if (!urlObj) {
+          alert("Please enter a valid URL");
+          return;
+        }
+
+        const pathParts = urlObj.pathname.split("/");
+
+        // Assuming the value we want is the first part of the path
+        const value = pathParts[1];
+        if (isAddress(value)) {
+          setState({ safeAddress: value, answer: answer });
+          onSubmit();
+        } else {
+          const result = await client.getAddressRecord({ name: value });
+
+          if (!result) {
+            alert("No perteneces a esa DAO, por favor verifica");
+            return;
+          }
+
+          const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+
+          const txResponse = await gnosisContractObj.getOwners();
+          if (txResponse) {
+            if (!txResponse.includes(connectedAddress)) {
+              alert("No perteneces a esa DAO, por favor verifica");
+            } else {
+              setState({ safeAddress: result?.value, answer: answer });
+              onSubmit();
+            }
+            return;
+          }
+        }
       }
     } catch (error) {
       alert("Please select a valid Safe address");
       console.log("Error in submitting the answers", error);
     }
-
-    // TODO handle for the only only questions type
   };
   function arrayify(msgHash: string): Uint8Array {
     return new Uint8Array(Buffer.from(msgHash.slice(2), "hex"));
