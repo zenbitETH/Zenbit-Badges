@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
@@ -51,7 +52,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders>
+            <Suspense>{children}</Suspense>
+          </ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
     </html>
