@@ -32,6 +32,8 @@ const CreateQuizForm: React.FC = () => {
     schemaId: "0x",
   });
 
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
 
   const [selectedImage, setSelectedImage] = useState<{
@@ -45,7 +47,7 @@ const CreateQuizForm: React.FC = () => {
     args: [1n, 1n, 1, "", "", "", "", "0x"],
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt", txnReceipt);
-
+      setShowSuccessToast(true);
       setFormData({
         name: "",
         desc: "",
@@ -59,6 +61,10 @@ const CreateQuizForm: React.FC = () => {
         imageFile: null,
         previewURL: null,
       });
+      const timeout = setTimeout(() => {
+        setShowSuccessToast(false);
+      }, 4000);
+      () => clearTimeout(timeout);
     },
   });
 
@@ -315,6 +321,13 @@ const CreateQuizForm: React.FC = () => {
           </ul>
         </div>
       )}
+      {showSuccessToast ? (
+        <div className="toast">
+          <div className="alert alert-success">
+            <span>New event created.</span>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

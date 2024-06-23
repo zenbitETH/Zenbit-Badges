@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ensdomains/ensjs": "^3.6.0",
-    "@ethereum-attestation-service/eas-sdk": "^0.29.1",
+    "@ethereum-attestation-service/eas-sdk": "^2.2.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
