@@ -1,7 +1,7 @@
 // pages/api/exportQuiz.ts
 import authMiddleware from "./middleware";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createEvent, deletedQuestion, getEventQuestionByAdmin, updateQuestion } from "~~/lib/actions/quiz.actions";
+import { createQuiz, deletedQuestion, getEventQuestionByAdmin, updateQuestion } from "~~/lib/actions/quiz.actions";
 
 // Define a type for the response data
 type ResponseData = {
@@ -12,7 +12,7 @@ type ResponseData = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   authMiddleware(req, res, async () => {
     if (req.method === "POST") {
-      const result = await createEvent(req.body);
+      const result = await createQuiz(req.body);
 
       res.status(200).json({ data: result, message: "Question created successfully" });
     } else if (req.method === "GET") {

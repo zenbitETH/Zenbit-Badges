@@ -13,6 +13,7 @@ interface FormData {
   name: string;
   desc: string;
   level: number;
+  startTimeStamp: number;
   timeStamp: number;
   mentorName: string;
   type: number;
@@ -26,6 +27,7 @@ const CreateQuizForm: React.FC = () => {
     name: "",
     desc: "", // Initialize with empty strings
     level: 0,
+    startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
     type: 1,
@@ -47,24 +49,42 @@ const CreateQuizForm: React.FC = () => {
     args: [1n, 1n, 1, "", "", "", "", "0x"],
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt", txnReceipt);
-      setShowSuccessToast(true);
-      setFormData({
-        name: "",
-        desc: "",
-        mentorName: "",
-        level: 0,
-        timeStamp: 0,
-        type: 1,
-        schemaId: "0x",
+
+      const newEevent = {
+        eventId: String(txnReceipt.transactionIndex - 1),
+        eventDate: formData.startTimeStamp,
+      };
+
+      const response = await fetch("/api/event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
+        },
+        body: JSON.stringify(newEevent),
       });
-      setSelectedImage({
-        imageFile: null,
-        previewURL: null,
-      });
-      const timeout = setTimeout(() => {
-        setShowSuccessToast(false);
-      }, 4000);
-      () => clearTimeout(timeout);
+
+      if (response.ok) {
+        setShowSuccessToast(true);
+        setFormData({
+          name: "",
+          desc: "",
+          mentorName: "",
+          level: 0,
+          startTimeStamp: 0,
+          timeStamp: 0,
+          type: 1,
+          schemaId: "0x",
+        });
+        setSelectedImage({
+          imageFile: null,
+          previewURL: null,
+        });
+        const timeout = setTimeout(() => {
+          setShowSuccessToast(false);
+        }, 4000);
+        () => clearTimeout(timeout);
+      }
     },
   });
 
@@ -214,6 +234,21 @@ const CreateQuizForm: React.FC = () => {
             <option value={2}>Written Answers</option>
             <option value={3}>Link</option>
           </select>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="startTimeStamp" className="block mb-1">
+            Start TimeStamp:
+          </label>
+          <input
+            type="number"
+            id="startTimeStamp"
+            name="startTimeStamp"
+            value={formData.startTimeStamp}
+            onChange={handleChange}
+            className=""
+            required
+          />
         </div>
 
         <div className="mb-4">

@@ -3,7 +3,7 @@ import { connectToDatabase } from "../database";
 import Quiz from "../database/models/quiz.model";
 import { handleError } from "../utils";
 
-export async function createEvent(body: CreateQuiz) {
+export async function createQuiz(body: CreateQuiz) {
   try {
     await connectToDatabase();
 
