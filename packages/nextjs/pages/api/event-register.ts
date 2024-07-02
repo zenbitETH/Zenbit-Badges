@@ -19,7 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const participantExists = await checkIfParticipantExistsByEmail(req.body.email);
     if (participantExists) {
       // check if participant is not registered in event
-
       const isRegisteredInEvent = await checkIfParticipantIsAlreadyRegisteredInEvent(
         participantExists,
         req.body.eventDBId,

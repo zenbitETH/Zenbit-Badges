@@ -36,15 +36,14 @@ export async function registerParticipantToEvent(participant: any, eventId: stri
 
     // find event by id (id from database)
     const event = await Events.findById({ _id: eventId });
+    const participantDocument = await Participants.findById({ _id: participant._id });
     // add participant to the event document
-    event.participants.push(participant);
+    event.participants.push(participantDocument._id);
     // save document
     await event.save();
 
-    const participantDocument = await Participants.findById({ _id: participant._id });
-
     // add event to the participant document
-    participantDocument.events.push(event);
+    participantDocument.events.push(event._id);
     // save document
     await participantDocument.save();
 
@@ -79,8 +78,6 @@ export async function checkIfParticipantExistsByEmail(email: string) {
 }
 
 export async function checkIfParticipantIsAlreadyRegisteredInEvent(participant: any, eventId: string) {
-  console.log("events model : ", Events);
-  console.log("participant prop : ", participant);
   try {
     await connectToDatabase();
 
@@ -90,17 +87,15 @@ export async function checkIfParticipantIsAlreadyRegisteredInEvent(participant: 
       .populate("participants")
       .exec();
 
-    console.log({ event });
-
     let exists = false;
-    event.participants.forEach((entry: any) => {
-      console.log({ entry });
-      if (entry._id == participant._id) {
-        exists = true;
-        return;
-      }
-    });
-
+    if (event.participants.length > 0) {
+      event.participants.forEach((entry: any) => {
+        if (entry._id == participant._id) {
+          exists = true;
+          return;
+        }
+      });
+    }
     return JSON.parse(JSON.stringify(exists));
   } catch (error) {
     handleError(error);

@@ -13,7 +13,7 @@ export const EventsSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "participants",
-      unique: [true, "Participant already added"],
+      // unique: [true, "Participant already added"],
     },
   ],
   createdAt: {
