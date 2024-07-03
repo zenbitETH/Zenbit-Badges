@@ -52,3 +52,15 @@ export async function deletedQuestion(id: string) {
     handleError(error);
   }
 }
+
+export async function getAllEvents() {
+  try {
+    await connectToDatabase();
+
+    const result = await Events.find();
+
+    return JSON.parse(JSON.stringify(result));
+  } catch (error) {
+    handleError(error);
+  }
+}

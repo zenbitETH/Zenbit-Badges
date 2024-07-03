@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { formatUnits } from "viem";
@@ -10,16 +10,32 @@ import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 // import { Address } from "~~/components/scaffold-eth";
 
+interface EventsData {
+  typeOf: number;
+  eventId: bigint;
+  level: bigint;
+  closingTimestamp: bigint;
+  attendeeCount: bigint;
+  eventName: string;
+  eventDescription: string;
+  mentorName: string;
+  badgeUri: string;
+  mentorAddress: string;
+  attendees: readonly string[];
+  isActive: boolean;
+  overrideClosingTimestamp: boolean;
+  schemaUID: `0x${string}`;
+  startTimestamp: number | undefined;
+}
+[];
+
 const Home = () => {
   const { address: connectedAddress } = useAccount();
   const searchParams = useSearchParams();
 
-  const eventId = searchParams?.get("eventId");
+  const [eventsData, setEventsData] = useState<EventsData[]>([]);
 
-  // const { data: readScaffold } = useScaffoldContractRead({
-  //   contractName: "EASOnboarding",
-  //   functionName: "eventIdCounter",
-  // });
+  const eventId = searchParams?.get("eventId");
 
   const router = useRouter();
 
@@ -34,11 +50,35 @@ const Home = () => {
     args: [connectedAddress],
   });
 
+  useEffect(() => {
+    async function fetchEventsFromDatabase() {
+      const response = await fetch("/api/events");
+      const { data } = await response.json();
+
+      if (events) {
+        const newEventsData = events?.map(eventInfo => {
+          let newEventInfo: any = eventInfo;
+          data.forEach((eventDBData: any) => {
+            if (eventDBData.eventId === formatUnits(eventInfo.eventId, 0)) {
+              newEventInfo = {
+                ...eventInfo,
+                startTimestamp: eventDBData.eventDate,
+              };
+            }
+          });
+          return newEventInfo;
+        });
+        setEventsData(newEventsData);
+      }
+    }
+    fetchEventsFromDatabase();
+  }, [events]);
+
   return (
     <div className="2xl:my-18 xl:my-18 my-24 mx-3">
       <div className="grid items-center justify-center gap-3 md:grid-cols-2 2xl:grid-cols-4 text-center">
-        {events
-          ? events
+        {eventsData
+          ? eventsData
               ?.filter(event =>
                 eventId === null || eventId === undefined
                   ? true
