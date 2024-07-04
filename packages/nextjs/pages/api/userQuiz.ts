@@ -23,11 +23,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       }
     } else if (req.method === "POST") {
       try {
-        console.log(req.body.eventId);
+        console.log(req.body);
 
         const eventData = await getEventByEventID(req.body.eventId);
         console.log({ eventData });
-        if (req.body.eventId !== "4") {
+        if (req.body.eventType !== "4") {
           const result = await checkAnswer(req.body);
 
           res.status(200).json({ data: result, message: "Quiz answer checked successfully" });

@@ -336,7 +336,7 @@ const Quiz = () => {
             "Content-Type": "application/json",
             "x-api-key": process.env.API_KEY || "",
           },
-          body: JSON.stringify({ eventId: eventId, value: answer }),
+          body: JSON.stringify({ eventId: eventId, value: answer, eventType: "4" }),
         });
         const result = await response.json();
         console.log({ result });
