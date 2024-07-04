@@ -1,9 +1,9 @@
-import { CreateQuiz, EventId, MyObject } from "../../types/quiz";
+import { CheckLiveEventAnswerBody, CreateQuiz, EventId, MyObject } from "../../types/quiz";
 import { connectToDatabase } from "../database";
 import Quiz from "../database/models/quiz.model";
 import { handleError } from "../utils";
 
-export async function createEvent(body: CreateQuiz) {
+export async function createEventQuiz(body: CreateQuiz) {
   try {
     await connectToDatabase();
 
@@ -93,7 +93,8 @@ export async function checkAnswer(body: MyObject) {
   }
 }
 
-export async function checkLiveEventAnswer(body: MyObject) {
+export async function checkLiveEventAnswer(body: CheckLiveEventAnswerBody) {
+  console.log({ body });
   try {
     await connectToDatabase();
 
@@ -101,11 +102,13 @@ export async function checkLiveEventAnswer(body: MyObject) {
       eventId: body.eventId,
       isActive: true,
     });
-
+    console.log("firstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirst");
+    console.log(quizData.answer, body.value);
     if (quizData.answer === body.value) {
       return JSON.parse(JSON.stringify(true));
+    } else {
+      return JSON.parse(JSON.stringify(false));
     }
-    return JSON.parse(JSON.stringify(false));
   } catch (error) {
     handleError(error);
   }

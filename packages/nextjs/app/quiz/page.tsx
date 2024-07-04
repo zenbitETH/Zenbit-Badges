@@ -329,7 +329,7 @@ const Quiz = () => {
         }
       } else if (eventDetails?.[0] == 4) {
         const answer = Object.values(answers)[0];
-
+        console.log({ eventId, answer });
         const response = await fetch("/api/userQuiz", {
           method: "POST",
           headers: {
@@ -339,7 +339,7 @@ const Quiz = () => {
           body: JSON.stringify({ eventId: eventId, value: answer }),
         });
         const result = await response.json();
-
+        console.log({ result });
         if (result && result.data) {
           onSubmit();
         } else {

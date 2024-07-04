@@ -5,7 +5,6 @@ import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
 import { formatUnits } from "viem";
-// import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
@@ -36,8 +35,6 @@ const CreateQuizForm: React.FC = () => {
   });
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
 
-  // const [lastEventId, setLastEventId] = useState<string>("");
-
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
@@ -55,15 +52,6 @@ const CreateQuizForm: React.FC = () => {
       console.log("txnReceipt", txnReceipt);
 
       setCreateEventEntryInDatabase(true);
-    },
-    onSuccess(data, variables, context) {
-      console.log("onSuccess ", { data, variables, context });
-    },
-    onMutate(variables) {
-      console.log("onMutate ", { variables });
-    },
-    onSettled(data, error, variables, context) {
-      console.log("onSettled ", { data, error, variables, context });
     },
   });
 
@@ -117,14 +105,11 @@ const CreateQuizForm: React.FC = () => {
 
     if (
       createEventEntryInDatabase &&
-      // secondFlagToCreateEventEntryInDatabase &&
       !getAllEventsIsLoading &&
       !getAllEventsIsFetching &&
       !getAllEventsIsRefetching &&
       eventData
-      // lastEventId !== formatUnits(eventData[eventData.length - 1].eventId, 0)
     ) {
-      console.log("postCreateEventEntry ", { id: formatUnits(eventData[eventData.length - 1].eventId, 0) });
       const newEevent = {
         eventId: formatUnits(eventData[eventData.length - 1].eventId, 0),
         eventType: formData.type,
@@ -245,17 +230,6 @@ const CreateQuizForm: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(lastEventId, eventData && formatUnits(eventData[eventData.length - 1].eventId, 0));
-  //   if (eventData && eventData.length > 0 && lastEventId !== formatUnits(eventData[eventData.length - 1].eventId, 0)) {
-  //     console.log("lastEventId STORED ", formatUnits(eventData[eventData.length - 1].eventId, 0));
-  //     setLastEventId(formatUnits(eventData[eventData.length - 1].eventId, 0));
-  //     setSecondFlagToCreateEventEntryInDatabase(true);
-  //   }
-  // }, [eventData, lastEventId]);
-
-  console.log({ eventData });
-
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
@@ -359,21 +333,6 @@ const CreateQuizForm: React.FC = () => {
           />
         </div>
 
-        {/* <div className="mb-4">
-          <label htmlFor="schemaId" className="block mb-1">
-            Schema Id:
-          </label>
-          <select id="schemaId" name="schemaId" value={formData.schemaId} onChange={handleChange} className="" required>
-            <option value={""}>Please Select </option>
-            {schemaIds.map(schemaId => {
-              return (
-                <option key={schemaId} value={schemaId}>
-                  {schemaId}
-                </option>
-              );
-            })}
-          </select>
-        </div> */}
         <div className="mb-4">
           <label htmlFor="placeImage" className="block mb-1">
             PlaceImage
