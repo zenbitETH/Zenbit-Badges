@@ -1,9 +1,10 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
+import { formatUnits } from "viem";
 // import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -17,6 +18,7 @@ interface FormData {
   mentorName: string;
   type: number;
   schemaId: "0x";
+  eventurl: string;
 }
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
@@ -30,7 +32,11 @@ const CreateQuizForm: React.FC = () => {
     mentorName: "",
     type: 1,
     schemaId: "0x",
+    eventurl: "",
   });
+  const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
+
+  // const [lastEventId, setLastEventId] = useState<string>("");
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
@@ -47,26 +53,94 @@ const CreateQuizForm: React.FC = () => {
     args: [1n, 1n, 1, "", "", "", "", "0x"],
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt", txnReceipt);
-      setShowSuccessToast(true);
-      setFormData({
-        name: "",
-        desc: "",
-        mentorName: "",
-        level: 0,
-        timeStamp: 0,
-        type: 1,
-        schemaId: "0x",
-      });
-      setSelectedImage({
-        imageFile: null,
-        previewURL: null,
-      });
-      const timeout = setTimeout(() => {
-        setShowSuccessToast(false);
-      }, 4000);
-      () => clearTimeout(timeout);
+
+      setCreateEventEntryInDatabase(true);
+    },
+    onSuccess(data, variables, context) {
+      console.log("onSuccess ", { data, variables, context });
+    },
+    onMutate(variables) {
+      console.log("onMutate ", { variables });
+    },
+    onSettled(data, error, variables, context) {
+      console.log("onSettled ", { data, error, variables, context });
     },
   });
+
+  const {
+    data: eventData,
+    isLoading: getAllEventsIsLoading,
+    isFetching: getAllEventsIsFetching,
+    isRefetching: getAllEventsIsRefetching,
+  } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "getAllEvents",
+  });
+
+  useEffect(() => {
+    async function postCreateEventEntry(newEevent: any) {
+      console.log("in postCreateEventEntry ", { newEevent });
+      const response = await fetch("/api/event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY || "",
+        },
+        body: JSON.stringify(newEevent),
+      });
+      if (response.ok) {
+        setShowSuccessToast(true);
+        setFormData({
+          name: "",
+          desc: "",
+          mentorName: "",
+          level: 0,
+          timeStamp: 0,
+          type: 1,
+          schemaId: "0x",
+          eventurl: "",
+        });
+        setSelectedImage({
+          imageFile: null,
+          previewURL: null,
+        });
+        setCreateEventEntryInDatabase(false);
+        const timeout = setTimeout(() => {
+          setShowSuccessToast(false);
+        }, 4000);
+        () => clearTimeout(timeout);
+      } else {
+        alert("Error creating event entry.");
+        setCreateEventEntryInDatabase(false);
+      }
+    }
+
+    if (
+      createEventEntryInDatabase &&
+      // secondFlagToCreateEventEntryInDatabase &&
+      !getAllEventsIsLoading &&
+      !getAllEventsIsFetching &&
+      !getAllEventsIsRefetching &&
+      eventData
+      // lastEventId !== formatUnits(eventData[eventData.length - 1].eventId, 0)
+    ) {
+      console.log("postCreateEventEntry ", { id: formatUnits(eventData[eventData.length - 1].eventId, 0) });
+      const newEevent = {
+        eventId: formatUnits(eventData[eventData.length - 1].eventId, 0),
+        eventType: formData.type,
+        eventURL: formData.eventurl,
+      };
+      postCreateEventEntry(newEevent);
+    }
+  }, [
+    createEventEntryInDatabase,
+    getAllEventsIsLoading,
+    getAllEventsIsFetching,
+    getAllEventsIsRefetching,
+    eventData,
+    formData.type,
+    formData.eventurl,
+  ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -89,10 +163,12 @@ const CreateQuizForm: React.FC = () => {
     ) {
       return;
     }
+    const timeStampValue = moment(formData.timeStamp).unix();
 
-    const isValidDate = moment(formData.timeStamp).valueOf();
+    // const isValidDate = moment(timeStampValue).valueOf();
     const currentTimestamp = moment().valueOf();
-    if (isValidDate < currentTimestamp) {
+
+    if (timeStampValue > currentTimestamp) {
       return;
     }
 
@@ -111,18 +187,35 @@ const CreateQuizForm: React.FC = () => {
     });
 
     if (responseData?.data?.IpfsHash) {
-      writeAsync({
-        args: [
-          BigInt(formData.timeStamp),
-          BigInt(formData.level),
-          formData.type,
-          formData.name,
-          formData.desc,
-          formData.mentorName,
-          responseData.data.IpfsHash,
-          `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-        ],
-      });
+      // dependiendo del eventType, escribir en el contrato el schemaId y questionsType correspondientes
+
+      const schemaIdToSave = schemaIds[3];
+      let questionType = 0;
+
+      if (formData.type === 1) {
+        // type 1 = live event
+        questionType = 4;
+      } else if (formData.type === 2) {
+        // type 2 = workshop
+        questionType = 1;
+      }
+
+      if (questionType !== 0) {
+        await writeAsync({
+          args: [
+            BigInt(timeStampValue),
+            BigInt(formData.level),
+            questionType,
+            formData.name,
+            formData.desc,
+            formData.mentorName,
+            responseData.data.IpfsHash,
+            `0x${schemaIdToSave}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
+          ],
+        });
+      } else {
+        alert("asdsad");
+      }
     }
     // client.storeBlob((selectedImage as any).imageFile).then(cid => {
     //   console.log("cid", cid);
@@ -152,10 +245,16 @@ const CreateQuizForm: React.FC = () => {
     }
   };
 
-  const { data: eventData } = useScaffoldContractRead({
-    contractName: "EASOnboarding",
-    functionName: "getAllEvents",
-  });
+  // useEffect(() => {
+  //   console.log(lastEventId, eventData && formatUnits(eventData[eventData.length - 1].eventId, 0));
+  //   if (eventData && eventData.length > 0 && lastEventId !== formatUnits(eventData[eventData.length - 1].eventId, 0)) {
+  //     console.log("lastEventId STORED ", formatUnits(eventData[eventData.length - 1].eventId, 0));
+  //     setLastEventId(formatUnits(eventData[eventData.length - 1].eventId, 0));
+  //     setSecondFlagToCreateEventEntryInDatabase(true);
+  //   }
+  // }, [eventData, lastEventId]);
+
+  console.log({ eventData });
 
   return (
     <div className="my-28 w-full mx-auto">
@@ -206,22 +305,36 @@ const CreateQuizForm: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="level" className="block mb-1">
-            Type of Questions:
+          <label htmlFor="type" className="block mb-1">
+            Event Type:
           </label>
-          <select id="answer" name="type" value={formData.type} onChange={handleChange} className="" required>
-            <option value={1}>3-Option Quiz </option>
-            <option value={2}>Written Answers</option>
-            <option value={3}>Link</option>
+          <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
+            <option value={1}>Live Event</option>
+            <option value={2}>Workshop</option>
           </select>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="timeStamp" className="block mb-1">
-            Closing TimeStamp:
+          <label htmlFor="eventurl" className="block mb-1">
+            Event URL:
           </label>
           <input
-            type="number"
+            type="text"
+            id="eventurl"
+            name="eventurl"
+            value={formData.eventurl}
+            onChange={handleChange}
+            className=""
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="timeStamp" className="block mb-1">
+            Attestation Time Limit:
+          </label>
+          <input
+            type="datetime-local"
             id="timeStamp"
             name="timeStamp"
             value={formData.timeStamp}
@@ -246,7 +359,7 @@ const CreateQuizForm: React.FC = () => {
           />
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="schemaId" className="block mb-1">
             Schema Id:
           </label>
@@ -260,7 +373,7 @@ const CreateQuizForm: React.FC = () => {
               );
             })}
           </select>
-        </div>
+        </div> */}
         <div className="mb-4">
           <label htmlFor="placeImage" className="block mb-1">
             PlaceImage

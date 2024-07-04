@@ -92,3 +92,21 @@ export async function checkAnswer(body: MyObject) {
     handleError(error);
   }
 }
+
+export async function checkLiveEventAnswer(body: MyObject) {
+  try {
+    await connectToDatabase();
+
+    const quizData = await Quiz.findOne({
+      eventId: body.eventId,
+      isActive: true,
+    });
+
+    if (quizData.answer === body.value) {
+      return JSON.parse(JSON.stringify(true));
+    }
+    return JSON.parse(JSON.stringify(false));
+  } catch (error) {
+    handleError(error);
+  }
+}

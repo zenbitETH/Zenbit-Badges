@@ -18,6 +18,7 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   answer,
   eventData,
 }) => {
+  console.log({ eventData });
   return (
     <div className="p-6 rounded-md bg-gray-200">
       <h3 className="font-mus md:text-xl mb-6">
@@ -61,6 +62,18 @@ const QuestionComponent: React.FC<QuestionProps> = ({
             value={answer}
             onChange={e => handleOptionChange(question?._id, e.target.value)}
             placeholder="Please enter the link for the sig wallet"
+          />
+        </div>
+      )}
+      {eventData?.[0] == 4 && (
+        <div className="flex items-center justify-between border border-gray-300 rounded-md p-2">
+          <input
+            type="text"
+            className="flex-1 outline-none "
+            name={`question-${questionIndex}`}
+            value={answer}
+            onChange={e => handleOptionChange(question?._id, e.target.value)}
+            placeholder="Ingrese la palabra secreta"
           />
         </div>
       )}

@@ -139,7 +139,7 @@ const Quiz = () => {
     functionName: "events",
     args: [BigInt(eventId)],
   });
-
+  console.log({ eventDetails });
   if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
     router.push("/");
   }
@@ -326,6 +326,26 @@ const Quiz = () => {
             }
             return;
           }
+        }
+      } else if (eventDetails?.[0] == 4) {
+        const answer = Object.values(answers)[0];
+
+        const response = await fetch("/api/userQuiz", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.API_KEY || "",
+          },
+          body: JSON.stringify({ eventId: eventId, value: answer }),
+        });
+        const result = await response.json();
+
+        if (result && result.data) {
+          onSubmit();
+        } else {
+          setLoading(false);
+          alert("Respuesta incorrecta, intenta de nuevo");
+          router.push("/");
         }
       }
     } catch (error) {
