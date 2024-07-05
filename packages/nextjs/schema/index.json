@@ -77,12 +77,12 @@
     },
     "Event_Type": {
       "type": "string",
-      "value": "",
+      "value": "quizType",
       "state": true
     },
     "Event_URL": {
       "type": "string",
-      "value": "",
+      "value": "eventURL",
       "state": true
     }
   }

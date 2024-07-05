@@ -94,7 +94,6 @@ export async function checkAnswer(body: MyObject) {
 }
 
 export async function checkLiveEventAnswer(body: CheckLiveEventAnswerBody) {
-  console.log({ body });
   try {
     await connectToDatabase();
 
@@ -102,8 +101,6 @@ export async function checkLiveEventAnswer(body: CheckLiveEventAnswerBody) {
       eventId: body.eventId,
       isActive: true,
     });
-    console.log("firstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirstfirst");
-    console.log(quizData.answer, body.value);
     if (quizData.answer === body.value) {
       return JSON.parse(JSON.stringify(true));
     } else {

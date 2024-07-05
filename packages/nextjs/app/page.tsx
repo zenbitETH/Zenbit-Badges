@@ -55,6 +55,7 @@ const Home = () => {
                   router={router}
                 />
               ))
+              .reverse()
           : "Cargando eventos disponibles..."}
       </div>
     </div>

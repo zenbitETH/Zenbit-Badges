@@ -25,6 +25,17 @@ import type { Schemas } from "~~/types/quiz/index";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
+export interface EventData {
+  _id: string;
+  eventId: string;
+  participants: any[];
+  eventType: string;
+  eventURL: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+}
+
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
@@ -44,6 +55,8 @@ const Quiz = () => {
   const [state, setState] = useState({
     answer: "",
     safeAddress: "",
+    eventURL: "",
+    quizType: "",
   });
 
   async function grantAttestation(easContract: Contract, data: string, recipient: Address) {
@@ -101,6 +114,7 @@ const Quiz = () => {
     router.push("/");
   }
   const [questions, setQuestions] = useState([]);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       const response = await fetch(`/api/userQuiz?id=${eventId}`, {
@@ -139,7 +153,19 @@ const Quiz = () => {
     functionName: "events",
     args: [BigInt(eventId)],
   });
-  console.log({ eventDetails });
+
+  useEffect(() => {
+    async function fetchEventData(eventId: string) {
+      const response = await fetch("/api/event?id=" + eventId);
+      const responseData = await response.json();
+      setState({ ...state, eventURL: responseData.data.eventURL, quizType: responseData.data.eventType });
+    }
+    if (eventId) {
+      fetchEventData(eventId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId]);
+
   if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
     router.push("/");
   }
@@ -236,8 +262,6 @@ const Quiz = () => {
 
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 
-  // const [selectedValueMentor, setSelectedValueMentor] = useState("");
-  // const { address: connectedAddress } = useAccount();
   const handleOptionChange = (questionIndex: string, option: string) => {
     setAnswers({
       ...answers,
@@ -288,7 +312,7 @@ const Quiz = () => {
           if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
           } else {
-            setState({ safeAddress: result?.value, answer: answer });
+            setState({ ...state, safeAddress: result?.value, answer: answer });
           }
           return;
         }
@@ -306,7 +330,7 @@ const Quiz = () => {
         // Assuming the value we want is the first part of the path
         const value = pathParts[1];
         if (isAddress(value)) {
-          setState({ safeAddress: value, answer: answer });
+          setState({ ...state, safeAddress: value, answer: answer });
         } else {
           const result = await client.getAddressRecord({ name: value });
 
@@ -322,24 +346,22 @@ const Quiz = () => {
             if (!txResponse.includes(connectedAddress)) {
               alert("No perteneces a esa DAO, por favor verifica");
             } else {
-              setState({ safeAddress: result?.value, answer: answer });
+              setState({ ...state, safeAddress: result?.value, answer: answer });
             }
             return;
           }
         }
       } else if (eventDetails?.[0] == 4) {
         const answer = Object.values(answers)[0];
-        console.log({ eventId, answer });
         const response = await fetch("/api/userQuiz", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "x-api-key": process.env.API_KEY || "",
           },
-          body: JSON.stringify({ eventId: eventId, value: answer, eventType: "4" }),
+          body: JSON.stringify({ eventId: eventId, value: answer, eventType: eventDetails?.[0].toString() }),
         });
         const result = await response.json();
-        console.log({ result });
         if (result && result.data) {
           onSubmit();
         } else {

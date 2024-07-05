@@ -18,7 +18,6 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   answer,
   eventData,
 }) => {
-  console.log({ eventData });
   return (
     <div className="p-6 rounded-md bg-gray-200">
       <h3 className="font-mus md:text-xl mb-6">
