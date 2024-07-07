@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { isAddress } from "@ethersproject/address";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
@@ -24,6 +23,19 @@ import schemas from "~~/schema/index.json";
 import type { Schemas } from "~~/types/quiz/index";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
+
+function parseDomain(domain: any) {
+  // Split the domain by dots
+  const parts = domain.split(".");
+
+  // If there's only one part, return it
+  if (parts.length === 1) {
+    return domain;
+  }
+
+  // Otherwise, return the last two parts joined by a dot
+  return parts.slice(-2).join(".");
+}
 
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
@@ -303,29 +315,28 @@ const Quiz = () => {
 
         const pathParts = urlObj.pathname.split("/");
 
-        // Assuming the value we want is the first part of the path
-        const value = pathParts[1];
-        if (isAddress(value)) {
-          setState({ safeAddress: value, answer: answer });
-        } else {
-          const result = await client.getAddressRecord({ name: value });
+        // The subdomain or domain we want is the first part of the path
+        const subDomain = pathParts[1];
 
-          if (!result) {
+        const value = parseDomain(subDomain);
+
+        const result = await client.getAddressRecord({ name: value });
+
+        if (!result) {
+          alert("No perteneces a esa DAO, por favor verifica");
+          return;
+        }
+
+        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+
+        const txResponse = await gnosisContractObj.getOwners();
+        if (txResponse) {
+          if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
-            return;
+          } else {
+            setState({ safeAddress: result?.value, answer: answer });
           }
-
-          const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
-
-          const txResponse = await gnosisContractObj.getOwners();
-          if (txResponse) {
-            if (!txResponse.includes(connectedAddress)) {
-              alert("No perteneces a esa DAO, por favor verifica");
-            } else {
-              setState({ safeAddress: result?.value, answer: answer });
-            }
-            return;
-          }
+          return;
         }
       }
     } catch (error) {
