@@ -42,6 +42,7 @@ const Quiz = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://optimism.drpc.org");
+  const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || "https://optimism.drpc.org");
   const [data, setData] = useState({
     id: "",
     address: "",
@@ -98,7 +99,7 @@ const Quiz = () => {
   }
 
   const privateKey = process.env.PRIVATE_KEY || "";
-  const wallet = new EtherWallet(privateKey).connect(provider);
+  const wallet = new EtherWallet(privateKey).connect(privateProvider);
 
   // EAS Contract information
   const easContractAddress = abi.address; // Address of the EAS contract
@@ -187,7 +188,7 @@ const Quiz = () => {
           value: getValue(value, state), // Getting the actual value from eventDetails
           type: type,
         }));
-        if (dataToEncode.length > 0 && dataToEncode[4].value !== "") {
+        if (dataToEncode.length > 0 && dataToEncode[3].value !== "") {
           const encodedData = schemaEncoder.encodeData(dataToEncode);
           const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
