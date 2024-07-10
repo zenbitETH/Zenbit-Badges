@@ -315,6 +315,11 @@ const Quiz = () => {
 
         const pathParts = urlObj.pathname.split("/");
 
+        if (urlObj.host !== "mirror.xyz") {
+          alert("Please enter a valid Mirror URL");
+          return;
+        }
+
         // The subdomain or domain we want is the first part of the path
         const subDomain = pathParts[1];
 
