@@ -66,15 +66,14 @@ const CreateQuizForm: React.FC = () => {
   });
 
   useEffect(() => {
-    async function postCreateEventEntry(newEevent: any) {
-      console.log("in postCreateEventEntry ", { newEevent });
+    async function postCreateEventEntry(newEvent: any) {
       const response = await fetch("/api/event", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.API_KEY || "",
         },
-        body: JSON.stringify(newEevent),
+        body: JSON.stringify(newEvent),
       });
       if (response.ok) {
         setShowSuccessToast(true);
@@ -110,12 +109,12 @@ const CreateQuizForm: React.FC = () => {
       !getAllEventsIsRefetching &&
       eventData
     ) {
-      const newEevent = {
+      const newEvent = {
         eventId: formatUnits(eventData[eventData.length - 1].eventId, 0),
         eventType: formData.type,
         eventURL: formData.eventurl,
       };
-      postCreateEventEntry(newEevent);
+      postCreateEventEntry(newEvent);
     }
   }, [
     createEventEntryInDatabase,
@@ -198,7 +197,7 @@ const CreateQuizForm: React.FC = () => {
           ],
         });
       } else {
-        alert("asdsad");
+        alert("questionType error");
       }
     }
     // client.storeBlob((selectedImage as any).imageFile).then(cid => {
@@ -228,7 +227,6 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
-  console.log({ formData });
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
@@ -282,9 +280,6 @@ const CreateQuizForm: React.FC = () => {
             Event Type:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
-            {/* Onboarding (quiz)
-            DAO formation (safe+ens)
-            DAO incubation (mirror link) */}
             <option value={1}>Onboarding</option>
             <option value={2}>DAO formation </option>
             <option value={3}>DAO incubation</option>

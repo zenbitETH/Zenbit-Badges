@@ -236,7 +236,7 @@ const CreateQuizForm: React.FC = () => {
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: questionToEdit.eventId === "4" ? questionToEdit.answer : "",
+      answer: questionToEdit.eventId === "3" ? questionToEdit.answer : "",
       eventId: questionToEdit.eventId,
     });
     setEditMode(questionToEdit._id);
