@@ -77,7 +77,7 @@
     "Event_Type": {
       "type": "string",
       "value": "eventDetails[0]",
-      "state": true
+      "state": false
     },
     "Event_URL": {
       "type": "string",
