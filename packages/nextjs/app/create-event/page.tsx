@@ -5,9 +5,11 @@ import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
 import { formatUnits } from "viem";
+import { useContractEvent } from "wagmi";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
+import { deployedContract } from "~~/utils/scaffold-eth/abi";
 
 interface FormData {
   name: string;
@@ -67,6 +69,7 @@ const CreateQuizForm: React.FC = () => {
 
   useEffect(() => {
     async function postCreateEventEntry(newEvent: any) {
+      console.log("in postCreateEventEntry ", { newEvent });
       const response = await fetch("/api/event", {
         method: "POST",
         headers: {
@@ -126,6 +129,15 @@ const CreateQuizForm: React.FC = () => {
     formData.eventurl,
   ]);
 
+  useContractEvent({
+    address: "0xaF66288e6c7865F3E66B72DCB5bB0aB92f1306bA",
+    abi: deployedContract.abi,
+    eventName: "EventCreated",
+    listener(log) {
+      console.log({ log });
+    },
+  });
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
@@ -173,14 +185,29 @@ const CreateQuizForm: React.FC = () => {
     if (responseData?.data?.IpfsHash) {
       // dependiendo del eventType, escribir en el contrato el schemaId y questionsType correspondientes
 
-      const schemaIdToSave = schemaIds[3];
+      let schemaIdToSave = "";
       let questionType = "0";
 
       if (formData.type === "5") {
         // when workshop, question type is quiz (id 1)
         questionType = "1";
+        schemaIdToSave = schemaIds[3];
       } else {
         questionType = formData.type;
+        switch (formData.type) {
+          case "1":
+            schemaIdToSave = schemaIds[0];
+            break;
+          case "2":
+            schemaIdToSave = schemaIds[1];
+            break;
+          case "3":
+            schemaIdToSave = schemaIds[2];
+            break;
+          case "4":
+            schemaIdToSave = schemaIds[3];
+            break;
+        }
       }
 
       if (questionType !== "0") {
