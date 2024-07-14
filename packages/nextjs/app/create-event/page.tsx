@@ -15,7 +15,7 @@ interface FormData {
   level: number;
   timeStamp: number;
   mentorName: string;
-  type: number;
+  type: string;
   schemaId: "0x";
   eventurl: string;
 }
@@ -29,7 +29,7 @@ const CreateQuizForm: React.FC = () => {
     level: 0,
     timeStamp: 0,
     mentorName: "",
-    type: 1,
+    type: "0",
     schemaId: "0x",
     eventurl: "",
   });
@@ -84,7 +84,7 @@ const CreateQuizForm: React.FC = () => {
           mentorName: "",
           level: 0,
           timeStamp: 0,
-          type: 1,
+          type: "0",
           schemaId: "0x",
           eventurl: "",
         });
@@ -175,22 +175,21 @@ const CreateQuizForm: React.FC = () => {
       // dependiendo del eventType, escribir en el contrato el schemaId y questionsType correspondientes
 
       const schemaIdToSave = schemaIds[3];
-      let questionType = 0;
+      let questionType = "0";
 
-      if (formData.type === 1) {
-        // type 1 = live event
-        questionType = 4;
-      } else if (formData.type === 2) {
-        // type 2 = workshop
-        questionType = 1;
+      if (formData.type === "5") {
+        // when workshop, question type is quiz (id 1)
+        questionType = "1";
+      } else {
+        questionType = formData.type;
       }
 
-      if (questionType !== 0) {
+      if (questionType !== "0") {
         await writeAsync({
           args: [
             BigInt(timeStampValue),
             BigInt(formData.level),
-            questionType,
+            Number(questionType),
             formData.name,
             formData.desc,
             formData.mentorName,
@@ -229,7 +228,7 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
-
+  console.log({ formData });
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
@@ -283,25 +282,33 @@ const CreateQuizForm: React.FC = () => {
             Event Type:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
-            <option value={1}>Live Event</option>
-            <option value={2}>Workshop</option>
+            {/* Onboarding (quiz)
+            DAO formation (safe+ens)
+            DAO incubation (mirror link) */}
+            <option value={1}>Onboarding</option>
+            <option value={2}>DAO formation </option>
+            <option value={3}>DAO incubation</option>
+            <option value={4}>Live Event</option>
+            <option value={5}>Workshop</option>
           </select>
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="eventurl" className="block mb-1">
-            Event URL:
-          </label>
-          <input
-            type="text"
-            id="eventurl"
-            name="eventurl"
-            value={formData.eventurl}
-            onChange={handleChange}
-            className=""
-            required
-          />
-        </div>
+        {formData.type === "4" || formData.type === "5" ? (
+          <div className="mb-4">
+            <label htmlFor="eventurl" className="block mb-1">
+              Event URL:
+            </label>
+            <input
+              type="text"
+              id="eventurl"
+              name="eventurl"
+              value={formData.eventurl}
+              onChange={handleChange}
+              className=""
+              required
+            />
+          </div>
+        ) : null}
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">
