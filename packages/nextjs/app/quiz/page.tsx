@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { isAddress } from "@ethersproject/address";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
@@ -25,11 +24,25 @@ import type { Schemas } from "~~/types/quiz/index";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
+function parseDomain(domain: any) {
+  // Split the domain by dots
+  const parts = domain.split(".");
+
+  // If there's only one part, return it
+  if (parts.length === 1) {
+    return domain;
+  }
+
+  // Otherwise, return the last two parts joined by a dot
+  return parts.slice(-2).join(".");
+}
+
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://optimism.drpc.org");
+  const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || "https://optimism.drpc.org");
   const [data, setData] = useState({
     id: "",
     address: "",
@@ -86,7 +99,7 @@ const Quiz = () => {
   }
 
   const privateKey = process.env.PRIVATE_KEY || "";
-  const wallet = new EtherWallet(privateKey).connect(provider);
+  const wallet = new EtherWallet(privateKey).connect(privateProvider);
 
   // EAS Contract information
   const easContractAddress = abi.address; // Address of the EAS contract
@@ -175,7 +188,7 @@ const Quiz = () => {
           value: getValue(value, state), // Getting the actual value from eventDetails
           type: type,
         }));
-        if (dataToEncode.length > 0 && dataToEncode[4].value !== "") {
+        if (dataToEncode.length > 0 && dataToEncode[3].value !== "") {
           const encodedData = schemaEncoder.encodeData(dataToEncode);
           const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
@@ -303,29 +316,33 @@ const Quiz = () => {
 
         const pathParts = urlObj.pathname.split("/");
 
-        // Assuming the value we want is the first part of the path
-        const value = pathParts[1];
-        if (isAddress(value)) {
-          setState({ safeAddress: value, answer: answer });
-        } else {
-          const result = await client.getAddressRecord({ name: value });
+        if (urlObj.host !== "mirror.xyz") {
+          alert("Please enter a valid Mirror URL");
+          return;
+        }
 
-          if (!result) {
+        // The subdomain or domain we want is the first part of the path
+        const subDomain = pathParts[1];
+
+        const value = parseDomain(subDomain);
+
+        const result = await client.getAddressRecord({ name: value });
+
+        if (!result) {
+          alert("No perteneces a esa DAO, por favor verifica");
+          return;
+        }
+
+        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+
+        const txResponse = await gnosisContractObj.getOwners();
+        if (txResponse) {
+          if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
-            return;
+          } else {
+            setState({ safeAddress: result?.value, answer: answer });
           }
-
-          const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
-
-          const txResponse = await gnosisContractObj.getOwners();
-          if (txResponse) {
-            if (!txResponse.includes(connectedAddress)) {
-              alert("No perteneces a esa DAO, por favor verifica");
-            } else {
-              setState({ safeAddress: result?.value, answer: answer });
-            }
-            return;
-          }
+          return;
         }
       }
     } catch (error) {
