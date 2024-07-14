@@ -734,7 +734,7 @@ const deployedContracts = {
   },
   84532: {
     EASOnboarding: {
-      address: "0x34358c3016a77A4e5835bd5CF867E0c7785b41A2",
+      address: "0xaF66288e6c7865F3E66B72DCB5bB0aB92f1306bA",
       abi: [
         {
           inputs: [],
@@ -1260,6 +1260,25 @@ const deployedContracts = {
               internalType: "bytes32[]",
               name: "",
               type: "bytes32[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "isMentor",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
             },
           ],
           stateMutability: "view",
