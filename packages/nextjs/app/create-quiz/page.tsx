@@ -29,6 +29,7 @@ const CreateQuizForm: React.FC = () => {
   const [editMode, setEditMode] = useState<string | null>(null);
   // const router = useRouter();
   const [data, setData] = useState<any>([]);
+  const [eventDBData, setEventDBData] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [selectEventType, setSelectedEventType] = useState<number>(0);
 
@@ -65,7 +66,8 @@ const CreateQuizForm: React.FC = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setData(data.data);
+          setData(data.data.quizData);
+          setEventDBData(data.data.eventData);
         } else {
           console.error("Failed to fetch data");
         }
@@ -77,6 +79,7 @@ const CreateQuizForm: React.FC = () => {
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEvent]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -236,7 +239,7 @@ const CreateQuizForm: React.FC = () => {
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: questionToEdit.eventId === "3" ? questionToEdit.answer : "",
+      answer: eventDBData.eventType === "4" ? questionToEdit.answer : "",
       eventId: questionToEdit.eventId,
     });
     setEditMode(questionToEdit._id);
@@ -291,6 +294,7 @@ const CreateQuizForm: React.FC = () => {
           onChange={e => {
             const selectedValue = e.target.value;
             const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
+            console.log({ selectedEventData });
             setSelectedEventType(selectedEventData?.typeOf || 0);
             setSelectedEvent(selectedValue);
           }}
