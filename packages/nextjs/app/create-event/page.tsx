@@ -4,7 +4,6 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
-// import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
@@ -19,8 +18,6 @@ interface FormData {
   type: number;
   schemaId: "0x";
 }
-// TODO need to read the events fro t he contract.
-// Cannot create the contract from the front end
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -35,9 +32,7 @@ const CreateQuizForm: React.FC = () => {
   });
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
-
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
     previewURL: string | null;
@@ -144,21 +139,6 @@ const CreateQuizForm: React.FC = () => {
         ],
       });
     }
-    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
-    //   console.log("cid", cid);
-    //   writeAsync({
-    //     args: [
-    //       BigInt(formData.timeStamp),
-    //       BigInt(formData.level),
-    //       formData.type,
-    //       formData.name,
-    //       formData.desc,
-    //       formData.mentorName,
-    //       cid,
-    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-    //     ],
-    //   });
-    // });
   };
 
   const handleImageChange = (e: any) => {
