@@ -4,12 +4,9 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
-import { formatUnits } from "viem";
-import { useContractEvent } from "wagmi";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
-import { deployedContract } from "~~/utils/scaffold-eth/abi";
 
 interface FormData {
   name: string;
@@ -35,7 +32,9 @@ const CreateQuizForm: React.FC = () => {
     schemaId: "0x",
     eventurl: "",
   });
+
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
+  const [createdEventId, setCreatedEventId] = useState(0);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
@@ -53,6 +52,8 @@ const CreateQuizForm: React.FC = () => {
     onBlockConfirmation: async txnReceipt => {
       console.log("txnReceipt", txnReceipt);
 
+      const eventIdFromHex = parseInt(txnReceipt.logs[0].topics[1]?.replace("0x", "") as string, 16);
+      setCreatedEventId(eventIdFromHex);
       setCreateEventEntryInDatabase(true);
     },
   });
@@ -69,7 +70,6 @@ const CreateQuizForm: React.FC = () => {
 
   useEffect(() => {
     async function postCreateEventEntry(newEvent: any) {
-      console.log("in postCreateEventEntry ", { newEvent });
       const response = await fetch("/api/event", {
         method: "POST",
         headers: {
@@ -106,6 +106,7 @@ const CreateQuizForm: React.FC = () => {
     }
 
     if (
+      createdEventId !== 0 &&
       createEventEntryInDatabase &&
       !getAllEventsIsLoading &&
       !getAllEventsIsFetching &&
@@ -113,7 +114,7 @@ const CreateQuizForm: React.FC = () => {
       eventData
     ) {
       const newEvent = {
-        eventId: formatUnits(eventData[eventData.length - 1].eventId, 0),
+        eventId: createdEventId,
         eventType: formData.type,
         eventURL: formData.eventurl,
       };
@@ -127,16 +128,8 @@ const CreateQuizForm: React.FC = () => {
     eventData,
     formData.type,
     formData.eventurl,
+    createdEventId,
   ]);
-
-  useContractEvent({
-    address: "0xaF66288e6c7865F3E66B72DCB5bB0aB92f1306bA",
-    abi: deployedContract.abi,
-    eventName: "EventCreated",
-    listener(log) {
-      console.log({ log });
-    },
-  });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -254,6 +247,7 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
+
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
