@@ -12,20 +12,20 @@ interface FormData {
   name: string;
   desc: string;
   level: number;
+  startTimeStamp: number;
   timeStamp: number;
   mentorName: string;
   type: string;
   schemaId: "0x";
   eventurl: string;
 }
-// TODO need to read the events fro t he contract.
-// Cannot create the contract from the front end
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     desc: "", // Initialize with empty strings
     level: 0,
+    startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
     type: "0",
@@ -37,9 +37,7 @@ const CreateQuizForm: React.FC = () => {
   const [createdEventId, setCreatedEventId] = useState(0);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
-
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
     previewURL: string | null;
@@ -86,6 +84,7 @@ const CreateQuizForm: React.FC = () => {
           mentorName: "",
           level: 0,
           timeStamp: 0,
+          startTimeStamp: 0,
           type: "0",
           schemaId: "0x",
           eventurl: "",
@@ -220,21 +219,6 @@ const CreateQuizForm: React.FC = () => {
         alert("questionType error");
       }
     }
-    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
-    //   console.log("cid", cid);
-    //   writeAsync({
-    //     args: [
-    //       BigInt(formData.timeStamp),
-    //       BigInt(formData.level),
-    //       formData.type,
-    //       formData.name,
-    //       formData.desc,
-    //       formData.mentorName,
-    //       cid,
-    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-    //     ],
-    //   });
-    // });
   };
 
   const handleImageChange = (e: any) => {
@@ -325,6 +309,21 @@ const CreateQuizForm: React.FC = () => {
             />
           </div>
         ) : null}
+
+        <div className="mb-4">
+          <label htmlFor="startTimeStamp" className="block mb-1">
+            Start TimeStamp:
+          </label>
+          <input
+            type="number"
+            id="startTimeStamp"
+            name="startTimeStamp"
+            value={formData.startTimeStamp}
+            onChange={handleChange}
+            className=""
+            required
+          />
+        </div>
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">
