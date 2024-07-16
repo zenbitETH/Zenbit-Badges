@@ -23,6 +23,8 @@ export default function EventDetailPage() {
   const [tableDataIsLoading, setTableDataIsLoading] = useState(false);
   const [tableData, setTableData] = useState<TableDataType>([]);
 
+  const [eventDBData, setEventDBData] = useState<any>();
+  const [eventParticipants, setEventParticipants] = useState([]);
   const { address: connectedAddress } = useAccount();
 
   const { data: eventDetails } = useScaffoldContractRead({
@@ -53,6 +55,24 @@ export default function EventDetailPage() {
     functionName: "getEventsCompleted",
     args: [connectedAddress],
   });
+
+  useEffect(() => {
+    async function fetchEventDBData(eventId: string) {
+      const response = await fetch("/api/event?id=" + eventId);
+      const resData = await response.json();
+      setEventDBData(resData.data);
+    }
+    async function fetchEventDBParticipants(eventId: string) {
+      const response = await fetch("/api/participants?id=" + eventId);
+      const resData2 = await response.json();
+      setEventParticipants(resData2.data[0].participants);
+    }
+
+    if (params?.eventId) {
+      fetchEventDBData(params.eventId);
+      fetchEventDBParticipants(params.eventId);
+    }
+  }, [params?.eventId]);
 
   useEffect(() => {
     if (params?.eventId && eventCreatedEvent?.length && attestationAddedEvent?.length) {
@@ -123,10 +143,14 @@ export default function EventDetailPage() {
             {String(eventDetails[5])}
           </h1>
         ) : null}
-        <div className="grid grid-cols-2 mx-auto items-center  text-sm max-w-xs ">
+        <div className="grid grid-cols-2 mx-auto items-center gap-y-2 text-sm max-w-xs ">
+          <div id="Event Date" className=" mx-auto bg-zen/70 rounded-md px-4 py-1 ">
+            <div className="font-bold">Comienza:‏ ‎</div>
+            {eventDBData ? moment(Number(eventDBData.eventDate)).format(" DD/MM/YYYY") : null}
+          </div>
           <div id="Event Date" className=" mx-auto bg-zen/70 rounded-md px-4 py-1 ">
             <div className="font-bold">Fecha:‏ ‎</div>
-            {eventDetails ? moment(Number(eventDetails[3]) * 1000).format(" DD/MM/YYYY") : null}
+            {eventDetails ? moment(Number(eventDetails[3])).format(" DD/MM/YYYY") : null}
           </div>
           <div className=" items-center bg-bit/70 rounded-md mx-auto px-4 py-1 ">
             <span className="font-bold">Mentor:‏ ‎</span>
@@ -199,7 +223,56 @@ export default function EventDetailPage() {
                 </tr>
               ))
             ) : (
-              <div className="justify-center text-center">No records found</div>
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <div className="justify-center text-center">No records found</div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="text-xl font-mus text-center my-3">Participantes Inscriptos al evento</div>
+      <div className="max-w-[360px] mx-auto sm:max-w-xl  lg:max-w-6xl overflow-x-auto   bg-black/40 rounded-md text-white">
+        <table className="table  ">
+          {/* head */}
+          <thead className="text-lg ">
+            <tr className="bg-bit">
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Organizacion</th>
+              <th>Fecha de Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableDataIsLoading ? (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <span className="loading loading-dots loading-lg"></span>
+                </td>
+              </tr>
+            ) : eventParticipants ? (
+              eventParticipants.map((participant: any, idx) => (
+                <tr key={idx}>
+                  <th>{idx + 1}</th>
+                  <td>{participant.name}</td>
+                  <td
+                    className="hover:underline
+                        hover:text-zen"
+                  >
+                    {participant.email}
+                  </td>
+                  <td>{participant.organization}</td>
+                  <td>{moment(Number(new Date(participant.createdAt).getTime())).format(" DD/MM/YYYY HH:mm:ss")}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <div className="justify-center text-center">No hay participantes registrados</div>
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

@@ -53,11 +53,11 @@ export async function registerParticipantToEvent(participant: any, eventId: stri
   }
 }
 
-export async function getEventByEventID(id: string) {
+export async function getParticipantsByEventID(id: string) {
   try {
     await connectToDatabase();
 
-    const result = await Participants.findOne({ eventId: id });
+    const result = await Events.find({ eventId: id }).populate("participants").exec();
 
     return JSON.parse(JSON.stringify(result));
   } catch (error) {
