@@ -8,8 +8,6 @@ import { useAccount } from "wagmi";
 import { EventCard } from "~~/components/EventCard";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
-// import { Address } from "~~/components/scaffold-eth";
-
 interface EventsData {
   typeOf: number;
   eventId: bigint;

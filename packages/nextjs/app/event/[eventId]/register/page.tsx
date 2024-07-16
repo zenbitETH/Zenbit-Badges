@@ -17,7 +17,6 @@ interface EventData {
 
 const RegisterToEventPage: React.FC = () => {
   const params = useParams<{ eventId: string }>();
-  console.log({ params });
   const [eventData, setEventData] = useState<EventData>();
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [toastMessage, setToastMessage] = useState();

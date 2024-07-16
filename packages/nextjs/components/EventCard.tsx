@@ -79,7 +79,7 @@ export const EventCard = ({
         </span>
         <span>
           {eventDetails.startTimestamp
-            ? moment(Number(eventDetails.startTimestamp) * 1000).format("DD/MM/YYYY hh:mm")
+            ? `Comienza: ${moment(Number(eventDetails.startTimestamp)).format("DD/MM/YYYY hh:mm")}`
             : null}
         </span>
         <div className="mx-auto rounded-full">

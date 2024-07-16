@@ -116,6 +116,7 @@ const CreateQuizForm: React.FC = () => {
         eventId: createdEventId,
         eventType: formData.type,
         eventURL: formData.eventurl,
+        eventDate: moment(formData.startTimeStamp).valueOf(),
       };
       postCreateEventEntry(newEvent);
     }
@@ -128,6 +129,7 @@ const CreateQuizForm: React.FC = () => {
     formData.type,
     formData.eventurl,
     createdEventId,
+    formData.startTimeStamp,
   ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -147,16 +149,26 @@ const CreateQuizForm: React.FC = () => {
       !formData.mentorName ||
       formData.level == undefined ||
       !formData.timeStamp ||
+      !formData.startTimeStamp ||
       !formData.schemaId
     ) {
       return;
     }
-    const timeStampValue = moment(formData.timeStamp).unix();
+
+    const currentTimestamp = moment().valueOf();
+    const timeStampValue = moment(formData.timeStamp).valueOf();
+
+    const startTimeStampValue = moment(formData.startTimeStamp).valueOf();
 
     // const isValidDate = moment(timeStampValue).valueOf();
-    const currentTimestamp = moment().valueOf();
 
-    if (timeStampValue > currentTimestamp) {
+    if (timeStampValue < currentTimestamp) {
+      alert("1");
+      return;
+    }
+
+    if (startTimeStampValue < currentTimestamp) {
+      alert("2");
       return;
     }
 
@@ -315,7 +327,7 @@ const CreateQuizForm: React.FC = () => {
             Start TimeStamp:
           </label>
           <input
-            type="number"
+            type="datetime-local"
             id="startTimeStamp"
             name="startTimeStamp"
             value={formData.startTimeStamp}
