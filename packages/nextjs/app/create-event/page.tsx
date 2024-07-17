@@ -301,11 +301,14 @@ const CreateQuizForm: React.FC = () => {
             Event Type:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
-            <option value={1}>Onboarding</option>
+            <option value={1}>Onboarding</option> {/* type 1 Onboarding (quiz 1, Onboarding Schema) */}
             <option value={2}>DAO formation </option>
+            {/* type 2 DAO formation (quiz 2 - single answer that validates safe+ens, DAO Formation Schema) */}
             <option value={3}>DAO incubation</option>
+            {/* type 3 DAO incubation (quiz 3 - mirror link, DAO incubation Schema) */}
             <option value={4}>Live Event</option>
-            <option value={5}>Workshop</option>
+            {/* type 4 Live Event (quiz 4 - single answer that validates secret word, Live Event Schema) */}
+            <option value={5}>Workshop</option> {/* type 5 Workshop (quiz 1, Live Event Schema) */}
           </select>
         </div>
 
