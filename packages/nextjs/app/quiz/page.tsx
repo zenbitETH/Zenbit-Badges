@@ -139,7 +139,6 @@ const Quiz = () => {
         },
       });
       const data = await response.json();
-      console.log({ data });
       setQuestions(data?.data || []);
     };
     if (eventId) {
@@ -428,7 +427,6 @@ const Quiz = () => {
       setLoading(false);
     }
   };
-  console.log({ questions });
 
   // // Check for the access to the questions before rendering the component
   return loading ? (

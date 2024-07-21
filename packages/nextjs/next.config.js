@@ -13,6 +13,7 @@ const nextConfig = {
     API_KEY: process.env.API_KEY,
     // @ts-ignore
     JSON_RPC_PROVIDER: process.env.JSON_RPC_PROVIDER,
+    PRIVATE_JSON_RPC_PROVIDER: process.env.PRIVATE_JSON_RPC_PROVIDER,
   },
   eslint: {
     ignoreDuringBuilds: process.env.NEXT_PUBLIC_IGNORE_BUILD_ERROR === "true",
