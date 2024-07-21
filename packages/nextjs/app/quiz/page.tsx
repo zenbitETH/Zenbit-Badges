@@ -106,7 +106,7 @@ const Quiz = () => {
       const valueMatch = value.match(/\[(\d+)\]/);
       const index = valueMatch !== null ? Number(valueMatch[1]) : 0;
       const val = eventDetails?.[index] || "";
-      const returnValue = typeof val === "bigint" ? val.toString() : val;
+      const returnValue = typeof val === "bigint" ? val.toString() : val.toString();
       return returnValue;
     }
   }
