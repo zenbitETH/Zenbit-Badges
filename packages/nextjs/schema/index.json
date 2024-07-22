@@ -52,5 +52,69 @@
       "value": "answer",
       "state": true
     }
+  },
+  "17ceae0972a7b2a858182fa4fc4f63b020941f4386872a2d3b611f882bcdf9bf": {
+    "Event_ID": {
+      "type": "uint256",
+      "value": "eventDetails[1]",
+      "state": false
+    },
+    "Event_Name": {
+      "type": "string",
+      "value": "eventDetails[5]",
+      "state": false
+    },
+    "Description": {
+      "type": "string",
+      "value": "123",
+      "state": false
+    },
+    "Mentor_Name": {
+      "type": "string",
+      "value": "eventDetails[7]",
+      "state": false
+    },
+    "Event_Type": {
+      "type": "string",
+      "value": "eventDetails[0]",
+      "state": false
+    },
+    "Event_URL": {
+      "type": "string",
+      "value": "answer",
+      "state": true
+    }
+  },
+  "d1b32a04207069d491b31239467ef1c57d54f3a961cbd0462a3afc52e3ec6f1a": {
+    "Event_ID": {
+      "type": "uint256",
+      "value": "eventDetails[1]",
+      "state": false
+    },
+    "Event_Name": {
+      "type": "string",
+      "value": "eventDetails[5]",
+      "state": false
+    },
+    "Description": {
+      "type": "string",
+      "value": "123",
+      "state": false
+    },
+    "Mentor_Name": {
+      "type": "string",
+      "value": "eventDetails[7]",
+      "state": false
+    },
+    "Event_Type": {
+      "type": "string",
+      "value": "eventDetails[0]",
+      "state": false
+    },
+    "Event_URL": {
+      "type": "string",
+      "value": "answer",
+      "state": true
+    }
   }
 }

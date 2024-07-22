@@ -13,6 +13,11 @@ export interface MyObject {
   value: Record<string, string>;
 }
 
+export interface CheckLiveEventAnswerBody {
+  eventId: string;
+  value: string;
+}
+
 export interface EventDetailsSchema {
   type: string;
   value: string;

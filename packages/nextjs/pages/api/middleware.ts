@@ -5,7 +5,7 @@ const authMiddleware = (req: NextApiRequest, res: NextApiResponse, next: () => v
   const referringWebsite = req.headers.referer;
   console.log(referringWebsite);
   // Define the allowed website URL
-  const allowedWebsite = process.env.ALLOWED_WEBSITE;
+  const allowedWebsite = process.env.ALLOWED_WEBSITE || `https://${process.env.VERCEL_URL}`;
   const apiKey = req.headers["x-api-key"];
 
   // Check if the referring website matches the allowed website

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { createEnsPublicClient } from "@ensdomains/ensjs";
 import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { isAddress } from "@ethersproject/address";
 import { Contract } from "@ethersproject/contracts";
 // Import necessary components from ethers
 import { JsonRpcProvider } from "@ethersproject/providers";
@@ -25,11 +24,36 @@ import type { Schemas } from "~~/types/quiz/index";
 import { abi, deployedContract, gnosisContract } from "~~/utils/scaffold-eth/abi";
 import { Answers } from "~~/utils/scaffold-eth/quiz";
 
+export interface EventData {
+  _id: string;
+  eventId: string;
+  participants: any[];
+  eventType: string;
+  eventURL: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+}
+
+function parseDomain(domain: any) {
+  // Split the domain by dots
+  const parts = domain.split(".");
+
+  // If there's only one part, return it
+  if (parts.length === 1) {
+    return domain;
+  }
+
+  // Otherwise, return the last two parts joined by a dot
+  return parts.slice(-2).join(".");
+}
+
 const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://optimism.drpc.org");
+  const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || "https://optimism.drpc.org");
   const [data, setData] = useState({
     id: "",
     address: "",
@@ -44,6 +68,8 @@ const Quiz = () => {
   const [state, setState] = useState({
     answer: "",
     safeAddress: "",
+    eventURL: "",
+    quizType: "",
   });
 
   async function grantAttestation(easContract: Contract, data: string, recipient: Address) {
@@ -80,13 +106,13 @@ const Quiz = () => {
       const valueMatch = value.match(/\[(\d+)\]/);
       const index = valueMatch !== null ? Number(valueMatch[1]) : 0;
       const val = eventDetails?.[index] || "";
-      const returnValue = typeof val === "bigint" ? val.toString() : val;
+      const returnValue = typeof val === "bigint" ? val.toString() : val.toString();
       return returnValue;
     }
   }
 
   const privateKey = process.env.PRIVATE_KEY || "";
-  const wallet = new EtherWallet(privateKey).connect(provider);
+  const wallet = new EtherWallet(privateKey).connect(privateProvider);
 
   // EAS Contract information
   const easContractAddress = abi.address; // Address of the EAS contract
@@ -98,12 +124,14 @@ const Quiz = () => {
   const searchParams = useSearchParams();
   const { eventId = "" } = searchParams ? Object.fromEntries(searchParams) : {};
   if (!eventId) {
+    alert("1");
     router.push("/");
   }
   const [questions, setQuestions] = useState([]);
+
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const response = await fetch(`/api/userQuiz?id=${eventId}`, {
+    const fetchQuestions = async (id: string) => {
+      const response = await fetch(`/api/userQuiz?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -111,10 +139,11 @@ const Quiz = () => {
         },
       });
       const data = await response.json();
-
       setQuestions(data?.data || []);
     };
-    fetchQuestions();
+    if (eventId) {
+      fetchQuestions(eventId);
+    }
   }, [eventId]);
 
   const { data: userData } = useScaffoldContractRead({
@@ -140,9 +169,26 @@ const Quiz = () => {
     args: [BigInt(eventId)],
   });
 
-  if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
-    router.push("/");
-  }
+  useEffect(() => {
+    async function fetchEventData(eventId: string) {
+      const response = await fetch("/api/event?id=" + eventId);
+      const responseData = await response.json();
+      if (responseData && responseData.data && responseData.eventURL) {
+        setState({ ...state, eventURL: responseData.data.eventURL, quizType: responseData.data.eventType });
+      } else {
+        setState({ ...state, quizType: responseData.data.eventType });
+      }
+    }
+    if (eventId) {
+      fetchEventData(eventId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId]);
+
+  // this validation is for checking the event level and the user level, we need to enhance this implementation
+  // if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
+  //   router.push("/");
+  // }
 
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",
@@ -175,7 +221,7 @@ const Quiz = () => {
           value: getValue(value, state), // Getting the actual value from eventDetails
           type: type,
         }));
-        if (dataToEncode.length > 0 && dataToEncode[4].value !== "") {
+        if (dataToEncode.length > 0 && dataToEncode[3].value !== "") {
           const encodedData = schemaEncoder.encodeData(dataToEncode);
           const schemaUID = await grantAttestation(easContract, encodedData, connectedAddress);
 
@@ -236,8 +282,6 @@ const Quiz = () => {
 
   const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(false);
 
-  // const [selectedValueMentor, setSelectedValueMentor] = useState("");
-  // const { address: connectedAddress } = useAccount();
   const handleOptionChange = (questionIndex: string, option: string) => {
     setAnswers({
       ...answers,
@@ -288,7 +332,7 @@ const Quiz = () => {
           if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
           } else {
-            setState({ safeAddress: result?.value, answer: answer });
+            setState({ ...state, safeAddress: result?.value, answer: answer });
           }
           return;
         }
@@ -303,29 +347,51 @@ const Quiz = () => {
 
         const pathParts = urlObj.pathname.split("/");
 
-        // Assuming the value we want is the first part of the path
-        const value = pathParts[1];
-        if (isAddress(value)) {
-          setState({ safeAddress: value, answer: answer });
-        } else {
-          const result = await client.getAddressRecord({ name: value });
+        if (urlObj.host !== "mirror.xyz") {
+          alert("Please enter a valid Mirror URL");
+          return;
+        }
 
-          if (!result) {
+        // The subdomain or domain we want is the first part of the path
+        const subDomain = pathParts[1];
+
+        const value = parseDomain(subDomain);
+
+        const result = await client.getAddressRecord({ name: value });
+
+        if (!result) {
+          alert("No perteneces a esa DAO, por favor verifica");
+          return;
+        }
+
+        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+
+        const txResponse = await gnosisContractObj.getOwners();
+        if (txResponse) {
+          if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
-            return;
+          } else {
+            setState({ ...state, safeAddress: result?.value, answer: answer });
           }
-
-          const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
-
-          const txResponse = await gnosisContractObj.getOwners();
-          if (txResponse) {
-            if (!txResponse.includes(connectedAddress)) {
-              alert("No perteneces a esa DAO, por favor verifica");
-            } else {
-              setState({ safeAddress: result?.value, answer: answer });
-            }
-            return;
-          }
+          return;
+        }
+      } else if (eventDetails?.[0] == 4) {
+        const answer = Object.values(answers)[0];
+        const response = await fetch("/api/userQuiz", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.API_KEY || "",
+          },
+          body: JSON.stringify({ eventId: eventId, value: answer, eventType: eventDetails?.[0].toString() }),
+        });
+        const result = await response.json();
+        if (result && result.data) {
+          onSubmit();
+        } else {
+          setLoading(false);
+          alert("Respuesta incorrecta, intenta de nuevo");
+          router.push("/");
         }
       }
     } catch (error) {
@@ -421,4 +487,5 @@ const Quiz = () => {
     </div>
   );
 };
+
 export default withAuth(Quiz);

@@ -2,7 +2,6 @@
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-// import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
@@ -27,10 +26,11 @@ const CreateQuizForm: React.FC = () => {
   const { address: connectedAddress } = useAccount();
 
   const [editMode, setEditMode] = useState<string | null>(null);
-  // const router = useRouter();
   const [data, setData] = useState<any>([]);
+  const [eventDBData, setEventDBData] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [selectEventType, setSelectedEventType] = useState<number>(0);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "options") {
@@ -64,7 +64,8 @@ const CreateQuizForm: React.FC = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setData(data.data);
+          setData(data.data.quizData);
+          setEventDBData(data.data.eventData);
         } else {
           console.error("Failed to fetch data");
         }
@@ -76,6 +77,7 @@ const CreateQuizForm: React.FC = () => {
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEvent]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -87,64 +89,132 @@ const CreateQuizForm: React.FC = () => {
       } else if (selectEventType == 2 && !formData.question) {
         alert("Please enter question");
         return;
+      } else if (selectEventType == 4 && (!formData.question || !formData.answer)) {
+        alert("Please enter a question with the answer");
+        return;
       }
-      const correctAnswer = parseInt(formData.answer);
 
-      const newQuestion: Question = {
-        ...formData,
-        answer: formData.options[correctAnswer - 1],
-        eventId: selectedEvent,
-      };
+      // TODO: DEV_NOTE: We should refactor this piece of code to handle the new eventType (4) and the previous options
+      if (selectEventType !== 4) {
+        // this happens with event type 1, 2 or 3
 
-      if (editMode) {
-        // const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
-        // setQuestions(updatedQuestions);
-        const canAccess = checkQuizAccess();
-        if (canAccess) {
-          const response = await fetch(`/api/quiz?id=${editMode}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": process.env.API_KEY || "",
-            },
-            body: JSON.stringify(newQuestion),
-          });
+        const correctAnswer = parseInt(formData.answer);
 
-          if (response.ok) {
-            getData();
-            setFormData({
-              question: "",
-              options: ["", "", ""], // Reset options
-              answer: "",
-              eventId: selectedEvent,
+        const newQuestion: Question = {
+          ...formData,
+          answer: formData.options[correctAnswer - 1],
+          eventId: selectedEvent,
+        };
+
+        if (editMode) {
+          const canAccess = checkQuizAccess();
+          if (canAccess) {
+            const response = await fetch(`/api/quiz?id=${editMode}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.API_KEY || "",
+              },
+              body: JSON.stringify(newQuestion),
             });
-            setEditMode(null);
-          } else {
-            console.error("Failed to update question");
+
+            if (response.ok) {
+              getData();
+              setFormData({
+                question: "",
+                options: ["", "", ""], // Reset options
+                answer: "",
+                eventId: selectedEvent,
+              });
+              setEditMode(null);
+            } else {
+              console.error("Failed to update question");
+            }
+          }
+        } else {
+          const canAccess = checkQuizAccess();
+          if (canAccess) {
+            const response = await fetch("/api/quiz", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.API_KEY || "",
+              },
+              body: JSON.stringify(newQuestion),
+            });
+
+            if (response.ok) {
+              getData();
+              setFormData({
+                question: "",
+                options: ["", "", ""], // Reset options
+                answer: "",
+                eventId: selectedEvent,
+              });
+            } else {
+              console.error("Failed to create question");
+            }
           }
         }
       } else {
-        const canAccess = checkQuizAccess();
-        if (canAccess) {
-          const response = await fetch("/api/quiz", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": process.env.API_KEY || "",
-            },
-            body: JSON.stringify(newQuestion),
-          });
+        // this happens for event type 4 (workshop)
 
-          if (response.ok) {
-            getData();
-            setFormData({
-              question: "",
-              options: ["", "", ""], // Reset options
-              answer: "",
-              eventId: selectedEvent,
+        const newQuestion: Question = {
+          ...formData,
+          answer: formData.answer,
+          eventId: selectedEvent,
+        };
+
+        if (editMode) {
+          // const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
+          // setQuestions(updatedQuestions);
+          const canAccess = checkQuizAccess();
+          if (canAccess) {
+            const response = await fetch(`/api/quiz?id=${editMode}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.API_KEY || "",
+              },
+              body: JSON.stringify(newQuestion),
             });
-          } else {
-            console.error("Failed to create question");
+
+            if (response.ok) {
+              getData();
+              setFormData({
+                question: "",
+                options: ["", "", ""], // Reset options
+                answer: "",
+                eventId: selectedEvent,
+              });
+              setEditMode(null);
+            } else {
+              console.error("Failed to update question");
+            }
+          }
+        } else {
+          const canAccess = checkQuizAccess();
+          if (canAccess) {
+            const response = await fetch("/api/quiz", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.API_KEY || "",
+              },
+              body: JSON.stringify(newQuestion),
+            });
+
+            if (response.ok) {
+              getData();
+              setFormData({
+                question: "",
+                options: ["", "", ""], // Reset options
+                answer: "",
+                eventId: selectedEvent,
+              });
+            } else {
+              console.error("Failed to create question");
+            }
           }
         }
       }
@@ -160,13 +230,12 @@ const CreateQuizForm: React.FC = () => {
 
   const handleEdit = (id: string) => {
     const questionToEdit = data.find((q: { _id: string }) => q._id == id);
-
     if (!questionToEdit) return;
 
     setFormData({
       question: questionToEdit.question,
       options: [...questionToEdit.options],
-      answer: "",
+      answer: eventDBData.eventType === "4" ? questionToEdit.answer : "",
       eventId: questionToEdit.eventId,
     });
     setEditMode(questionToEdit._id);
@@ -221,6 +290,7 @@ const CreateQuizForm: React.FC = () => {
           onChange={e => {
             const selectedValue = e.target.value;
             const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
+            console.log({ selectedEventData });
             setSelectedEventType(selectedEventData?.typeOf || 0);
             setSelectedEvent(selectedValue);
           }}
@@ -285,6 +355,23 @@ const CreateQuizForm: React.FC = () => {
                     <option value={2}>Option 2</option>
                     <option value={3}>Option 3</option>
                   </select>
+                </div>
+              </>
+            )}
+            {selectEventType == 4 && (
+              <>
+                <div className="mb-4">
+                  <label htmlFor="answer" className="block mb-1">
+                    Fixed Answer:
+                  </label>
+                  <input
+                    type="text"
+                    id={`answer`}
+                    name="answer"
+                    value={formData.answer}
+                    onChange={handleChange}
+                    className=""
+                  />
                 </div>
               </>
             )}
