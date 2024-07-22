@@ -1030,7 +1030,8 @@ export const abi = {
 };
 
 export const deployedContract = {
-  address: "0xaF66288e6c7865F3E66B72DCB5bB0aB92f1306bA",
+  address: "0xE383f2B3Ff9024bAa09b33923b8DBd0F2AF98ad0",
+  // address: "0xaF66288e6c7865F3E66B72DCB5bB0aB92f1306bA", // this is baseSepolia
   abi: [
     {
       inputs: [],
