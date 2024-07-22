@@ -106,7 +106,7 @@ const Quiz = () => {
       const valueMatch = value.match(/\[(\d+)\]/);
       const index = valueMatch !== null ? Number(valueMatch[1]) : 0;
       const val = eventDetails?.[index] || "";
-      const returnValue = typeof val === "bigint" ? val.toString() : val;
+      const returnValue = typeof val === "bigint" ? val.toString() : val.toString();
       return returnValue;
     }
   }
@@ -139,7 +139,6 @@ const Quiz = () => {
         },
       });
       const data = await response.json();
-      console.log({ data });
       setQuestions(data?.data || []);
     };
     if (eventId) {
@@ -428,7 +427,6 @@ const Quiz = () => {
       setLoading(false);
     }
   };
-  console.log({ questions });
 
   // // Check for the access to the questions before rendering the component
   return loading ? (
