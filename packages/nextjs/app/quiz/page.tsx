@@ -106,7 +106,7 @@ const Quiz = () => {
       const valueMatch = value.match(/\[(\d+)\]/);
       const index = valueMatch !== null ? Number(valueMatch[1]) : 0;
       const val = eventDetails?.[index] || "";
-      const returnValue = typeof val === "bigint" ? val.toString() : val;
+      const returnValue = typeof val === "bigint" ? val.toString() : val.toString();
       return returnValue;
     }
   }
@@ -124,13 +124,14 @@ const Quiz = () => {
   const searchParams = useSearchParams();
   const { eventId = "" } = searchParams ? Object.fromEntries(searchParams) : {};
   if (!eventId) {
+    alert("1");
     router.push("/");
   }
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const response = await fetch(`/api/userQuiz?id=${eventId}`, {
+    const fetchQuestions = async (id: string) => {
+      const response = await fetch(`/api/userQuiz?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -138,10 +139,11 @@ const Quiz = () => {
         },
       });
       const data = await response.json();
-
       setQuestions(data?.data || []);
     };
-    fetchQuestions();
+    if (eventId) {
+      fetchQuestions(eventId);
+    }
   }, [eventId]);
 
   const { data: userData } = useScaffoldContractRead({
@@ -171,7 +173,11 @@ const Quiz = () => {
     async function fetchEventData(eventId: string) {
       const response = await fetch("/api/event?id=" + eventId);
       const responseData = await response.json();
-      setState({ ...state, eventURL: responseData.data.eventURL, quizType: responseData.data.eventType });
+      if (responseData && responseData.data && responseData.eventURL) {
+        setState({ ...state, eventURL: responseData.data.eventURL, quizType: responseData.data.eventType });
+      } else {
+        setState({ ...state, quizType: responseData.data.eventType });
+      }
     }
     if (eventId) {
       fetchEventData(eventId);
@@ -179,9 +185,10 @@ const Quiz = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
-  if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
-    router.push("/");
-  }
+  // this validation is for checking the event level and the user level, we need to enhance this implementation
+  // if (eventDetails && eventDetails[2] > (userData?.[0] ?? 0)) {
+  //   router.push("/");
+  // }
 
   const { writeAsync } = useScaffoldContractWrite({
     contractName: "EASOnboarding",

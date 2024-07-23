@@ -2,7 +2,6 @@
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-// import { useRouter } from "next/navigation";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
@@ -27,7 +26,6 @@ const CreateQuizForm: React.FC = () => {
   const { address: connectedAddress } = useAccount();
 
   const [editMode, setEditMode] = useState<string | null>(null);
-  // const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [eventDBData, setEventDBData] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
@@ -109,8 +107,6 @@ const CreateQuizForm: React.FC = () => {
         };
 
         if (editMode) {
-          // const updatedQuestions = questions.map(q => (q.eventId === editMode ? newQuestion : q));
-          // setQuestions(updatedQuestions);
           const canAccess = checkQuizAccess();
           if (canAccess) {
             const response = await fetch(`/api/quiz?id=${editMode}`, {
