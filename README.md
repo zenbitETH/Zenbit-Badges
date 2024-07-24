@@ -27,3 +27,16 @@ Mayo 2024: [EAS Onboarding en OP Mainnet](https://optimistic.etherscan.io/addres
 ## ❓ Cuestionarios disponibles
 1. Pregunta con opción multiple (3 respuestas)
 2. Verificación de multisig  ENS
+
+## ⚙️ Puesta en marcha
+1. clonar repositorio `git clone https://github.com/zenbitETH/Zenbit-Badges.git`
+2. configurar red baseSepolia (o red deseada) en [hardhat/hardhat.config.ts](https://github.com/zenbitETH/Zenbit-Badges/blob/69f6ffd5bad4c1674947b45a8f09e28977f6dd86/packages/hardhat/hardhat.config.ts#L33) y [nextjs/scaffold.config.ts](https://github.com/zenbitETH/Zenbit-Badges/blob/69f6ffd5bad4c1674947b45a8f09e28977f6dd86/packages/nextjs/scaffold.config.ts#L14) 
+3. ejecutar `yarn chain` (esto corre el nodo de hardhat) y dejar la terminal corriendo 
+4. ejecutar `yarn deploy` en una nueva terminal (esto deploya el contrato en hardhat, que apunta a baseSepolia)
+5. ejecutar `yarn start` (esto corre el frontend, con la direccion del contrato actualizada automaticamente por scaffold-eth2)
+6. crear una base de datos en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)
+7. configurar las variables de entorno necesarias (importantes: private key de la wallet + url de base de datos)
+8. configurar wallet con rol "Mentor" en el contrato, desde baseSepolia SCAN (o de la red deseada)
+9. crear evento
+10. crear quiz
+11. atestar
