@@ -52,8 +52,9 @@ const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || "https://optimism.drpc.org");
-  const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || "https://optimism.drpc.org");
+  const baseProvider = process.env.NODE_ENV == "production" ? "https://optimism.drpc.org" : "https://sepolia.base.org";
+  const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || baseProvider);
+  const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || baseProvider);
   const [data, setData] = useState({
     id: "",
     address: "",

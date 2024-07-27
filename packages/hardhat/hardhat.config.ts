@@ -19,6 +19,8 @@ const deployerPrivateKey =
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
 
+const network = process.env.NETWORK || "optimism";
+
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.20",
@@ -30,7 +32,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: "optimism",
+  defaultNetwork: network,
   namedAccounts: {
     deployer: {
       // By default, it will take the first Hardhat account as the deployer
