@@ -1,12 +1,16 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
+import "react-quill/dist/quill.snow.css";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
+
+// Import Quill styles
 
 interface FormData {
   name: string;
@@ -21,6 +25,8 @@ interface FormData {
 // TODO need to read the events fro t he contract.
 // Cannot create the contract from the front end
 
+const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
+
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -32,6 +38,42 @@ const CreateQuizForm: React.FC = () => {
     schemaId: "0x",
     eventurl: "",
   });
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      [{ align: [] }],
+      [{ color: [] }],
+      ["code-block"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "align",
+    "color",
+    "code-block",
+  ];
+
+  const handleEditorChange = (newContent: any) => {
+    setFormData(prevState => ({
+      ...prevState,
+      desc: newContent,
+    }));
+  };
 
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
@@ -232,7 +274,6 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
-
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
@@ -256,13 +297,17 @@ const CreateQuizForm: React.FC = () => {
           <label htmlFor="desc" className="block mb-1">
             Event Description:
           </label>
-          <textarea
-            id="desc"
-            name="desc"
+          <QuillEditor
             value={formData.desc}
-            onChange={handleChange}
-            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder-italic h-32 bg-white"
-            required
+            onChange={handleEditorChange}
+            modules={quillModules}
+            formats={quillFormats}
+            style={{
+              color: "black",
+              background: "white",
+              borderRadius: 32,
+              height: "100%",
+            }}
           />
         </div>
 
