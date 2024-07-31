@@ -262,21 +262,6 @@ const CreateQuizForm: React.FC = () => {
         alert("questionType error");
       }
     }
-    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
-    //   console.log("cid", cid);
-    //   writeAsync({
-    //     args: [
-    //       BigInt(formData.timeStamp),
-    //       BigInt(formData.level),
-    //       formData.type,
-    //       formData.name,
-    //       formData.desc,
-    //       formData.mentorName,
-    //       cid,
-    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-    //     ],
-    //   });
-    // });
   };
 
   const handleImageChange = (e: any) => {
