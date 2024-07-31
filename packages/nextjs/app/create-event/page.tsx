@@ -1,31 +1,37 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import axios from "axios";
 import moment from "moment";
+import "react-quill/dist/quill.snow.css";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
+
+// Import Quill styles
 
 interface FormData {
   name: string;
   desc: string;
   level: number;
+  startTimeStamp: number;
   timeStamp: number;
   mentorName: string;
   type: string;
   schemaId: "0x";
   eventurl: string;
 }
-// TODO need to read the events fro t he contract.
-// Cannot create the contract from the front end
+
+const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     desc: "", // Initialize with empty strings
     level: 0,
+    startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
     type: "0",
@@ -33,13 +39,47 @@ const CreateQuizForm: React.FC = () => {
     eventurl: "",
   });
 
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      [{ align: [] }],
+      [{ color: [] }],
+      ["code-block"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "align",
+    "color",
+    "code-block",
+  ];
+
+  const handleEditorChange = (newContent: any) => {
+    setFormData(prevState => ({
+      ...prevState,
+      desc: newContent,
+    }));
+  };
+
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
-
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
     previewURL: string | null;
@@ -86,6 +126,7 @@ const CreateQuizForm: React.FC = () => {
           mentorName: "",
           level: 0,
           timeStamp: 0,
+          startTimeStamp: 0,
           type: "0",
           schemaId: "0x",
           eventurl: "",
@@ -117,6 +158,7 @@ const CreateQuizForm: React.FC = () => {
         eventId: createdEventId,
         eventType: formData.type,
         eventURL: formData.eventurl,
+        eventDate: moment(formData.startTimeStamp).valueOf(),
       };
       postCreateEventEntry(newEvent);
     }
@@ -129,6 +171,7 @@ const CreateQuizForm: React.FC = () => {
     formData.type,
     formData.eventurl,
     createdEventId,
+    formData.startTimeStamp,
   ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -148,6 +191,7 @@ const CreateQuizForm: React.FC = () => {
       !formData.mentorName ||
       formData.level == undefined ||
       !formData.timeStamp ||
+      !formData.startTimeStamp ||
       !formData.schemaId
     ) {
       return;
@@ -220,21 +264,6 @@ const CreateQuizForm: React.FC = () => {
         alert("questionType error");
       }
     }
-    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
-    //   console.log("cid", cid);
-    //   writeAsync({
-    //     args: [
-    //       BigInt(formData.timeStamp),
-    //       BigInt(formData.level),
-    //       formData.type,
-    //       formData.name,
-    //       formData.desc,
-    //       formData.mentorName,
-    //       cid,
-    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-    //     ],
-    //   });
-    // });
   };
 
   const handleImageChange = (e: any) => {
@@ -247,7 +276,6 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
-
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
@@ -271,13 +299,17 @@ const CreateQuizForm: React.FC = () => {
           <label htmlFor="desc" className="block mb-1">
             Event Description:
           </label>
-          <textarea
-            id="desc"
-            name="desc"
+          <QuillEditor
             value={formData.desc}
-            onChange={handleChange}
-            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder-italic h-32 bg-white"
-            required
+            onChange={handleEditorChange}
+            modules={quillModules}
+            formats={quillFormats}
+            style={{
+              color: "black",
+              background: "white",
+              borderRadius: 32,
+              height: "100%",
+            }}
           />
         </div>
 
@@ -328,6 +360,21 @@ const CreateQuizForm: React.FC = () => {
             />
           </div>
         ) : null}
+
+        <div className="mb-4">
+          <label htmlFor="startTimeStamp" className="block mb-1">
+            Start TimeStamp:
+          </label>
+          <input
+            type="datetime-local"
+            id="startTimeStamp"
+            name="startTimeStamp"
+            value={formData.startTimeStamp}
+            onChange={handleChange}
+            className=""
+            required
+          />
+        </div>
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">

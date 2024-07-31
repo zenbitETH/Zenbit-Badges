@@ -32,16 +32,26 @@ export const EventCard = ({
           "Evento Finalizado"}
         {userData && userData?.[1].includes(eventDetails?.eventId) && "¡Obtuviste esta Badge! 🎖️"}
       </span>
+
       {userData &&
-        !userData?.[1].includes(eventDetails?.eventId) &&
-        !(Number(eventDetails.closingTimestamp) * 1000 < Date.now()) && (
-          <Link
-            href={`/quiz?eventId=${eventDetails?.eventId}`}
-            className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
-          >
-            ¡Reclama esta Badge! 🎖️
-          </Link>
-        )}
+      !userData?.[1].includes(eventDetails?.eventId) &&
+      !(Number(eventDetails.closingTimestamp) * 1000 < Date.now()) &&
+      Number(eventDetails.startTimestamp) * 1000 < Date.now() ? (
+        <Link
+          href={`/quiz?eventId=${eventDetails?.eventId}`}
+          className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
+        >
+          ¡Reclama esta Badge! 🎖️
+        </Link>
+      ) : null}
+      {!(Number(eventDetails.startTimestamp) * 1000 < Date.now()) ? (
+        <Link
+          href={`/event/${eventDetails?.eventId}/register`}
+          className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
+        >
+          ¡Registrarse al evento!
+        </Link>
+      ) : null}
 
       {!account?.address && (
         <span className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md">
@@ -67,7 +77,11 @@ export const EventCard = ({
         <span className="flex 2xl:text-lg font-bold font-mus px-5 items-center justify-center">
           {String(eventDetails.eventName)}
         </span>
-        <span> {moment(Number(eventDetails.closingTimestamp) * 1000).format("DD/MM/YYYY")}</span>
+        <span>
+          {eventDetails.startTimestamp
+            ? `Comienza: ${moment(Number(eventDetails.startTimestamp)).format("DD/MM/YYYY hh:mm")}`
+            : null}
+        </span>
         <div className="mx-auto rounded-full">
           <Image
             alt="Badge"
