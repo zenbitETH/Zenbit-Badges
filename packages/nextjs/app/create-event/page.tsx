@@ -16,14 +16,13 @@ interface FormData {
   name: string;
   desc: string;
   level: number;
+  startTimeStamp: number;
   timeStamp: number;
   mentorName: string;
   type: string;
   schemaId: "0x";
   eventurl: string;
 }
-// TODO need to read the events fro t he contract.
-// Cannot create the contract from the front end
 
 const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -32,6 +31,7 @@ const CreateQuizForm: React.FC = () => {
     name: "",
     desc: "", // Initialize with empty strings
     level: 0,
+    startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
     type: "0",
@@ -79,9 +79,7 @@ const CreateQuizForm: React.FC = () => {
   const [createdEventId, setCreatedEventId] = useState(0);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
-
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
     previewURL: string | null;
@@ -128,6 +126,7 @@ const CreateQuizForm: React.FC = () => {
           mentorName: "",
           level: 0,
           timeStamp: 0,
+          startTimeStamp: 0,
           type: "0",
           schemaId: "0x",
           eventurl: "",
@@ -159,6 +158,7 @@ const CreateQuizForm: React.FC = () => {
         eventId: createdEventId,
         eventType: formData.type,
         eventURL: formData.eventurl,
+        eventDate: moment(formData.startTimeStamp).valueOf(),
       };
       postCreateEventEntry(newEvent);
     }
@@ -171,6 +171,7 @@ const CreateQuizForm: React.FC = () => {
     formData.type,
     formData.eventurl,
     createdEventId,
+    formData.startTimeStamp,
   ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -190,6 +191,7 @@ const CreateQuizForm: React.FC = () => {
       !formData.mentorName ||
       formData.level == undefined ||
       !formData.timeStamp ||
+      !formData.startTimeStamp ||
       !formData.schemaId
     ) {
       return;
@@ -358,6 +360,21 @@ const CreateQuizForm: React.FC = () => {
             />
           </div>
         ) : null}
+
+        <div className="mb-4">
+          <label htmlFor="startTimeStamp" className="block mb-1">
+            Start TimeStamp:
+          </label>
+          <input
+            type="datetime-local"
+            id="startTimeStamp"
+            name="startTimeStamp"
+            value={formData.startTimeStamp}
+            onChange={handleChange}
+            className=""
+            required
+          />
+        </div>
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">

@@ -27,7 +27,7 @@ export const HeaderMenuLinks = () => {
   if (connectedAddress) {
     const additionalLinks: HeaderMenuLink[] = [
       {
-        label: "Ver Badges",
+        label: "Perfil",
         href: "/profile",
       },
     ];
