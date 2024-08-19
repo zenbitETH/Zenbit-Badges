@@ -97,12 +97,15 @@ const RegisterToEventPage: React.FC = () => {
     }
   };
   return (
-    <>
-      <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
-        <div className="text-2xl mb-2 font-mus text-center">Register to Event:</div>
+    <div className="mx-auto">
+      <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 w-96 grid gap-4 ">
+        <div className="text-2xl font-mus text-center">
+          Registro a {/* Event_Name */}:
+          <div className="text-center text-lg font-cha font-bold">Fecha:{/* Event Date */}</div>
+        </div>
         <div className="mb-4">
           <label htmlFor="name" className="block mb-1">
-            Participant Name:
+            ¿Cómo te podemos llamar?:
           </label>
           <input
             type="text"
@@ -111,13 +114,14 @@ const RegisterToEventPage: React.FC = () => {
             value={formData.name}
             onChange={handleChange}
             className=""
+            placeholder="Introduce tu nombre o un alias"
             required
           />
         </div>
 
         <div className="mb-4">
           <label htmlFor="email" className="block mb-1">
-            Participant Email:
+            ¿Cúal es tu Email?
           </label>
           <input
             id="email"
@@ -126,13 +130,14 @@ const RegisterToEventPage: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             className=""
+            placeholder="Para el recordatorio en tu calendario"
             required
           />
         </div>
 
         <div className="mb-4">
           <label htmlFor="organization" className="block mb-1">
-            Participant Organization:
+            ¿Perteneces a alguna organización?
           </label>
           <input
             id="organization"
@@ -140,13 +145,13 @@ const RegisterToEventPage: React.FC = () => {
             value={formData.organization}
             onChange={handleChange}
             className=""
-            required
+            placeholder="Universidad, empresa, institución etc."
           />
         </div>
 
         <div className="text-center w-full">
           <button type="submit" className="bg-zen">
-            Register
+            ¡Apuntame al evento!
           </button>
         </div>
       </form>
@@ -165,7 +170,7 @@ const RegisterToEventPage: React.FC = () => {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 };
 
