@@ -2,6 +2,9 @@
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import moment from "moment";
+import { parseUnits } from "viem";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 interface FormData {
   name: string;
@@ -36,6 +39,13 @@ const RegisterToEventPage: React.FC = () => {
       fetchEventDataByEventID(params.eventId as string);
     }
   }, [params?.eventId]);
+
+  const { data: eventDetails } = useScaffoldContractRead({
+    contractName: "EASOnboarding",
+    functionName: "events",
+    args: [parseUnits(params?.eventId as string, 0)],
+    enabled: params?.eventId !== undefined,
+  });
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -100,8 +110,10 @@ const RegisterToEventPage: React.FC = () => {
     <div className="mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 w-96 grid gap-4 ">
         <div className="text-2xl font-mus text-center">
-          Registro a {/* Event_Name */}:
-          <div className="text-center text-lg font-cha font-bold">Fecha:{/* Event Date */}</div>
+          Registro a {`${eventDetails ? eventDetails[5] : ""}`}:
+          <div className="text-center text-lg font-cha">
+            Fecha: {eventData ? moment(Number(eventData.eventDate)).format("DD/MM/YYYY hh:mm") : ""}
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="name" className="block mb-1">

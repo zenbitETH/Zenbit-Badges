@@ -16,6 +16,7 @@ export const EventCard = ({
   router: any;
 }) => {
   const account = useAccount();
+
   return (
     <div
       className={`py-10 sm:p-10 ${
@@ -44,7 +45,7 @@ export const EventCard = ({
           ¡Reclama esta Badge! 🎖️
         </Link>
       ) : null}
-      {!(Number(eventDetails.startTimestamp) * 1000 < Date.now()) ? (
+      {eventDetails.startTimestamp && !(Number(eventDetails.startTimestamp) < Date.now()) ? (
         <Link
           href={`/event/${eventDetails?.eventId}/register`}
           className="text-xl text-white absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-md backdrop-blur-md"
