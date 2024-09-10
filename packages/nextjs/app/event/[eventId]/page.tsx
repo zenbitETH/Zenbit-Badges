@@ -31,7 +31,6 @@ export default function EventDetailPage() {
     args: [parseUnits(params?.eventId as string, 0)],
     enabled: params?.eventId !== undefined,
   });
-
   const { data: eventCreatedEvent } = useScaffoldEventHistory({
     contractName: "EASOnboarding",
     eventName: "EventCreated",
