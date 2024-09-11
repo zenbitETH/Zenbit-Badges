@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap");
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";
@@ -30,39 +30,50 @@ p {
 }
 
 .btn-sm {
-  @apply hover:bg-zen text-white hover:text-black
+  @apply hover:bg-zen text-white hover:text-black;
 }
 
 .btn.btn-ghost {
   @apply shadow-none;
 }
 
-input, select {
+input,
+select {
   @apply placeholder:italic px-6 py-3 text-black w-full border-zen mx-auto rounded-md bg-white;
 }
 
 button {
-  @apply
-  text-black hover:text-white hover:bg-bit px-6 py-1 rounded-md font-mus xl:text-lg 
+  @apply text-black hover:text-white hover:bg-bit px-6 py-1 rounded-md font-mus xl:text-lg;
 }
 
 .radio {
-  @apply 
-  h-14 w-14 bg-gray-500
+  @apply h-14 w-14 bg-gray-500;
 }
 
 .radio:checked {
-  @apply
-  bg-zen
-  animate-pulse
+  @apply bg-zen
+  animate-pulse;
 }
 
 .finalized-event {
-  @apply
-  bg-gradient-to-b from-gray-600 to-gray-500/20 hover:cursor-not-allowed text-white
+  @apply bg-gradient-to-b from-gray-600 to-gray-500/20 hover:cursor-not-allowed text-white;
 }
 
 .badge-granted {
-  @apply
-  bg-gradient-to-t from-zen/60 to-bit/90 hover:cursor-not-allowed backdrop-blur-md text-white
+  @apply bg-gradient-to-t from-zen/60 to-bit/90 hover:cursor-not-allowed backdrop-blur-md text-white;
+}
+
+.ql-toolbar,
+.ql-container {
+  border: 0px !important;
+}
+.ql-toolbar {
+  border-bottom: 1px solid black !important;
+}
+
+.ql-editor {
+  background-color: white;
+  border-radius: 32px;
+  margin-top: 4px;
+  min-height: 150px;
 }

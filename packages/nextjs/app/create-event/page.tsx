@@ -2,8 +2,11 @@
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import moment from "moment";
+import "quill/dist/quill.snow.css";
+import { useQuill } from "react-quilljs";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
@@ -12,34 +15,33 @@ interface FormData {
   name: string;
   desc: string;
   level: number;
+  startTimeStamp: number;
   timeStamp: number;
   mentorName: string;
   type: string;
   schemaId: "0x";
   eventurl: string;
 }
-// TODO need to read the events fro t he contract.
-// Cannot create the contract from the front end
 
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     desc: "", // Initialize with empty strings
     level: 0,
+    startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
     type: "0",
     schemaId: "0x",
     eventurl: "",
   });
+  const router = useRouter();
 
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
 
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-
   const [schemaIds] = useState<string[]>(Object.keys(schemas));
-
   const [selectedImage, setSelectedImage] = useState<{
     imageFile: File | null;
     previewURL: string | null;
@@ -86,6 +88,7 @@ const CreateQuizForm: React.FC = () => {
           mentorName: "",
           level: 0,
           timeStamp: 0,
+          startTimeStamp: 0,
           type: "0",
           schemaId: "0x",
           eventurl: "",
@@ -95,6 +98,7 @@ const CreateQuizForm: React.FC = () => {
           previewURL: null,
         });
         setCreateEventEntryInDatabase(false);
+        router.push("/");
         const timeout = setTimeout(() => {
           setShowSuccessToast(false);
         }, 4000);
@@ -117,9 +121,11 @@ const CreateQuizForm: React.FC = () => {
         eventId: createdEventId,
         eventType: formData.type,
         eventURL: formData.eventurl,
+        eventDate: moment(formData.startTimeStamp).valueOf(),
       };
       postCreateEventEntry(newEvent);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     createEventEntryInDatabase,
     getAllEventsIsLoading,
@@ -129,6 +135,7 @@ const CreateQuizForm: React.FC = () => {
     formData.type,
     formData.eventurl,
     createdEventId,
+    formData.startTimeStamp,
   ]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -140,6 +147,19 @@ const CreateQuizForm: React.FC = () => {
     }));
   };
 
+  const { quill, quillRef } = useQuill();
+
+  React.useEffect(() => {
+    if (quill) {
+      quill.on("text-change", () => {
+        setFormData(prevState => ({
+          ...prevState,
+          desc: quill.root.innerHTML,
+        }));
+      });
+    }
+  }, [quill]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -148,6 +168,7 @@ const CreateQuizForm: React.FC = () => {
       !formData.mentorName ||
       formData.level == undefined ||
       !formData.timeStamp ||
+      !formData.startTimeStamp ||
       !formData.schemaId
     ) {
       return;
@@ -220,21 +241,6 @@ const CreateQuizForm: React.FC = () => {
         alert("questionType error");
       }
     }
-    // client.storeBlob((selectedImage as any).imageFile).then(cid => {
-    //   console.log("cid", cid);
-    //   writeAsync({
-    //     args: [
-    //       BigInt(formData.timeStamp),
-    //       BigInt(formData.level),
-    //       formData.type,
-    //       formData.name,
-    //       formData.desc,
-    //       formData.mentorName,
-    //       cid,
-    //       `0x${formData.schemaId}`, // Fix: Ensure formData.schemaId is of type '`0x${string}`'
-    //     ],
-    //   });
-    // });
   };
 
   const handleImageChange = (e: any) => {
@@ -251,10 +257,10 @@ const CreateQuizForm: React.FC = () => {
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
-        <div className="text-2xl mb-2 font-mus text-center">New Event:</div>
+        <div className="text-2xl mb-2 font-mus text-center">Añadir un Evento:</div>
         <div className="mb-4">
           <label htmlFor="name" className="block mb-1">
-            Event Name:
+            Nombre del Evento:
           </label>
           <input
             type="text"
@@ -269,21 +275,14 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="desc" className="block mb-1">
-            Event Description:
+            Descripción del Evento:
           </label>
-          <textarea
-            id="desc"
-            name="desc"
-            value={formData.desc}
-            onChange={handleChange}
-            className="p-3 pb-5 text-black w-full mx-auto rounded-md placeholder-italic h-32 bg-white"
-            required
-          />
+          <div ref={quillRef} />
         </div>
 
         <div className="mb-4">
           <label htmlFor="level" className="block mb-1">
-            Level:
+            Nivel del contenido:
           </label>
           <input
             type="number"
@@ -298,13 +297,13 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="type" className="block mb-1">
-            Event Type:
+            Tipo de evento:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
             <option value={1}>Onboarding</option> {/* type 1 Onboarding (quiz 1, Onboarding Schema) */}
-            <option value={2}>DAO formation </option>
+            <option value={2}>Formación de DAO </option>
             {/* type 2 DAO formation (quiz 2 - single answer that validates safe+ens, DAO Formation Schema) */}
-            <option value={3}>DAO incubation</option>
+            <option value={3}>Incubación de DAO</option>
             {/* type 3 DAO incubation (quiz 3 - mirror link, DAO incubation Schema) */}
             <option value={4}>Live Event</option>
             {/* type 4 Live Event (quiz 4 - single answer that validates secret word, Live Event Schema) */}
@@ -315,7 +314,7 @@ const CreateQuizForm: React.FC = () => {
         {formData.type === "4" || formData.type === "5" ? (
           <div className="mb-4">
             <label htmlFor="eventurl" className="block mb-1">
-              Event URL:
+              URL del evento:
             </label>
             <input
               type="text"
@@ -330,8 +329,23 @@ const CreateQuizForm: React.FC = () => {
         ) : null}
 
         <div className="mb-4">
+          <label htmlFor="startTimeStamp" className="block mb-1">
+            Fecha del evento:
+          </label>
+          <input
+            type="datetime-local"
+            id="startTimeStamp"
+            name="startTimeStamp"
+            value={formData.startTimeStamp}
+            onChange={handleChange}
+            className=""
+            required
+          />
+        </div>
+
+        <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">
-            Attestation Time Limit:
+            Fecha limite para atestar:
           </label>
           <input
             type="datetime-local"
@@ -346,7 +360,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="mentorName" className="block mb-1">
-            Mentor Name:
+            Nombre del mentor:
           </label>
           <input
             type="text"
@@ -361,7 +375,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="placeImage" className="block mb-1">
-            PlaceImage
+            Miniatura del evento
           </label>
           <input
             type="file"
@@ -384,14 +398,14 @@ const CreateQuizForm: React.FC = () => {
         )}
         <div className="text-center w-full">
           <button type="submit" className="bg-zen">
-            Add Event
+            Crear evento
           </button>
         </div>
       </form>
 
       {eventData && eventData.length > 0 && (
         <div className="text-center mx-3 my-10">
-          <div className="text-2xl mb-2 font-mus">Created Events:</div>
+          <div className="text-2xl mb-2 font-mus">Eventos Creados:</div>
           <ul className="grid md:grid-cols-2 2xl:grid-cols-3 gap-3">
             {eventData.map(
               ({ eventId, eventName, typeOf, eventDescription, mentorName, level, closingTimestamp }, index) => (
@@ -422,7 +436,7 @@ const CreateQuizForm: React.FC = () => {
       {showSuccessToast ? (
         <div className="toast">
           <div className="alert alert-success">
-            <span>New event created.</span>
+            <span>¡Tu evento ha sido creado!</span>
           </div>
         </div>
       ) : null}
