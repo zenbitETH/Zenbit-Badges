@@ -2,6 +2,7 @@
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import moment from "moment";
 import "quill/dist/quill.snow.css";
@@ -34,6 +35,7 @@ const CreateQuizForm: React.FC = () => {
     schemaId: "0x",
     eventurl: "",
   });
+  const router = useRouter();
 
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
@@ -96,6 +98,7 @@ const CreateQuizForm: React.FC = () => {
           previewURL: null,
         });
         setCreateEventEntryInDatabase(false);
+        router.push("/");
         const timeout = setTimeout(() => {
           setShowSuccessToast(false);
         }, 4000);
