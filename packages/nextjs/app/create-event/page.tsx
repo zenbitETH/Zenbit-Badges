@@ -125,6 +125,7 @@ const CreateQuizForm: React.FC = () => {
       };
       postCreateEventEntry(newEvent);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     createEventEntryInDatabase,
     getAllEventsIsLoading,
@@ -151,11 +152,6 @@ const CreateQuizForm: React.FC = () => {
   React.useEffect(() => {
     if (quill) {
       quill.on("text-change", () => {
-        // console.log("Text change!");
-        // console.log(quill.getText()); // Get text only
-        // console.log(quill.getContents()); // Get delta contents
-        // console.log(quill.root.innerHTML); // Get innerHTML using quill
-        // console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
         setFormData(prevState => ({
           ...prevState,
           desc: quill.root.innerHTML,
