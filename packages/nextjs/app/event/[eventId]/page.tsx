@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import moment from "moment";
+import "quill/dist/quill.snow.css";
 import { formatUnits, isAddress, parseUnits } from "viem";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
@@ -135,11 +136,12 @@ export default function EventDetailPage() {
           </div>
         </div>
         {eventDetails ? (
-          <div
-            id="Event Description"
-            className="text-justify h-sm:text-sm h-md:text-base h-lg:text-lg rounded-xl  "
-            dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
-          ></div>
+          <div className="ql-snow">
+            <div
+              className="ql-editor text-justify h-sm:text-sm h-md:text-base h-lg:text-lg rounded-xl"
+              dangerouslySetInnerHTML={{ __html: eventDetails[6] }}
+            />
+          </div>
         ) : null}
       </section>
       <div className="text-xl font-mus text-center my-3">Badges otorgadas en este evento</div>

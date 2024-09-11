@@ -70,3 +70,10 @@ button {
 .ql-toolbar {
   border-bottom: 1px solid black !important;
 }
+
+.ql-editor {
+  background-color: white;
+  border-radius: 32px;
+  margin-top: 4px;
+  min-height: 150px;
+}

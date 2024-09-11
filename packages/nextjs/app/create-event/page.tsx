@@ -1,16 +1,15 @@
 "use client";
 
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import moment from "moment";
-import "react-quill/dist/quill.snow.css";
+import "quill/dist/quill.snow.css";
+import { useQuill } from "react-quilljs";
 import { withAuth } from "~~/components/withAuth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import schemas from "~~/schema/index.json";
-
-// Import Quill styles
 
 interface FormData {
   name: string;
@@ -24,8 +23,6 @@ interface FormData {
   eventurl: string;
 }
 
-const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
-
 const CreateQuizForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -38,42 +35,7 @@ const CreateQuizForm: React.FC = () => {
     schemaId: "0x",
     eventurl: "",
   });
-
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      [{ align: [] }],
-      [{ color: [] }],
-      ["code-block"],
-      ["clean"],
-    ],
-  };
-
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "image",
-    "align",
-    "color",
-    "code-block",
-  ];
-
-  const handleEditorChange = (newContent: any) => {
-    setFormData(prevState => ({
-      ...prevState,
-      desc: newContent,
-    }));
-  };
+  const router = useRouter();
 
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
@@ -136,6 +98,7 @@ const CreateQuizForm: React.FC = () => {
           previewURL: null,
         });
         setCreateEventEntryInDatabase(false);
+        router.push("/");
         const timeout = setTimeout(() => {
           setShowSuccessToast(false);
         }, 4000);
@@ -162,6 +125,7 @@ const CreateQuizForm: React.FC = () => {
       };
       postCreateEventEntry(newEvent);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     createEventEntryInDatabase,
     getAllEventsIsLoading,
@@ -182,6 +146,19 @@ const CreateQuizForm: React.FC = () => {
       [name]: value,
     }));
   };
+
+  const { quill, quillRef } = useQuill();
+
+  React.useEffect(() => {
+    if (quill) {
+      quill.on("text-change", () => {
+        setFormData(prevState => ({
+          ...prevState,
+          desc: quill.root.innerHTML,
+        }));
+      });
+    }
+  }, [quill]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -276,13 +253,14 @@ const CreateQuizForm: React.FC = () => {
       });
     }
   };
+
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
-        <div className="text-2xl mb-2 font-mus text-center">New Event:</div>
+        <div className="text-2xl mb-2 font-mus text-center">Añadir un Evento:</div>
         <div className="mb-4">
           <label htmlFor="name" className="block mb-1">
-            Event Name:
+            Nombre del Evento:
           </label>
           <input
             type="text"
@@ -297,25 +275,14 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="desc" className="block mb-1">
-            Event Description:
+            Descripción del Evento:
           </label>
-          <QuillEditor
-            value={formData.desc}
-            onChange={handleEditorChange}
-            modules={quillModules}
-            formats={quillFormats}
-            style={{
-              color: "black",
-              background: "white",
-              borderRadius: 32,
-              height: "100%",
-            }}
-          />
+          <div ref={quillRef} />
         </div>
 
         <div className="mb-4">
           <label htmlFor="level" className="block mb-1">
-            Level:
+            Nivel del contenido:
           </label>
           <input
             type="number"
@@ -330,13 +297,13 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="type" className="block mb-1">
-            Event Type:
+            Tipo de evento:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
             <option value={1}>Onboarding</option> {/* type 1 Onboarding (quiz 1, Onboarding Schema) */}
-            <option value={2}>DAO formation </option>
+            <option value={2}>Formación de DAO </option>
             {/* type 2 DAO formation (quiz 2 - single answer that validates safe+ens, DAO Formation Schema) */}
-            <option value={3}>DAO incubation</option>
+            <option value={3}>Incubación de DAO</option>
             {/* type 3 DAO incubation (quiz 3 - mirror link, DAO incubation Schema) */}
             <option value={4}>Live Event</option>
             {/* type 4 Live Event (quiz 4 - single answer that validates secret word, Live Event Schema) */}
@@ -347,7 +314,7 @@ const CreateQuizForm: React.FC = () => {
         {formData.type === "4" || formData.type === "5" ? (
           <div className="mb-4">
             <label htmlFor="eventurl" className="block mb-1">
-              Event URL:
+              URL del evento:
             </label>
             <input
               type="text"
@@ -363,7 +330,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="startTimeStamp" className="block mb-1">
-            Start TimeStamp:
+            Fecha del evento:
           </label>
           <input
             type="datetime-local"
@@ -378,7 +345,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">
-            Attestation Time Limit:
+            Fecha limite para atestar:
           </label>
           <input
             type="datetime-local"
@@ -393,7 +360,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="mentorName" className="block mb-1">
-            Mentor Name:
+            Nombre del mentor:
           </label>
           <input
             type="text"
@@ -408,7 +375,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="placeImage" className="block mb-1">
-            PlaceImage
+            Miniatura del evento
           </label>
           <input
             type="file"
@@ -431,14 +398,14 @@ const CreateQuizForm: React.FC = () => {
         )}
         <div className="text-center w-full">
           <button type="submit" className="bg-zen">
-            Add Event
+            Crear evento
           </button>
         </div>
       </form>
 
       {eventData && eventData.length > 0 && (
         <div className="text-center mx-3 my-10">
-          <div className="text-2xl mb-2 font-mus">Created Events:</div>
+          <div className="text-2xl mb-2 font-mus">Eventos Creados:</div>
           <ul className="grid md:grid-cols-2 2xl:grid-cols-3 gap-3">
             {eventData.map(
               ({ eventId, eventName, typeOf, eventDescription, mentorName, level, closingTimestamp }, index) => (
@@ -469,7 +436,7 @@ const CreateQuizForm: React.FC = () => {
       {showSuccessToast ? (
         <div className="toast">
           <div className="alert alert-success">
-            <span>New event created.</span>
+            <span>¡Tu evento ha sido creado!</span>
           </div>
         </div>
       ) : null}
