@@ -258,10 +258,10 @@ const CreateQuizForm: React.FC = () => {
   return (
     <div className="my-28 w-full mx-auto">
       <form onSubmit={handleSubmit} className="rounded-md bg-gray-300/80 p-4 mb-4 max-w-4xl md:mx-auto mx-3">
-        <div className="text-2xl mb-2 font-mus text-center">New Event:</div>
+        <div className="text-2xl mb-2 font-mus text-center">Añadir un Evento:</div>
         <div className="mb-4">
           <label htmlFor="name" className="block mb-1">
-            Event Name:
+            Nombre del Evento:
           </label>
           <input
             type="text"
@@ -276,14 +276,14 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="desc" className="block mb-1">
-            Event Description:
+            Descripción del Evento:
           </label>
           <div ref={quillRef} />
         </div>
 
         <div className="mb-4">
           <label htmlFor="level" className="block mb-1">
-            Level:
+            Nivel del contenido:
           </label>
           <input
             type="number"
@@ -298,13 +298,13 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="type" className="block mb-1">
-            Event Type:
+            Tipo de evento:
           </label>
           <select id="type" name="type" value={formData.type} onChange={handleChange} className="" required>
             <option value={1}>Onboarding</option> {/* type 1 Onboarding (quiz 1, Onboarding Schema) */}
-            <option value={2}>DAO formation </option>
+            <option value={2}>Formación de DAO </option>
             {/* type 2 DAO formation (quiz 2 - single answer that validates safe+ens, DAO Formation Schema) */}
-            <option value={3}>DAO incubation</option>
+            <option value={3}>Incubación de DAO</option>
             {/* type 3 DAO incubation (quiz 3 - mirror link, DAO incubation Schema) */}
             <option value={4}>Live Event</option>
             {/* type 4 Live Event (quiz 4 - single answer that validates secret word, Live Event Schema) */}
@@ -315,7 +315,7 @@ const CreateQuizForm: React.FC = () => {
         {formData.type === "4" || formData.type === "5" ? (
           <div className="mb-4">
             <label htmlFor="eventurl" className="block mb-1">
-              Event URL:
+              URL del evento:
             </label>
             <input
               type="text"
@@ -331,7 +331,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="startTimeStamp" className="block mb-1">
-            Start TimeStamp:
+            Fecha del evento:
           </label>
           <input
             type="datetime-local"
@@ -346,7 +346,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="timeStamp" className="block mb-1">
-            Attestation Time Limit:
+            Fecha limite para atestar:
           </label>
           <input
             type="datetime-local"
@@ -361,7 +361,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="mentorName" className="block mb-1">
-            Mentor Name:
+            Nombre del mentor:
           </label>
           <input
             type="text"
@@ -376,7 +376,7 @@ const CreateQuizForm: React.FC = () => {
 
         <div className="mb-4">
           <label htmlFor="placeImage" className="block mb-1">
-            PlaceImage
+            Miniatura del evento
           </label>
           <input
             type="file"
@@ -399,14 +399,14 @@ const CreateQuizForm: React.FC = () => {
         )}
         <div className="text-center w-full">
           <button type="submit" className="bg-zen">
-            Add Event
+            Crear evento
           </button>
         </div>
       </form>
 
       {eventData && eventData.length > 0 && (
         <div className="text-center mx-3 my-10">
-          <div className="text-2xl mb-2 font-mus">Created Events:</div>
+          <div className="text-2xl mb-2 font-mus">Eventos Creados:</div>
           <ul className="grid md:grid-cols-2 2xl:grid-cols-3 gap-3">
             {eventData.map(
               ({ eventId, eventName, typeOf, eventDescription, mentorName, level, closingTimestamp }, index) => (
@@ -437,7 +437,7 @@ const CreateQuizForm: React.FC = () => {
       {showSuccessToast ? (
         <div className="toast">
           <div className="alert alert-success">
-            <span>New event created.</span>
+            <span>¡Tu evento ha sido creado!</span>
           </div>
         </div>
       ) : null}
