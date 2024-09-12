@@ -1,4 +1,3 @@
-import "./envConfig.ts";
 import * as chains from "viem/chains";
 
 export type ScaffoldConfig = {
@@ -9,16 +8,13 @@ export type ScaffoldConfig = {
   onlyLocalBurnerWallet: boolean;
   walletAutoConnect: boolean;
 };
-console.log("VERCEL_ENV: " + process.env.VERCEL_ENV);
-const isProd = process.env.VERCEL_ENV == "production";
-console.log("---------- " + isProd);
+// const isProd = process.env.VERCEL_ENV == "production";
 
-const targetNetwork = isProd ? chains.optimism : chains.baseSepolia;
-console.log("targetNetwork: ", { targetNetwork });
+// const targetNetwork = isProd ? chains.optimism : chains.baseSepolia;
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [targetNetwork],
+  targetNetworks: [chains.optimism],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
