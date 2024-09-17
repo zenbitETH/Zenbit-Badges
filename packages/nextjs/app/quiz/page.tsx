@@ -217,7 +217,6 @@ const Quiz = () => {
             encodedString += `${eventDetailsSchema[key].type} ${key},`;
           }
         }
-        console.log({ eventDetailsSchema });
         encodedString = encodedString.slice(0, -1);
         const schemaEncoder = new SchemaEncoder(encodedString);
         const dataToEncode = Object.entries(eventDetailsSchema).map(([key, { type, value, state }]) => ({
