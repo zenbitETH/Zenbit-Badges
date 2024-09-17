@@ -131,7 +131,7 @@ export default function EventDetailPage() {
           <div className=" items-center bg-bit/70 rounded-md mx-auto px-4 py-1 ">
             <span className="font-bold">Mentor:‏ ‎</span>
             {eventDetails && isAddress(eventDetails[9]) ? (
-              <Address address={eventDetails[9]} format="long" size="sm" />
+              <Address address={eventDetails[9]} format="short" size="sm" />
             ) : null}
           </div>
         </div>

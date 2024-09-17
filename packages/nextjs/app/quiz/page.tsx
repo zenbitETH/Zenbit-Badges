@@ -54,7 +54,6 @@ const Quiz = () => {
   const router = useRouter();
   const baseProvider =
     process.env.NEXT_PUBLIC_VERCEL_ENV == "production" ? "https://optimism.drpc.org" : "https://sepolia.base.org";
-  console.log("baseProvider env - ", process.env.NEXT_PUBLIC_VERCEL_ENV + " - " + baseProvider);
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || baseProvider);
   const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || baseProvider);
   const [data, setData] = useState({
@@ -379,14 +378,14 @@ const Quiz = () => {
           return;
         }
       } else if (eventDetails?.[0] == 4) {
-        const answer = Object.values(answers)[0];
+        // const answer = Object.values(answers)[0];
         const response = await fetch("/api/userQuiz", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "x-api-key": process.env.API_KEY || "",
           },
-          body: JSON.stringify({ eventId: eventId, value: answer, eventType: eventDetails?.[0].toString() }),
+          body: JSON.stringify({ eventId: eventId, value: answers, eventType: eventDetails?.[0].toString() }),
         });
         const result = await response.json();
         if (result && result.data) {
