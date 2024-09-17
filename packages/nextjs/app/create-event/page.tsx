@@ -36,7 +36,6 @@ const CreateQuizForm: React.FC = () => {
     eventurl: "",
   });
   const router = useRouter();
-
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
 

@@ -290,7 +290,7 @@ const CreateQuizForm: React.FC = () => {
           onChange={e => {
             const selectedValue = e.target.value;
             const selectedEventData = eventData?.find((q: { eventId: bigint }) => q.eventId == BigInt(selectedValue));
-            console.log({ selectedEventData });
+
             setSelectedEventType(selectedEventData?.typeOf || 0);
             setSelectedEvent(selectedValue);
           }}
