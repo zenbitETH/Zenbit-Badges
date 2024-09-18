@@ -58,10 +58,12 @@ export const useScaffoldEventHistory = <
     setIsLoading(true);
     try {
       if (!deployedContractData) {
+        console.log("1 .....................");
         throw new Error("Contract not found");
       }
 
       if (!enabled) {
+        console.log("2...................");
         throw new Error("Hook disabled");
       }
 
@@ -70,8 +72,11 @@ export const useScaffoldEventHistory = <
       ) as AbiEvent;
 
       const blockNumber = await publicClient.getBlockNumber({ cacheTime: 0 });
-
+      console.log({ blockNumber }, { fromBlock }, { fromBlockUpdated });
+      console.log(fromBlock ? blockNumber >= fromBlock : false);
+      console.log(blockNumber >= fromBlockUpdated);
       if ((fromBlock && blockNumber >= fromBlock) || blockNumber >= fromBlockUpdated) {
+        console.log("3 true ..............");
         const logs = await publicClient.getLogs({
           address: deployedContractData?.address,
           event,
@@ -106,8 +111,11 @@ export const useScaffoldEventHistory = <
           setEvents(newEvents);
         }
         setError(undefined);
+      } else {
+        console.log("getLogs() false false false false false false false false false false false ");
       }
     } catch (e: any) {
+      console.log("catch error :S");
       console.error(e);
       setEvents(undefined);
       setError(e);
@@ -117,13 +125,19 @@ export const useScaffoldEventHistory = <
   };
 
   useEffect(() => {
+    console.log({ fromBlock, fromBlockUpdated }, typeof fromBlock);
     readEvents(fromBlock);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromBlock, enabled]);
 
   useEffect(() => {
-    if (!deployedContractLoading) {
+    if (!deployedContractLoading && deployedContractData) {
+      console.log(
+        "--------------deployedContractData---------------- read events read events read events v read events v read events v read events v ",
+      );
       readEvents();
+    } else {
+      console.log("--------------deployedContractData---------------- FALSE read events FALSE");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
