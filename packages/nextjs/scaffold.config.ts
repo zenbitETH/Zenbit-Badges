@@ -10,7 +10,7 @@ export type ScaffoldConfig = {
 };
 console.log(process.env.VERCEL_ENV + " - " + process.env.NEXT_PUBLIC_VERCEL_ENV);
 
-const isProd = process.env.VERCEL_ENV == "production";
+const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV == "production";
 
 const targetNetwork = isProd ? chains.optimism : chains.baseSepolia;
 
