@@ -52,7 +52,8 @@ const Quiz = () => {
   const { address: connectedAddress } = useAccount();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const baseProvider = process.env.VERCEL_ENV == "production" ? "https://optimism.drpc.org" : "https://sepolia.base.org";
+  const baseProvider =
+    process.env.NEXT_PUBLIC_VERCEL_ENV == "production" ? "https://optimism.drpc.org" : "https://sepolia.base.org";
   const provider = new JsonRpcProvider(process.env.JSON_RPC_PROVIDER || baseProvider);
   const privateProvider = new JsonRpcProvider(process.env.PRIVATE_JSON_RPC_PROVIDER || baseProvider);
   const [data, setData] = useState({
@@ -71,6 +72,7 @@ const Quiz = () => {
     safeAddress: "",
     eventURL: "",
     quizType: "",
+    daoENS: "",
   });
 
   async function grantAttestation(easContract: Contract, data: string, recipient: Address) {
@@ -214,7 +216,6 @@ const Quiz = () => {
             encodedString += `${eventDetailsSchema[key].type} ${key},`;
           }
         }
-
         encodedString = encodedString.slice(0, -1);
         const schemaEncoder = new SchemaEncoder(encodedString);
         const dataToEncode = Object.entries(eventDetailsSchema).map(([key, { type, value, state }]) => ({
@@ -358,33 +359,33 @@ const Quiz = () => {
 
         const value = parseDomain(subDomain);
 
-        const result = await client.getAddressRecord({ name: value });
+        const daoAddress = await client.getAddressRecord({ name: value });
 
-        if (!result) {
+        if (!daoAddress) {
           alert("No perteneces a esa DAO, por favor verifica");
           return;
         }
 
-        const gnosisContractObj = new Contract(result?.value, gnosisContract.abi, provider);
+        const gnosisContractObj = new Contract(daoAddress?.value, gnosisContract.abi, provider);
 
         const txResponse = await gnosisContractObj.getOwners();
         if (txResponse) {
           if (!txResponse.includes(connectedAddress)) {
             alert("No perteneces a esa DAO, por favor verifica");
           } else {
-            setState({ ...state, safeAddress: result?.value, answer: answer });
+            setState({ ...state, safeAddress: daoAddress?.value, answer: answer, daoENS: subDomain });
           }
           return;
         }
       } else if (eventDetails?.[0] == 4) {
-        const answer = Object.values(answers)[0];
+        // const answer = Object.values(answers)[0];
         const response = await fetch("/api/userQuiz", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "x-api-key": process.env.API_KEY || "",
           },
-          body: JSON.stringify({ eventId: eventId, value: answer, eventType: eventDetails?.[0].toString() }),
+          body: JSON.stringify({ eventId: eventId, value: answers, eventType: eventDetails?.[0].toString() }),
         });
         const result = await response.json();
         if (result && result.data) {

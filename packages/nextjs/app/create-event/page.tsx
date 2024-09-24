@@ -31,12 +31,11 @@ const CreateQuizForm: React.FC = () => {
     startTimeStamp: 0,
     timeStamp: 0,
     mentorName: "",
-    type: "0",
+    type: "1",
     schemaId: "0x",
     eventurl: "",
   });
   const router = useRouter();
-
   const [createEventEntryInDatabase, setCreateEventEntryInDatabase] = useState(false);
   const [createdEventId, setCreatedEventId] = useState(0);
 
