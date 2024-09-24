@@ -35,7 +35,7 @@ export default function EventDetailPage() {
   const { data: eventCreatedEvent } = useScaffoldEventHistory({
     contractName: "EASOnboarding",
     eventName: "EventCreated",
-    fromBlock: 119579120n,
+    fromBlock: process.env.NEXT_PUBLIC_VERCEL_ENV == "production" ? 119579120n : 13042260n,
     filters: { eventId: parseUnits(params?.eventId as string, 0) },
     blockData: true,
   });
@@ -43,7 +43,7 @@ export default function EventDetailPage() {
   const { data: attestationAddedEvent } = useScaffoldEventHistory({
     contractName: "EASOnboarding",
     eventName: "AttestationAdded",
-    fromBlock: 119579120n,
+    fromBlock: process.env.NEXT_PUBLIC_VERCEL_ENV == "production" ? 119579120n : 13042260n,
     filters: { eventId: parseUnits(params?.eventId as string, 0) },
     blockData: true,
   });
@@ -131,7 +131,7 @@ export default function EventDetailPage() {
           <div className=" items-center bg-bit/70 rounded-md mx-auto px-4 py-1 ">
             <span className="font-bold">Mentor:‏ ‎</span>
             {eventDetails && isAddress(eventDetails[9]) ? (
-              <Address address={eventDetails[9]} format="long" size="sm" />
+              <Address address={eventDetails[9]} format="short" size="sm" />
             ) : null}
           </div>
         </div>

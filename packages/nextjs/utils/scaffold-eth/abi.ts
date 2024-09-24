@@ -1473,6 +1473,11 @@ if (process.env.VERCEL_ENV == "production") {
             name: "",
             type: "tuple[]",
           },
+          {
+            internalType: "string[]",
+            name: "",
+            type: "string[]",
+          },
         ],
         stateMutability: "view",
         type: "function",
@@ -1554,6 +1559,25 @@ if (process.env.VERCEL_ENV == "production") {
             internalType: "bytes32[]",
             name: "",
             type: "bytes32[]",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "isMentor",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
           },
         ],
         stateMutability: "view",
@@ -2165,6 +2189,11 @@ if (process.env.VERCEL_ENV == "production") {
             name: "",
             type: "tuple[]",
           },
+          {
+            internalType: "string[]",
+            name: "",
+            type: "string[]",
+          },
         ],
         stateMutability: "view",
         type: "function",
@@ -2246,6 +2275,25 @@ if (process.env.VERCEL_ENV == "production") {
             internalType: "bytes32[]",
             name: "",
             type: "bytes32[]",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "isMentor",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
           },
         ],
         stateMutability: "view",

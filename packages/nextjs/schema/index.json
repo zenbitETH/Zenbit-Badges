@@ -74,12 +74,17 @@
       "value": "eventDetails[7]",
       "state": false
     },
-    "Event_Type": {
-      "type": "string",
-      "value": "eventDetails[0]",
-      "state": false
+    "DAO_Multisig": {
+      "type": "address",
+      "value": "safeAddress",
+      "state": true
     },
-    "Event_URL": {
+    "DAO_ENS_Name": {
+      "type": "string",
+      "value": "daoENS",
+      "state": true
+    },
+    "Incubation_URL": {
       "type": "string",
       "value": "answer",
       "state": true
@@ -113,7 +118,7 @@
     },
     "Event_URL": {
       "type": "string",
-      "value": "answer",
+      "value": "eventURL",
       "state": true
     }
   }
