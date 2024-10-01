@@ -8,7 +8,6 @@ export type ScaffoldConfig = {
   onlyLocalBurnerWallet: boolean;
   walletAutoConnect: boolean;
 };
-console.log(process.env.VERCEL_ENV + " - " + process.env.NEXT_PUBLIC_VERCEL_ENV);
 
 const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV == "production";
 
