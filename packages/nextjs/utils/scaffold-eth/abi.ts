@@ -1031,7 +1031,7 @@ export const abi = {
 
 let deployedContractTemplate;
 
-if (process.env.VERCEL_ENV == "production") {
+if (process.env.NEXT_PUBLIC_VERCEL_ENV == "production") {
   deployedContractTemplate = {
     address: "0xE383f2B3Ff9024bAa09b33923b8DBd0F2AF98ad0",
     abi: [
