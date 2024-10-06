@@ -1,9 +1,23 @@
 # 🎖️ Zenbit Badges
 
+Zenbit Badges (ZB) es una dapp de identidad onchain que automatiza la emisión de attestation con contrato EASOnboarding y una cuenta dedicada (ej. badges.zenbit.eth).
 
-🧪 Una dapp que facilita el uso de Ethereum Attestation Service (EAS) para certificar onchain el cumplimiento de actividades o el uso de herramientas web3 durante eventos presenciales o virtuales. Zenbit Badges consta de un contrato escrito en solidity que permite llevar el registro de eventos asi como de mentores y participantes, además de emitir atestaciones en nombre de badges.zenbit.eth de manera automatizada.
+## Contenido
+1. [📝 Descripción](#📝-descripción)
+2. [👤 Roles de Usuario](#👤-roles-de-usuario)
+3. [⚙️ Contratos](#⚙️-contratos)
+4. [✅ Certificaciones Disponibles](#✅-certificaciones-disponibles)
+5. [❓ Cuestionarios Disponibles](#❓-cuestionarios-disponibles)
+6. [🏁 Puesta en marcha](#🏁-puesta-en-marcha)
+7. [✨ Contribuciones](#✨-contribuciones)
+8. [📜 Licencia](#📜-licencia)
+9. [📬 Contacto](#📬-contacto)
 
-## Flujo de usuario
+
+## 📝 Descripción
+🧪 ZB es unna dapp que facilita el uso de Ethereum Attestation Service (EAS) para certificar onchain el cumplimiento de actividades o el uso de herramientas web3 durante eventos presenciales o virtuales. Zenbit Badges consta de un contrato escrito en solidity que permite llevar el registro de eventos asi como de mentores y participantes, además de emitir atestaciones en nombre de badges.zenbit.eth de manera automatizada.
+
+## 👤 Roles de usuario
 Zenbit Badges tiene 2 tiempos de usuario: mentores y participantes
 
 ### 🍎 Mentores
@@ -19,14 +33,14 @@ Mayo 2024: [EAS Onboarding en OP Mainnet](https://optimistic.etherscan.io/addres
 
 1. Introducción a Optimism (Optimism Onboarding): [EAS Schema #423](https://optimism.easscan.org/schema/view/0xe3990a5b917495816f40d1c85a5e0ec5ad3dd66e40b129edb0f0b3a381790b7b)
 2. Formación de DAO (DAO Formation): [EAS Schema #424](https://optimism.easscan.org/schema/view/0xddc12d29e4863e857d1b6429f2afd4bf3d687110bbb425e730b87d5f1efcda5a)
-
-## ⏳ Certificaciones pendientes
-3. Incubación de proyectos
-4. Taller o curso educativo
+3. Incubación de proyectos:  [EAS Schema #512](https://optimism.easscan.org/schema/view/0x17ceae0972a7b2a858182fa4fc4f63b020941f4386872a2d3b611f882bcdf9bf)
+4. Taller o curso educativo: [EAS Schema #513](https://optimism.easscan.org/schema/view/0xd1b32a04207069d491b31239467ef1c57d54f3a961cbd0462a3afc52e3ec6f1a)
 
 ## ❓ Cuestionarios disponibles
-1. Pregunta con opción multiple (3 respuestas)
-2. Verificación de multisig  ENS
+1. Preguntas con opción multiple (3 respuestas)
+2. Verificación de pertenencia a safe multisig con ENS
+3. Verificación de autor con URL de de artículos de Mirror
+4. Palabra secreta o cuestionario escrito
 
 ## ⚙️ Puesta en marcha
 1. clonar repositorio `git clone https://github.com/zenbitETH/Zenbit-Badges.git`
@@ -40,3 +54,5 @@ Mayo 2024: [EAS Onboarding en OP Mainnet](https://optimistic.etherscan.io/addres
 9. crear evento
 10. crear quiz
 11. atestar
+
+
