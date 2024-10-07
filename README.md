@@ -9,8 +9,8 @@ Zenbit Badges (ZB) es una dapp de identidad onchain que automatiza la emisión d
 4. [🌐 Marco de Habilidades Web3](#4-🌐-marco-de-habilidades-web3)
 5. [🪺 Programa Piloto de Incubación de DAO](#5-🪺-programa-piloto-de-incubación-de-dao)
 6. [🏁 Puesta en marcha](#🏁-puesta-en-marcha)
-6. [📜 Licencia](#📜-licencia)
-7. [📬 Contacto](#📬-contacto)
+7. [📜 Licencia](#📜-licencia)
+8. [📬 Contacto](#📬-contacto)
 
 
 ## 1 📝 Descripción
