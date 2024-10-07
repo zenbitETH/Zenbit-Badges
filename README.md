@@ -14,7 +14,7 @@ Zenbit Badges (ZB) es una dapp de identidad onchain que automatiza la emisión d
 
 
 ## 1 📝 Descripción
-🧪 ZB facilita el uso de Ethereum Attestation Service (EAS) para certificar onchain el cumplimiento de actividades o el uso de herramientas web3 durante eventos presenciales o virtuales. Zenbit Badges consta de un contrato escrito en solidity que permite llevar el registro de eventos asi como de [🍎 Mentores](#🍎-mentores) y participantes, además de emitir atestaciones en nombre de badges.zenbit.eth de manera automatizada.
+🧪 ZB facilita el uso de Ethereum Attestation Service (EAS) para certificar onchain el cumplimiento de actividades o el uso de herramientas web3 durante eventos presenciales o virtuales. Zenbit Badges consta de un contrato escrito en solidity que permite llevar el registro de eventos asi como de [🍎 Mentores](#🍎-mentores) y [🎒 Participantes](#🎒-participantes), además de emitir atestaciones en nombre de badges.zenbit.eth de manera automatizada.
 
 ![¿Qué es Zenbit Badges?](https://github.com/zenbitETH/Public-Assets/blob/main/Zenbit%20Badges/ZB1.png?raw=true)
 
