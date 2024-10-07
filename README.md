@@ -18,6 +18,15 @@ Zenbit Badges (ZB) es una dapp de identidad onchain que automatiza la emisión d
 
 ![¿Qué es Zenbit Badges?](https://github.com/zenbitETH/Public-Assets/blob/main/Zenbit%20Badges/ZB1.png?raw=true)
 
+ZB cuenta con 4 páginas de interacción que se mostrarán en pantalla dependiendo del rol asignado a la dirección conectada a la aplicación:
+1. Eventos (visible para todos)
+2. Detalle de eventos (visible para todos)
+3. Perfil (visible para direcciones conectadas de participantes)
+4. Crear Evento (visible solo para mentores)
+5. Crear Quiz (visible solo para mentores)
+
+![Pantalla principal de Zenbit Badges](https://github.com/zenbitETH/Public-Assets/blob/main/Zenbit%20Badges/zb4.png?raw=true)
+
 ## 2 👤 Roles de usuario
 Zenbit Badges tiene 2 tiempos de usuario: mentores y participantes
 
