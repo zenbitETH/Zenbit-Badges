@@ -1,5 +1,14 @@
 # 🎖️ Zenbit Badges
 
+> [!CAUTION]
+> **Proyecto retirado (octubre 2026).** Desde abril de 2024 (`019fb2c`), `packages/nextjs/next.config.js` pasaba `PRIVATE_KEY`, `API_KEY` y las URLs de RPC por el bloque `env:` de Next.js. Next.js incrusta esos valores en el JavaScript que recibe el navegador, así que cada despliegue publicó la llave privada de la cuenta firmante `0xe2A45CA9Ec5780FC389FBD8991980397b8B470AF` (badges.zenbit.eth).
+>
+> Esa cuenta es el `deployer` inmutable de **EASOnboarding** en OP Mainnet (`0xE383f2B3Ff9024bAa09b33923b8DBd0F2AF98ad0`). El contrato acepta como válida cualquier firma suya y solo ella puede agregar o quitar mentores. El contrato se desplegó después de que empezó la exposición, así que **ninguna firma o attestation emitida a través de él puede probarse auténtica**. No la uses como credencial.
+>
+> badges.zenbit.mx está fuera de línea, la llave está quemada y las credenciales asociadas se rotaron. No reutilices este código sin quitar el bloque `env:` y mover la firma a un servidor.
+>
+> **Retired project (October 2026).** Since April 2024, `next.config.js` inlined `PRIVATE_KEY`, `API_KEY` and the RPC URLs into client JavaScript, so every deployment published the signer key of `0xe2A4…70AF`. That account is the immutable `deployer` of EASOnboarding on OP Mainnet (`0xE383…8ad0`), whose signatures the contract trusts. The contract was deployed after the exposure began, so **no attestation issued through it can be shown to be genuine**. The site is offline, the key is burned and the related credentials were rotated.
+
 Zenbit Badges (ZB) es una dapp de identidad onchain que automatiza la emisión de attestation con contrato EASOnboarding y una cuenta dedicada (ej. badges.zenbit.eth).
 
 ## Contenido
